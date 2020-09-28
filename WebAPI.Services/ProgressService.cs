@@ -7,96 +7,95 @@ namespace WebAPI.Services
 {
     public class ProgressService : IProgressService
     {
-        public bool UpdatingDatabase { get; set; }
-        public DateTime LastStartedTime { get; set; }
-        public DateTime LastCompletedTime { get; set; }
-        public DateTime NextPlannedTime { get; set; }
-        public bool IsUpdatingPaused { get; set; }
-        public bool IsUpdatingInProgress { get; set; }
-        public bool Finalizing { get; set; }
-        public int FailedResultsQuantity { get; set; }
-        public int TotalResultsQuantity { get; set; }
-        public int ReurnedVesselsInCurrent { get; set; }
-        public string LastUpdatedVessel { get; set; }
-        public string LastError { get; set; }
-        public CancellationTokenSource TokenSource { get; set; }
-        public CancellationToken CancellationToken { get; set; }
+        private bool _updatingDatabase;
+        private DateTime _lastStartedTime;
+        private DateTime _lastCompletedTime;
+        private DateTime _nextPlannedTime;
+        private bool _isUpdatingPaused;
+        private bool _isUpdatingInProgress;
+        private bool _finalizing;
+        private int _failedResultsQuantity;
+        private int _totalResultsQuantity;
+        private int _reurnedVesselsInCurrent;
+        private string _lastUpdatedVessel;
+        private string _lastError;
+        private CancellationTokenSource _tokenSource;
 
-        public CancellationToken GetNewCalnellationToken() //todo: write unit tests
+        public CancellationToken GetNewCalnellationToken()
         {
-            TokenSource = new CancellationTokenSource();
+            _tokenSource = new CancellationTokenSource();
 
-            return TokenSource.Token;
+            return _tokenSource.Token;
         }
 
-        public CancellationTokenSource GetTokenSource() //todo: write unit tests
+        public CancellationTokenSource GetTokenSource()
         {
-            return TokenSource;
+            return _tokenSource;
         }
 
         public StatusModel GetProgressStatus()
         {
             return new StatusModel()
             {
-                LastStartedTime = LastStartedTime,
-                LastCompletedTime = LastCompletedTime,
-                NextPlannedTime = NextPlannedTime,
-                IsUpdatingInProgress = IsUpdatingInProgress,
-                IsUpdatingPaused = IsUpdatingPaused,
-                FailedResultsQuantity = FailedResultsQuantity,
-                TotalResultsQuantity = TotalResultsQuantity,
-                ReurnedVesselsInCurrent = ReurnedVesselsInCurrent,
-                LastUpdatedVessel = LastUpdatedVessel,
-                Finalizing = Finalizing,
-                UpdatingDatabase = UpdatingDatabase,
-                LastError = LastError,
-                MemoryMegabytesUsage = GetProcessInfo()
+                LastStartedTime = _lastStartedTime,
+                LastCompletedTime = _lastCompletedTime,
+                NextPlannedTime = _nextPlannedTime,
+                IsUpdatingInProgress = _isUpdatingInProgress,
+                IsUpdatingPaused = _isUpdatingPaused,
+                FailedResultsQuantity = _failedResultsQuantity,
+                TotalResultsQuantity = _totalResultsQuantity,
+                ReurnedVesselsInCurrent = _reurnedVesselsInCurrent,
+                LastUpdatedVessel = _lastUpdatedVessel,
+                Finalizing = _finalizing,
+                UpdatingDatabase = _updatingDatabase,
+                LastError = _lastError,
+                MemoryMegabytesUsage = GetProcessMemoryUsed()
             };
         }
 
         public bool GetIsUpdatingStarted()
         {
-            return IsUpdatingInProgress;
+            return _isUpdatingInProgress;
         }
 
         public void SetCompletedUpdatesTime()
         {
-            LastCompletedTime = DateTime.UtcNow;
+            _lastCompletedTime = DateTime.UtcNow;
         }
 
         public void SetReturnedVessels(int qty)
         {
-            ReurnedVesselsInCurrent = qty;
+            _reurnedVesselsInCurrent = qty;
         }
 
         public void SetUpdatingPaused()
         {
-            this.IsUpdatingPaused = true;
+            _isUpdatingPaused = true;
         }
 
         public void SetUpdatingStarted()
         {
-            IsUpdatingInProgress = true;
-            LastStartedTime = DateTime.UtcNow;
-            NextPlannedTime = LastStartedTime.AddMinutes(2);
+            _isUpdatingInProgress = true;
+            _lastStartedTime = DateTime.UtcNow;
+            _nextPlannedTime = _lastStartedTime.AddMinutes(2);
         }
 
         public void SetUpdatingStopped()
         {
-            IsUpdatingInProgress = false;
+            _isUpdatingInProgress = false;
         }
 
         public void SetUpdatingUnpaused()
         {
-            IsUpdatingPaused = false;
+            _isUpdatingPaused = false;
         }
 
         public bool GetIsUpdatingPaused()
         {
-            return IsUpdatingPaused;
+            return _isUpdatingPaused;
         }
 
-        private float GetProcessInfo()
+        private float GetProcessMemoryUsed()
         {
             Process proc = Process.GetCurrentProcess();
             long mem = proc.WorkingSet64;
