@@ -7,10 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebAPI.App\WebAPI.App.csproj" />
+    <ProjectReference Include="..\WebAPI.Client\WebAPI.Client.csproj" />
+    <ProjectReference Include="..\WebAPI.Models\WebAPI.Models.csproj" />
+    <ProjectReference Include="..\WebAPI.Services\WebAPI.Services.csproj" />
   </ItemGroup>
 
 </Project>

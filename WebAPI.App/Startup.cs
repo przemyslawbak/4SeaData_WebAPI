@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebAPI.DAL;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using WebAPI.Services;
 
 namespace WebAPI
 {
@@ -21,6 +21,9 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:4Sea_Server:ConnectionString"]));
+            services.AddTransient<IHostedService, TimeHostedUpdater>();
+            services.AddTransient<IUpdaterService, UpdaterService>();
+            services.AddSingleton<IProgressService, ProgressService>();
             services.AddMvc();
         }
 

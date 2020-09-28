@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Models
+﻿using System;
+
+namespace WebAPI.Models
 {
     public class StatusModel
     {
@@ -13,6 +15,7 @@
         public int TotalResultsQuantity { get; set; }
         public int ReurnedVesselsInCurrent { get; set; }
         public string LastUpdatedVessel { get; set; }
+        public string LastError { get; set; }
         public float MemoryMegabytesUsage { get; set; }
     }
 }
