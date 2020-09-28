@@ -6,10 +6,15 @@ namespace WebAPI.Services
     public interface IProgressService
     {
         StatusModel GetProgressStatus();
-        bool IsUpdatingStarted();
-        bool IsUpdatingPaused();
+        bool GetIsUpdatingStarted();
+        bool GetIsUpdatingPaused();
         void SetUpdatingPaused();
         void SetUpdatingUnpaused();
-        CancellationToken GetCalnellationToken();
+        CancellationToken GetNewCalnellationToken();
+        void SetUpdatingStarted();
+        void SetUpdatingStopped();
+        void SetCompletedUpdatesTime();
+        void SetReturnedVessels(int qty);
+        CancellationTokenSource GetTokenSource();
     }
 }

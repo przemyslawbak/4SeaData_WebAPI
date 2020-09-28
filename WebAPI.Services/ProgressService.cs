@@ -22,19 +22,16 @@ namespace WebAPI.Services
         public CancellationTokenSource TokenSource { get; set; }
         public CancellationToken CancellationToken { get; set; }
 
-        public CancellationToken GetCalnellationToken()
+        public CancellationToken GetNewCalnellationToken() //todo: write unit tests
         {
-            if (CancellationToken != null)
-            {
-                if (!CancellationToken.IsCancellationRequested)
-                {
-                    return CancellationToken;
-                }
-            }
-
             TokenSource = new CancellationTokenSource();
 
             return TokenSource.Token;
+        }
+
+        public CancellationTokenSource GetTokenSource() //todo: write unit tests
+        {
+            return TokenSource;
         }
 
         public StatusModel GetProgressStatus()
@@ -57,19 +54,46 @@ namespace WebAPI.Services
             };
         }
 
-        public bool IsUpdatingStarted()
+        public bool GetIsUpdatingStarted()
         {
             return IsUpdatingInProgress;
         }
 
+        public void SetCompletedUpdatesTime()
+        {
+            LastCompletedTime = DateTime.UtcNow;
+        }
+
+        public void SetReturnedVessels(int qty)
+        {
+            ReurnedVesselsInCurrent = qty;
+        }
+
         public void SetUpdatingPaused()
         {
-            IsUpdatingPaused = true;
+            this.IsUpdatingPaused = true;
+        }
+
+        public void SetUpdatingStarted()
+        {
+            IsUpdatingInProgress = true;
+            LastStartedTime = DateTime.UtcNow;
+            NextPlannedTime = LastStartedTime.AddMinutes(2);
+        }
+
+        public void SetUpdatingStopped()
+        {
+            IsUpdatingInProgress = false;
         }
 
         public void SetUpdatingUnpaused()
         {
             IsUpdatingPaused = false;
+        }
+
+        public bool GetIsUpdatingPaused()
+        {
+            return IsUpdatingPaused;
         }
 
         private float GetProcessInfo()
@@ -79,11 +103,6 @@ namespace WebAPI.Services
             ProcessDataModel process = new ProcessDataModel() { MemoryMegabytesUsage = (mem / 1024f) / 1024f };
             return process.MemoryMegabytesUsage;
 
-        }
-
-        bool IProgressService.IsUpdatingPaused()
-        {
-            return IsUpdatingPaused;
         }
     }
 }

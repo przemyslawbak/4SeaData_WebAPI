@@ -1,34 +1,81 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebAPI.Services
 {
-    public class TimeHostedUpdater : IHostedService, IDisposable
+    public class TimeHostedUpdater : ITimeHostedUpdater, IDisposable
     {
         private Timer _timer;
+        private readonly IProgressService _progress;
 
-        public TimeHostedUpdater()
+        public TimeHostedUpdater(IProgressService progress)
         {
-
+            _progress = progress;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
+            if (!_progress.GetIsUpdatingStarted())
+            {
+                Task.Run(() =>
+                {
+                    _timer = new Timer(DoWorkAsync, cancellationToken, TimeSpan.Zero, TimeSpan.FromMinutes(2));
+
+                }, cancellationToken);
+            }
 
             return Task.CompletedTask;
         }
 
-        private void DoWork(object state)
+        private async void DoWorkAsync(object sender)
         {
-            //todo: 
+            try
+            {
+                await StartUpdatesAsync((CancellationToken)sender);
+            }
+            catch (OperationCanceledException ex)
+            {
+                _progress.SetUpdatingStopped();
+
+                _timer?.Change(Timeout.Infinite, 0);
+
+                Dispose();
+            }
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        private async Task StartUpdatesAsync(CancellationToken cancelToken)
         {
-            _timer?.Change(Timeout.Infinite, 0);
+            //todo: move entire method to separate service
+            _progress.SetUpdatingStarted();
+
+            for (int i = 1; i < 59; i++)
+            {
+                while (_progress.GetIsUpdatingPaused())
+                {
+                    await Task.Delay(100, cancelToken);
+                }
+
+                await Task.Delay(1000, cancelToken);
+
+                _progress.SetReturnedVessels(i);
+
+                //todo: collect errors quantity FailedResultsQuantity
+                //todo: set errors in LastError
+                //todo: verify TotalResultsQuantity
+                //todo: ReurnedVesselsInCurrent
+                //todo: Finalizing
+                //todo: UpdatingDatabase
+            }
+
+            _progress.SetUpdatingStopped();
+            _progress.SetCompletedUpdatesTime();
+        }
+
+        public Task StopAsync(CancellationTokenSource source)
+        {
+
+            source.Cancel();
 
             return Task.CompletedTask;
         }

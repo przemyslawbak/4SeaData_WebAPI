@@ -21,7 +21,7 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:4Sea_Server:ConnectionString"]));
-            services.AddTransient<IHostedService, TimeHostedUpdater>();
+            services.AddTransient<ITimeHostedUpdater, TimeHostedUpdater>();
             services.AddTransient<IUpdaterService, UpdaterService>();
             services.AddSingleton<IProgressService, ProgressService>();
             services.AddMvc();
@@ -39,11 +39,13 @@ namespace WebAPI
                 //TODO: routing
             }
 
+            app.UseHttpsRedirection();
+
             app.UseRouting();
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllerRoute(
-            name: "default",
-            pattern: "api/{controller}/{action}");
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
         }
     }
