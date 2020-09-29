@@ -13,9 +13,7 @@ namespace WebAPI.Services
         CancellationToken GetNewCalnellationToken();
         void SetUpdatingStarted();
         void SetUpdatingCompleted();
-        void SetCompletedUpdatesTime();
-        void SetReturnedVessels(int qty);
-        CancellationTokenSource GetTokenSource();
         CancellationToken GetCurrentCalnellationToken();
+        void SetTotalResultsQuantities(int count);
     }
 }

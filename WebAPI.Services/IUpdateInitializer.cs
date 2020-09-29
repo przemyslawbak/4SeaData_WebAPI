@@ -2,7 +2,7 @@
 
 namespace WebAPI.Services
 {
-    public interface IScrapper
+    public interface IUpdateInitializer
     {
         Task StartUpdatesAsync();
     }

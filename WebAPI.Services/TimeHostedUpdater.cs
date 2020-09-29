@@ -9,12 +9,12 @@ namespace WebAPI.Services
     {
         private Timer _timer;
         private readonly IProgressService _progress;
-        private readonly IScrapper _scrapper;
+        private readonly IUpdateInitializer _initializer;
 
-        public TimeHostedUpdater(IProgressService progress, IScrapper scrapper)
+        public TimeHostedUpdater(IProgressService progress, IUpdateInitializer initializer)
         {
             _progress = progress;
-            _scrapper = scrapper;
+            _initializer = initializer;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -26,11 +26,7 @@ namespace WebAPI.Services
 
         private async void DoWorkAsync(object sender)
         {
-            _progress.SetUpdatingStarted();
-
-            await _scrapper.StartUpdatesAsync();
-
-            _progress.SetUpdatingCompleted();
+            await _initializer.StartUpdatesAsync();
         }
 
         public Task StopAsync(CancellationToken cancelToken)

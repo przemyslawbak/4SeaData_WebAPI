@@ -16,7 +16,7 @@ namespace WebAPI.Services
         private bool _finalizing;
         private int _failedResultsQuantity;
         private int _totalResultsQuantity;
-        private int _reurnedVesselsInCurrent;
+        private int _returnedResultsQuantity;
         private string _lastUpdatedVessel;
         private string _lastError;
         private CancellationTokenSource _tokenSource;
@@ -34,11 +34,6 @@ namespace WebAPI.Services
             return _cancellationToken;
         }
 
-        public CancellationTokenSource GetTokenSource()
-        {
-            return _tokenSource;
-        }
-
         public StatusModel GetProgressStatus()
         {
             return new StatusModel()
@@ -50,7 +45,7 @@ namespace WebAPI.Services
                 IsUpdatingPaused = _isUpdatingPaused,
                 FailedResultsQuantity = _failedResultsQuantity,
                 TotalResultsQuantity = _totalResultsQuantity,
-                ReurnedVesselsInCurrent = _reurnedVesselsInCurrent,
+                ReurnedVesselsInCurrent = _returnedResultsQuantity,
                 LastUpdatedVessel = _lastUpdatedVessel,
                 Finalizing = _finalizing,
                 UpdatingDatabase = _updatingDatabase,
@@ -62,15 +57,6 @@ namespace WebAPI.Services
         public bool GetIsUpdatingStarted()
         {
             return _isUpdatingInProgress;
-        }
-
-        public void SetCompletedUpdatesTime()
-        {
-        }
-
-        public void SetReturnedVessels(int qty)
-        {
-            _reurnedVesselsInCurrent = qty;
         }
 
         public void SetUpdatingPaused()
@@ -99,6 +85,14 @@ namespace WebAPI.Services
         public bool GetIsUpdatingPaused()
         {
             return _isUpdatingPaused;
+        }
+
+        public void SetTotalResultsQuantities(int qty)
+        {
+            _lastUpdatedVessel = string.Empty;
+            _returnedResultsQuantity = 0;
+            _failedResultsQuantity = 0;
+            _totalResultsQuantity = qty;
         }
 
         private float GetProcessMemoryUsed()
