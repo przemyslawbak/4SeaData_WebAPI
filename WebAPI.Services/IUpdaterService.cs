@@ -9,7 +9,6 @@ namespace WebAPI.Services
         VesselModel GetSingleVessel(int mmsi, int imo, string searchType);
         StatusModel GetUpdatingStatus();
         bool PauseUpdating();
-        Task<bool> StartUpdatingAsync();
         Task<bool> StopUpdatingAsync();
     }
 }

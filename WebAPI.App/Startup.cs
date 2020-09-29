@@ -24,6 +24,7 @@ namespace WebAPI
             services.AddTransient<IHostedService, TimeHostedUpdater>();
             services.AddTransient<IUpdaterService, UpdaterService>();
             services.AddSingleton<IProgressService, ProgressService>();
+            services.AddSingleton<IScrapper, Scrapper>();
             services.AddMvc();
         }
 

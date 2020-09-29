@@ -66,7 +66,6 @@ namespace WebAPI.Services
 
         public void SetCompletedUpdatesTime()
         {
-            _lastCompletedTime = DateTime.UtcNow;
         }
 
         public void SetReturnedVessels(int qty)
@@ -86,9 +85,10 @@ namespace WebAPI.Services
             _nextPlannedTime = _lastStartedTime.AddMinutes(2);
         }
 
-        public void SetUpdatingStopped()
+        public void SetUpdatingCompleted()
         {
             _isUpdatingInProgress = false;
+            _lastCompletedTime = DateTime.UtcNow;
         }
 
         public void SetUpdatingUnpaused()

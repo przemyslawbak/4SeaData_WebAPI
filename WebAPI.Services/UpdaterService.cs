@@ -41,23 +41,9 @@ namespace WebAPI.Services
             }
         }
 
-        public async Task<bool> StartUpdatingAsync()
-        {
-            if (_progress.GetIsUpdatingStarted())
-            {
-                return false;
-            }
-            else
-            {
-                await _hostedUpdater.StartAsync(_progress.GetNewCalnellationToken());
-
-                return true;
-            }
-        }
-
         public async Task<bool> StopUpdatingAsync()
         {
-            if (_progress.GetIsUpdatingStarted()) //todo: what if waiting for new timer?
+            if (_progress.GetIsUpdatingStarted())
             {
                 await _hostedUpdater.StopAsync(_progress.GetCurrentCalnellationToken());
 

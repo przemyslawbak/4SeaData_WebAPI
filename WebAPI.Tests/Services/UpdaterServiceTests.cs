@@ -41,20 +41,6 @@ namespace WebAPI.Tests.Services
         }
 
         [Theory]
-        [InlineData(true, false, 0, 0)]
-        [InlineData(false, true, 1, 1)]
-        private async Task StartUpdatingAsync_OnUpdaterdStartedValue_ReturnsCorrectBool(bool isUpdatingStarted, bool expected, int timesCalledStartAsync, int timesGetCalnellationToken)
-        {
-            _progressMock.Setup(mock => mock.GetIsUpdatingStarted()).Returns(isUpdatingStarted);
-
-            bool result = await _service.StartUpdatingAsync();
-
-            Assert.Equal(expected, result);
-            _hostedUpdaterMock.Verify(mock => mock.StartAsync(It.IsAny<CancellationToken>()), Times.Exactly(timesCalledStartAsync));
-            _progressMock.Verify(mock => mock.GetNewCalnellationToken(), Times.Exactly(timesGetCalnellationToken));
-        }
-
-        [Theory]
         [InlineData(true, true, 1, 1)]
         [InlineData(false, false, 0, 0)]
         private async Task StopUpdatingAsync_OnUpdaterdStartedValue_ReturnsCorrectBool(bool isUpdatingStarted, bool expected, int timesCalledStartAsync, int timesGetTokenSource)
