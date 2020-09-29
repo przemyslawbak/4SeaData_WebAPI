@@ -1,14 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 using WebAPI.Models;
 
 namespace WebAPI.Services
 {
     public class UpdaterService : IUpdaterService
     {
-        private readonly ITimeHostedUpdater _hostedUpdater;
+        private readonly IHostedService _hostedUpdater;
         private readonly IProgressService _progress;
 
-        public UpdaterService(ITimeHostedUpdater hostedUpdater, IProgressService progress)
+        public UpdaterService(IHostedService hostedUpdater, IProgressService progress)
         {
             _hostedUpdater = hostedUpdater;
             _progress = progress;
@@ -56,9 +57,9 @@ namespace WebAPI.Services
 
         public async Task<bool> StopUpdatingAsync()
         {
-            if (_progress.GetIsUpdatingStarted())
+            if (_progress.GetIsUpdatingStarted()) //todo: what if waiting for new timer?
             {
-                await _hostedUpdater.StopAsync(_progress.GetTokenSource());
+                await _hostedUpdater.StopAsync(_progress.GetCurrentCalnellationToken());
 
                 return true;
             }

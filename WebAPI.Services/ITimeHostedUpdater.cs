@@ -6,6 +6,6 @@ namespace WebAPI.Services
     public interface ITimeHostedUpdater
     {
         Task StartAsync(CancellationToken token);
-        Task StopAsync(CancellationTokenSource source);
+        Task StopAsync(CancellationToken source);
     }
 }

@@ -16,5 +16,6 @@ namespace WebAPI.Services
         void SetCompletedUpdatesTime();
         void SetReturnedVessels(int qty);
         CancellationTokenSource GetTokenSource();
+        CancellationToken GetCurrentCalnellationToken();
     }
 }

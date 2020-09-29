@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Hosting;
+using Moq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebAPI.Services;
@@ -8,13 +9,13 @@ namespace WebAPI.Tests.Services
 {
     public class UpdaterServiceTests
     {
-        private readonly Mock<ITimeHostedUpdater> _hostedUpdaterMock;
+        private readonly Mock<IHostedService> _hostedUpdaterMock;
         private readonly Mock<IProgressService> _progressMock;
         private readonly UpdaterService _service;
 
         public UpdaterServiceTests()
         {
-            _hostedUpdaterMock = new Mock<ITimeHostedUpdater>();
+            _hostedUpdaterMock = new Mock<IHostedService>();
             _progressMock = new Mock<IProgressService>();
 
             _progressMock.Setup(mock => mock.GetNewCalnellationToken()).Returns(new CancellationToken());
@@ -63,8 +64,8 @@ namespace WebAPI.Tests.Services
             bool result = await _service.StopUpdatingAsync();
 
             Assert.Equal(expected, result);
-            _hostedUpdaterMock.Verify(mock => mock.StopAsync(It.IsAny<CancellationTokenSource>()), Times.Exactly(timesCalledStartAsync));
-            _progressMock.Verify(mock => mock.GetTokenSource(), Times.Exactly(timesGetTokenSource));
+            _hostedUpdaterMock.Verify(mock => mock.StopAsync(It.IsAny<CancellationToken>()), Times.Exactly(timesCalledStartAsync));
+            _progressMock.Verify(mock => mock.GetCurrentCalnellationToken(), Times.Exactly(timesGetTokenSource));
         }
     }
 }

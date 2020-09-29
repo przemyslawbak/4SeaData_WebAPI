@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebAPI.Services
 {
-    public class TimeHostedUpdater : ITimeHostedUpdater, IDisposable
+    public class TimeHostedUpdater : IHostedService, IDisposable
     {
         private Timer _timer;
         private readonly IProgressService _progress;
@@ -36,11 +37,7 @@ namespace WebAPI.Services
             }
             catch (OperationCanceledException ex)
             {
-                _progress.SetUpdatingStopped();
-
-                _timer?.Change(Timeout.Infinite, 0);
-
-                Dispose();
+                //todo:
             }
         }
 
@@ -72,10 +69,13 @@ namespace WebAPI.Services
             _progress.SetCompletedUpdatesTime();
         }
 
-        public Task StopAsync(CancellationTokenSource source)
+        public Task StopAsync(CancellationToken cancelToken)
         {
+            _progress.SetUpdatingStopped();
 
-            source.Cancel();
+            _timer?.Change(Timeout.Infinite, 0);
+
+            Dispose();
 
             return Task.CompletedTask;
         }

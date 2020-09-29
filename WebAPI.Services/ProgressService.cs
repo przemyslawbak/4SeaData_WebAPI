@@ -20,12 +20,18 @@ namespace WebAPI.Services
         private string _lastUpdatedVessel;
         private string _lastError;
         private CancellationTokenSource _tokenSource;
+        private CancellationToken _cancellationToken;
 
         public CancellationToken GetNewCalnellationToken()
         {
             _tokenSource = new CancellationTokenSource();
 
             return _tokenSource.Token;
+        }
+
+        public CancellationToken GetCurrentCalnellationToken()
+        {
+            return _cancellationToken;
         }
 
         public CancellationTokenSource GetTokenSource()
