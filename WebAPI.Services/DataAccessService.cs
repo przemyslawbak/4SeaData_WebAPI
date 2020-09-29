@@ -1,24 +1,36 @@
 ﻿using System.Collections.Generic;
+using WebAPI.DAL;
 using WebAPI.Models;
 
 namespace WebAPI.Services
 {
     public class DataAccessService : IDataAccessService
     {
-        //todo: add repo
+        private readonly IDataRepository _repo;
+
+        public DataAccessService(IDataRepository repo)
+        {
+            _repo = repo;
+        }
+
         public List<SeaModel> GetSeaAreas()
         {
-            throw new System.NotImplementedException();
+            return _repo.GetAllSeaAreas();
         }
 
         public List<VesselAisUpdateModel> GetVesselsToBeUpdated()
         {
-            throw new System.NotImplementedException();
+            return _repo.GetAllVesselsUpdateModels();
         }
 
-        public void UpdateDataQuantities()
+        public void SaveUpdatedVessels(List<VesselModel> updatedVessels)
         {
-            throw new System.NotImplementedException();
+            _repo.SaveUpdatedVessels(updatedVessels);
+        }
+
+        public void SaveDatabaseQuantities()
+        {
+            _repo.SaveDatabaseQuantities();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace WebAPI.Services
             _dataProcessor = dataProcessor;
         }
 
-        public async Task StartUpdatesAsync()
+        public async Task StartUpdatesAsync() //todo: unit test
         {
             if (!_progress.GetIsUpdatingStarted())
             {
@@ -33,7 +33,7 @@ namespace WebAPI.Services
         {
             List<VesselAisUpdateModel> updateList = PopulateUpdateList();
             List<SeaModel> seaAreas = PopulateSeaAreaList();
-            _dataService.UpdateDataQuantities();
+            _dataService.SaveDatabaseQuantities();
 
             await _dataProcessor.IterateThroughObjects(updateList, seaAreas);
         }

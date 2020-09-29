@@ -15,5 +15,11 @@ namespace WebAPI.Services
         void SetUpdatingCompleted();
         CancellationToken GetCurrentCalnellationToken();
         void SetTotalResultsQuantities(int count);
+        int GetTotalResultsQuantity();
+        bool GetIsUpdatingDatabase();
+        void AddFailedRequest();
+        void SetLastError(string message);
+        void SetLastUpdatedVessel(string v);
+        void AddToReturnedResultsQuantity();
     }
 }

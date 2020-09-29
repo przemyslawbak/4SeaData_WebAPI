@@ -103,5 +103,35 @@ namespace WebAPI.Services
             return process.MemoryMegabytesUsage;
 
         }
+
+        public int GetTotalResultsQuantity()
+        {
+            return _totalResultsQuantity;
+        }
+
+        public bool GetIsUpdatingDatabase()
+        {
+            return _updatingDatabase;
+        }
+
+        public void AddFailedRequest()
+        {
+            _failedResultsQuantity++;
+        }
+
+        public void SetLastError(string message)
+        {
+            _lastError = message;
+        }
+
+        public void SetLastUpdatedVessel(string vessel)
+        {
+            _lastUpdatedVessel = vessel;
+        }
+
+        public void AddToReturnedResultsQuantity()
+        {
+            _returnedResultsQuantity++;
+        }
     }
 }

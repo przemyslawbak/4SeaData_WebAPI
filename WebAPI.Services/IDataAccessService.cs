@@ -6,7 +6,8 @@ namespace WebAPI.Services
     public interface IDataAccessService
     {
         List<VesselAisUpdateModel> GetVesselsToBeUpdated();
-        void UpdateDataQuantities();
+        void SaveDatabaseQuantities();
         List<SeaModel> GetSeaAreas();
+        void SaveUpdatedVessels(List<VesselModel> updatedVessels);
     }
 }
