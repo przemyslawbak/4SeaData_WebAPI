@@ -19,12 +19,12 @@ namespace WebAPI.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(DoWorkAsync, null, TimeSpan.Zero, TimeSpan.FromMinutes(2));
+            _timer = new Timer(InitUpdates, null, TimeSpan.Zero, TimeSpan.FromMinutes(2));
 
             return Task.CompletedTask;
         }
 
-        private async void DoWorkAsync(object sender)
+        private async void InitUpdates(object sender)
         {
             await _initializer.StartUpdatesAsync();
         }

@@ -32,15 +32,9 @@ namespace WebAPI.Services
         private async Task InitializeWorkData()
         {
             List<VesselAisUpdateModel> updateList = PopulateUpdateList();
-            List<SeaModel> seaAreas = PopulateSeaAreaList();
             _dataService.SaveDatabaseQuantities();
 
-            await _dataProcessor.IterateThroughObjects(updateList, seaAreas);
-        }
-
-        private List<SeaModel> PopulateSeaAreaList()
-        {
-            return _dataService.GetSeaAreas();
+            await _dataProcessor.IterateThroughUpdateObjects(updateList);
         }
 
         private List<VesselAisUpdateModel> PopulateUpdateList()

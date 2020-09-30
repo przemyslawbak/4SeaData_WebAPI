@@ -37,7 +37,7 @@ namespace WebAPI.Services
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
-                _repo.SaveUpdatedVessels(updatedVessels);
+                //_repo.SaveUpdatedVessels(updatedVessels); todo: uncomment, check repo
             };
         }
 

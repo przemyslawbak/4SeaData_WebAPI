@@ -13,15 +13,16 @@ namespace WebAPI.Services
         //todo: too many dependencies, split service
         private readonly IProgressService _progress;
         private readonly IConfiguration _configuration;
-        private readonly ITaskGenerator _tasksGenerator;
+        private readonly IVesselFactory _tasksGenerator;
         private readonly IStringParser _stringParser;
         private readonly IDataAccessService _dataService;
 
         private readonly int _step;
         private readonly int _degreeOfParallelism;
+        private readonly List<SeaModel> _seaAreas;
         private int _counter;
 
-        public DataProcessor(IProgressService progress, IConfiguration configuration, ITaskGenerator tasksGenerator, IStringParser stringParser, IDataAccessService dataService)
+        public DataProcessor(IProgressService progress, IConfiguration configuration, IVesselFactory tasksGenerator, IStringParser stringParser, IDataAccessService dataService)
         {
             _progress = progress;
             _configuration = configuration;
@@ -31,33 +32,36 @@ namespace WebAPI.Services
 
             _step = _configuration.GetValue<int>("Iteration:Step");
             _degreeOfParallelism = _configuration.GetValue<int>("Iteration:ParalelizmDegree");
+            _seaAreas = _dataService.GetSeaAreas();
         }
 
-        public async Task IterateThroughObjects(List<VesselAisUpdateModel> updateList, List<SeaModel> seaAreas)
+        public async Task IterateThroughUpdateObjects(List<VesselAisUpdateModel> updateList)
         {
             _counter = 0;
 
             while (_counter < _progress.GetTotalResultsQuantity())
             {
-                await ProcessNextStep(updateList, seaAreas);
+                await ProcessNextStep(updateList);
             }
         }
 
-        private async Task ProcessNextStep(List<VesselAisUpdateModel> updateList, List<SeaModel> seaAreas)
+        private async Task ProcessNextStep(List<VesselAisUpdateModel> updateList)
         {
-            int currentStep = GetCurrentStep(_counter, _step);
             List<VesselModel> updatedVessels = new List<VesselModel>();
-            List<Task<VesselModel>> currentRunningTasks = new List<Task<VesselModel>>();
+            List<Task> currentRunningTasks = new List<Task>();
             CancellationTokenSource tokenSource = new CancellationTokenSource();
             SemaphoreSlim semaphoreThrottel = new SemaphoreSlim(_degreeOfParallelism);
 
-            for (int i = _counter; i < currentStep; i++)
+            for (int i = _counter; i < GetCurrentStep(_counter, _step); i++)
             {
                 int iteration = i;
 
-                Task<VesselModel> updateVesselTask = _tasksGenerator.CreateNewTask(updateList[iteration], seaAreas, tokenSource.Token, semaphoreThrottel);
-                currentRunningTasks.Add(updateVesselTask);
-                updatedVessels = AddToList(updatedVessels, updateVesselTask);
+                currentRunningTasks.Add(Task.Run(async () =>
+                {
+                    VesselModel updateVesselTask = await _tasksGenerator.GetVesselUpdates(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
+                    updatedVessels = AddToList(updatedVessels, updateVesselTask);
+
+                }, tokenSource.Token));
             }
 
             try
@@ -86,18 +90,18 @@ namespace WebAPI.Services
             }
         }
 
-        private List<VesselModel> AddToList(List<VesselModel> updatedVessels, Task<VesselModel> updateVesselTask)
+        private List<VesselModel> AddToList(List<VesselModel> updatedVessels, VesselModel updateVesselTask)
         {
             _counter++;
             _progress.AddToReturnedResultsQuantity();
 
-            if (updateVesselTask.Result != null)
+            if (updateVesselTask != null)
             {
                 lock (((ICollection)updatedVessels).SyncRoot)
                 {
-                    updatedVessels.Add(updateVesselTask.Result);
+                    updatedVessels.Add(updateVesselTask);
 
-                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updateVesselTask.Result));
+                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updateVesselTask));
                 }
             }
 

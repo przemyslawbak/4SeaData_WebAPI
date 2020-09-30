@@ -6,6 +6,6 @@ namespace WebAPI.Services
 {
     public interface IDataProcessor
     {
-        Task IterateThroughObjects(List<VesselAisUpdateModel> updateList, List<SeaModel> seaAreas);
+        Task IterateThroughUpdateObjects(List<VesselAisUpdateModel> updateList);
     }
 }
