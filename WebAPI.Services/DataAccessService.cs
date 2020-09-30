@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using WebAPI.DAL;
 using WebAPI.Models;
 
@@ -6,31 +7,47 @@ namespace WebAPI.Services
 {
     public class DataAccessService : IDataAccessService
     {
-        private readonly IDataRepository _repo;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public DataAccessService(IDataRepository repo)
+        public DataAccessService(IServiceScopeFactory scopeFactory)
         {
-            _repo = repo;
+            _scopeFactory = scopeFactory;
         }
 
         public List<SeaModel> GetSeaAreas()
         {
-            return _repo.GetAllSeaAreas();
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
+                return _repo.GetAllSeaAreas();
+            };
         }
 
         public List<VesselAisUpdateModel> GetVesselsToBeUpdated()
         {
-            return _repo.GetAllVesselsUpdateModels();
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
+                return _repo.GetAllVesselsUpdateModels();
+            };
         }
 
         public void SaveUpdatedVessels(List<VesselModel> updatedVessels)
         {
-            _repo.SaveUpdatedVessels(updatedVessels);
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
+                _repo.SaveUpdatedVessels(updatedVessels);
+            };
         }
 
         public void SaveDatabaseQuantities()
         {
-            _repo.SaveDatabaseQuantities();
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
+                _repo.SaveDatabaseQuantities();
+            };
         }
     }
 }

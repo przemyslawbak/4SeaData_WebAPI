@@ -31,7 +31,7 @@ namespace WebAPI
             services.AddTransient<IStringParser, StringParser>();
             services.AddTransient<ITaskGenerator, TaskGenerator>();
             services.AddTransient<IScrapper, Scrapper>();
-            services.AddTransient<IDataRepository, DataRepository>();
+            services.AddTransient<DataRepository>();
             services.AddMvc();
         }
 

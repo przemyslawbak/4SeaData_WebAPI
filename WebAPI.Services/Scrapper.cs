@@ -8,7 +8,7 @@ namespace WebAPI.Services
     {
         public async Task<VesselModel> ScrapSingleVessel(int mmsi, int imo, List<SeaModel> seaAreas)
         {
-            await Task.Delay(100); //todo: implement
+            await Task.Delay(1000); //todo: implement
 
             return new VesselModel();
         }
