@@ -23,18 +23,18 @@ namespace WebAPI.Services
             {
                 _progress.SetUpdatingStarted();
 
-                await InitializeWorkData();
+                await InitializeWorkDataAsync();
 
                 _progress.SetUpdatingCompleted();
             }
         }
 
-        private async Task InitializeWorkData()
+        private async Task InitializeWorkDataAsync()
         {
             List<VesselAisUpdateModel> updateList = PopulateUpdateList();
             _dataService.SaveDatabaseQuantities();
 
-            await _dataProcessor.IterateThroughUpdateObjects(updateList);
+            await _dataProcessor.IterateThroughUpdateObjectsAsync(updateList);
         }
 
         private List<VesselAisUpdateModel> PopulateUpdateList()

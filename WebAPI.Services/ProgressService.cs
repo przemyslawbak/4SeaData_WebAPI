@@ -7,6 +7,7 @@ namespace WebAPI.Services
 {
     public class ProgressService : IProgressService
     {
+        //todo: remove unused props and fields
         private bool _updatingDatabase;
         private DateTime _lastStartedTime;
         private DateTime _lastCompletedTime;

@@ -35,17 +35,17 @@ namespace WebAPI.Services
             _seaAreas = _dataService.GetSeaAreas();
         }
 
-        public async Task IterateThroughUpdateObjects(List<VesselAisUpdateModel> updateList)
+        public async Task IterateThroughUpdateObjectsAsync(List<VesselAisUpdateModel> updateList)
         {
             _counter = 0;
 
             while (_counter < _progress.GetTotalResultsQuantity())
             {
-                await ProcessNextStep(updateList);
+                await ProcessNextStepAsync(updateList);
             }
         }
 
-        private async Task ProcessNextStep(List<VesselAisUpdateModel> updateList)
+        private async Task ProcessNextStepAsync(List<VesselAisUpdateModel> updateList)
         {
             List<VesselModel> updatedVessels = new List<VesselModel>();
             List<Task> currentRunningTasks = new List<Task>();
@@ -58,7 +58,7 @@ namespace WebAPI.Services
 
                 currentRunningTasks.Add(Task.Run(async () =>
                 {
-                    VesselModel updateVesselTask = await _tasksGenerator.GetVesselUpdates(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
+                    VesselModel updateVesselTask = await _tasksGenerator.GetVesselUpdatesAsync(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
                     updatedVessels = AddToList(updatedVessels, updateVesselTask);
 
                 }, tokenSource.Token));
@@ -106,6 +106,11 @@ namespace WebAPI.Services
             }
 
             return updatedVessels;
+        }
+
+        public Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType)
+        {
+            throw new NotImplementedException(); //todo: implement
         }
     }
 }

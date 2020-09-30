@@ -11,16 +11,18 @@ namespace WebAPI.Tests.Services
     {
         private readonly Mock<IHostedService> _hostedUpdaterMock;
         private readonly Mock<IProgressService> _progressMock;
+        private readonly Mock<IDataProcessor> _dataProcessorMock;
         private readonly UpdaterService _service;
 
         public UpdaterServiceTests()
         {
             _hostedUpdaterMock = new Mock<IHostedService>();
             _progressMock = new Mock<IProgressService>();
+            _dataProcessorMock = new Mock<IDataProcessor>();
 
             _progressMock.Setup(mock => mock.GetNewCalnellationToken()).Returns(new CancellationToken());
 
-            _service = new UpdaterService(_hostedUpdaterMock.Object, _progressMock.Object);
+            _service = new UpdaterService(_hostedUpdaterMock.Object, _progressMock.Object, _dataProcessorMock.Object);
         }
 
         [Theory]

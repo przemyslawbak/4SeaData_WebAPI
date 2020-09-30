@@ -6,7 +6,7 @@ namespace WebAPI.Services
 {
     public interface IUpdaterService
     {
-        VesselModel GetSingleVessel(int mmsi, int imo, string searchType);
+        Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType);
         StatusModel GetUpdatingStatus();
         bool PauseUpdating();
         Task<bool> StopUpdatingAsync();

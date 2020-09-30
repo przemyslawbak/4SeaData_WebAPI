@@ -6,6 +6,7 @@ namespace WebAPI.Services
 {
     public interface IDataProcessor
     {
-        Task IterateThroughUpdateObjects(List<VesselAisUpdateModel> updateList);
+        Task IterateThroughUpdateObjectsAsync(List<VesselAisUpdateModel> updateList);
+        Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType);
     }
 }

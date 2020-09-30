@@ -7,6 +7,6 @@ namespace WebAPI.Services
 {
     public interface IVesselFactory
     {
-        Task<VesselModel> GetVesselUpdates(VesselAisUpdateModel aisUpdateModel, List<SeaModel> seaAreas, CancellationToken token, SemaphoreSlim semaphoreThrottel);
+        Task<VesselModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel, List<SeaModel> seaAreas, CancellationToken token, SemaphoreSlim semaphoreThrottel);
     }
 }

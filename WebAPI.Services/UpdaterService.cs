@@ -8,11 +8,13 @@ namespace WebAPI.Services
     {
         private readonly IHostedService _hostedUpdater;
         private readonly IProgressService _progress;
+        private readonly IDataProcessor _dataProcessor;
 
-        public UpdaterService(IHostedService hostedUpdater, IProgressService progress)
+        public UpdaterService(IHostedService hostedUpdater, IProgressService progress, IDataProcessor dataProcessor)
         {
             _hostedUpdater = hostedUpdater;
             _progress = progress;
+            _dataProcessor = dataProcessor;
         }
 
         public StatusModel GetUpdatingStatus()
@@ -55,9 +57,9 @@ namespace WebAPI.Services
             }
         }
 
-        public VesselModel GetSingleVessel(int mmsi, int imo, string searchType)
+        public async Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType)
         {
-            throw new System.NotImplementedException(); //todo: implement
+            return await _dataProcessor.UpdateSingleVesselAsync(mmsi, imo, searchType);
         }
     }
 }
