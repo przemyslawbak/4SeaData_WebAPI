@@ -4,7 +4,7 @@ namespace WebAPI.Services
 {
     public class StringParser : IStringParser
     {
-        public string BuildUpdatedVesselInfo(VesselModel result)
+        public string BuildUpdatedVesselInfo(VesselUpdateModel result)
         {
             return "test vessel"; //todo: update stub
         }

@@ -6,6 +6,6 @@ namespace WebAPI.Services
 {
     public interface IScrapper
     {
-        Task<VesselModel> ScrapSingleVesselAsync(int mmsi, int imo, List<SeaModel> seaAreas);
+        VesselUpdateModel ScrapSingleVessel(int mmsi, int imo, List<SeaModel> seaAreas);
     }
 }

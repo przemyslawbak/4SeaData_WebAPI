@@ -47,7 +47,7 @@ namespace WebAPI.Services
 
         private async Task ProcessNextStepAsync(List<VesselAisUpdateModel> updateList)
         {
-            List<VesselModel> updatedVessels = new List<VesselModel>();
+            List<VesselUpdateModel> updatedVessels = new List<VesselUpdateModel>();
             List<Task> currentRunningTasks = new List<Task>();
             CancellationTokenSource tokenSource = new CancellationTokenSource();
             SemaphoreSlim semaphoreThrottel = new SemaphoreSlim(_degreeOfParallelism);
@@ -58,8 +58,8 @@ namespace WebAPI.Services
 
                 currentRunningTasks.Add(Task.Run(async () =>
                 {
-                    VesselModel updateVesselTask = await _tasksGenerator.GetVesselUpdatesAsync(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
-                    updatedVessels = AddToList(updatedVessels, updateVesselTask);
+                    VesselUpdateModel updatedVessel = await _tasksGenerator.GetVesselUpdatesAsync(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
+                    updatedVessels = AddToList(updatedVessels, updatedVessel);
 
                 }, tokenSource.Token));
             }
@@ -90,18 +90,18 @@ namespace WebAPI.Services
             }
         }
 
-        private List<VesselModel> AddToList(List<VesselModel> updatedVessels, VesselModel updateVesselTask)
+        private List<VesselUpdateModel> AddToList(List<VesselUpdateModel> updatedVessels, VesselUpdateModel updateVessel)
         {
             _counter++;
             _progress.AddToReturnedResultsQuantity();
 
-            if (updateVesselTask != null)
+            if (updateVessel != null)
             {
                 lock (((ICollection)updatedVessels).SyncRoot)
                 {
-                    updatedVessels.Add(updateVesselTask);
+                    updatedVessels.Add(updateVessel);
 
-                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updateVesselTask));
+                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updateVessel));
                 }
             }
 

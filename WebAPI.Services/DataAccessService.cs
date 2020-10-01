@@ -32,7 +32,7 @@ namespace WebAPI.Services
             };
         }
 
-        public void SaveUpdatedVessels(List<VesselModel> updatedVessels)
+        public void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels)
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {

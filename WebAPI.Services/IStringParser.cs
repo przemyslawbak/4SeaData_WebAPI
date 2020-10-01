@@ -4,6 +4,6 @@ namespace WebAPI.Services
 {
     public interface IStringParser
     {
-        string BuildUpdatedVesselInfo(VesselModel result);
+        string BuildUpdatedVesselInfo(VesselUpdateModel result);
     }
 }
