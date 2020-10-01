@@ -2,6 +2,6 @@
 {
     public interface IHttpService
     {
-        string GetHtmlDocument(string v);
+        string GetHtmlDocument(string html);
     }
 }

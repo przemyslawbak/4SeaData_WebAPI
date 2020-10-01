@@ -7,10 +7,10 @@ namespace WebAPI.Services
     public class UpdaterService : IUpdaterService
     {
         private readonly IHostedService _hostedUpdater;
-        private readonly IProgressService _progress;
+        private readonly IUpdatingProgress _progress;
         private readonly IDataProcessor _dataProcessor;
 
-        public UpdaterService(IHostedService hostedUpdater, IProgressService progress, IDataProcessor dataProcessor)
+        public UpdaterService(IHostedService hostedUpdater, IUpdatingProgress progress, IDataProcessor dataProcessor)
         {
             _hostedUpdater = hostedUpdater;
             _progress = progress;

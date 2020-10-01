@@ -21,7 +21,7 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:4Sea_Server:ConnectionString"]));
-            services.AddSingleton<IProgressService, ProgressService>();
+            services.AddSingleton<IUpdatingProgress, UpdatingProgress>();
             services.AddTransient<IHostedService, TimeHostedUpdater>();
             services.AddTransient<IUpdaterService, UpdaterService>();
             services.AddTransient<IUpdateInitializer, UpdateInitializer>();
@@ -31,6 +31,7 @@ namespace WebAPI
             services.AddTransient<IStringParser, StringParser>();
             services.AddTransient<IVesselFactory, UpdatedVesselFactory>();
             services.AddTransient<IScrapper, Scrapper>();
+            services.AddTransient<INodeParser, NodeParser>();
             services.AddTransient<DataRepository>();
             services.AddMvc();
         }

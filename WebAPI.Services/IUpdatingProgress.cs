@@ -3,7 +3,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    public interface IProgressService
+    public interface IUpdatingProgress
     {
         StatusModel GetProgressStatus();
         bool GetIsUpdatingStarted();

@@ -9,9 +9,9 @@ namespace WebAPI.Services
     public class UpdatedVesselFactory : IVesselFactory
     {
         private readonly IScrapper _scrapper;
-        private readonly IProgressService _progress;
+        private readonly IUpdatingProgress _progress;
 
-        public UpdatedVesselFactory(IScrapper scrapper, IProgressService progress)
+        public UpdatedVesselFactory(IScrapper scrapper, IUpdatingProgress progress)
         {
             _scrapper = scrapper;
             _progress = progress;

@@ -11,7 +11,7 @@ namespace WebAPI.Services
     public class DataProcessor : IDataProcessor
     {
         //todo: too many dependencies, split service
-        private readonly IProgressService _progress;
+        private readonly IUpdatingProgress _progress;
         private readonly IConfiguration _configuration;
         private readonly IVesselFactory _tasksGenerator;
         private readonly IStringParser _stringParser;
@@ -22,7 +22,7 @@ namespace WebAPI.Services
         private readonly List<SeaModel> _seaAreas;
         private int _counter;
 
-        public DataProcessor(IProgressService progress, IConfiguration configuration, IVesselFactory tasksGenerator, IStringParser stringParser, IDataAccessService dataService)
+        public DataProcessor(IUpdatingProgress progress, IConfiguration configuration, IVesselFactory tasksGenerator, IStringParser stringParser, IDataAccessService dataService)
         {
             _progress = progress;
             _configuration = configuration;

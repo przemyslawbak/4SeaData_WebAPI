@@ -10,14 +10,14 @@ namespace WebAPI.Tests.Services
     public class UpdaterServiceTests
     {
         private readonly Mock<IHostedService> _hostedUpdaterMock;
-        private readonly Mock<IProgressService> _progressMock;
+        private readonly Mock<IUpdatingProgress> _progressMock;
         private readonly Mock<IDataProcessor> _dataProcessorMock;
         private readonly UpdaterService _service;
 
         public UpdaterServiceTests()
         {
             _hostedUpdaterMock = new Mock<IHostedService>();
-            _progressMock = new Mock<IProgressService>();
+            _progressMock = new Mock<IUpdatingProgress>();
             _dataProcessorMock = new Mock<IDataProcessor>();
 
             _progressMock.Setup(mock => mock.GetNewCalnellationToken()).Returns(new CancellationToken());

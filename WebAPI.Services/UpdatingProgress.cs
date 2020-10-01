@@ -5,7 +5,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    public class ProgressService : IProgressService
+    public class UpdatingProgress : IUpdatingProgress
     {
         //todo: remove unused props and fields
         private bool _updatingDatabase;

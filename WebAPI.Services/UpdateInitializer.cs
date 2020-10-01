@@ -6,11 +6,11 @@ namespace WebAPI.Services
 {
     public class UpdateInitializer : IUpdateInitializer
     {
-        private readonly IProgressService _progress;
+        private readonly IUpdatingProgress _progress;
         private readonly IDataAccessService _dataService;
         private readonly IDataProcessor _dataProcessor;
 
-        public UpdateInitializer(IProgressService progress, IDataAccessService dataService, IDataProcessor dataProcessor)
+        public UpdateInitializer(IUpdatingProgress progress, IDataAccessService dataService, IDataProcessor dataProcessor)
         {
             _progress = progress;
             _dataService = dataService;
