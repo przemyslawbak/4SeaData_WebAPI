@@ -31,7 +31,12 @@ namespace WebAPI.Services
             {
                 if (!skip)
                 {
-                    vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo, seaAreas);
+                    vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo, seaAreas); 
+
+                    if (vessel.IMO != aisUpdateModel.Imo)
+                    {
+                        throw new Exception("Received vessel imo differs from the one passed.");
+                    }
 
                     while (_progress.GetIsUpdatingDatabase() || _progress.GetIsUpdatingPaused())
                     {
@@ -47,6 +52,7 @@ namespace WebAPI.Services
             {
                 _progress.AddFailedRequest();
                 _progress.SetLastError(ex.Message);
+                vessel = null;
             }
             finally
             {
