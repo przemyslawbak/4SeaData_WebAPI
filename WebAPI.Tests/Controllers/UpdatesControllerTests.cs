@@ -38,7 +38,17 @@ namespace WebAPI.Tests.Controllers
                 NextPlannedTime = new DateTime(2000, 01, 04),
                 ReurnedVesselsInCurrent = 34623,
                 TotalResultsQuantity = 190300,
-                UpdatingDatabase = true
+                UpdatingDatabase = true,
+                MissingStatuses = 2,
+                MissingSpeeds = 1,
+                MissingLongs = 0,
+                MissingLats = 3,
+                MissingEtas = 4,
+                MissingActivityTimes = 5,
+                MissingAreas = 6,
+                MissingCourses = 7,
+                MissingDestinations = 8,
+                MissingDraughts = 9
             };
 
             _configMock.SetupGet(mock => mock[It.Is<string>(s => s == "Authentication:Key")]).Returns("test_security_key");
@@ -156,6 +166,16 @@ namespace WebAPI.Tests.Controllers
             Assert.Equal(new DateTime(2000, 01, 04).ToString(), resultData.NextPlannedTime.ToString());
             Assert.Equal(new DateTime(2000, 01, 03).ToString(), resultData.LastStartedTime.ToString());
             Assert.Equal(new DateTime(2000, 01, 02).ToString(), resultData.LastCompletedTime.ToString());
+            Assert.Equal(2, resultData.MissingStatuses);
+            Assert.Equal(1, resultData.MissingSpeeds);
+            Assert.Equal(0, resultData.MissingLongs);
+            Assert.Equal(3, resultData.MissingLats);
+            Assert.Equal(4, resultData.MissingEtas);
+            Assert.Equal(5, resultData.MissingActivityTimes);
+            Assert.Equal(6, resultData.MissingAreas);
+            Assert.Equal(7, resultData.MissingCourses);
+            Assert.Equal(8, resultData.MissingDestinations);
+            Assert.Equal(9, resultData.MissingDraughts);
         }
 
         [Fact]
