@@ -23,6 +23,17 @@ namespace WebAPI.Services
         private CancellationTokenSource _tokenSource;
         private CancellationToken _cancellationToken;
 
+        private int _missingLatCounter;
+        private int _missingLonCounter;
+        private int _missingDestinationCounter;
+        private int _missingDraughtCounter;
+        private int _missingSpeedCounter;
+        private int _missingCourseCounter;
+        private int _missingActivityCounter;
+        private int _missingEtaCounter;
+        private int _missingStatusCounter;
+        private int _missingAreaCounter;
+
         public CancellationToken GetNewCalnellationToken()
         {
             _tokenSource = new CancellationTokenSource();
@@ -39,6 +50,16 @@ namespace WebAPI.Services
         {
             return new StatusModel()
             {
+                MissingActivityTimes = _missingActivityCounter,
+                MissingAreas = _missingAreaCounter,
+                MissingCourses = _missingCourseCounter,
+                MissingDestinations = _missingDestinationCounter,
+                MissingDraughts = _missingDraughtCounter,
+                MissingEtas = _missingEtaCounter,
+                MissingLats = _missingLatCounter,
+                MissingLongs = _missingLonCounter,
+                MissingSpeeds = _missingSpeedCounter,
+                MissingStatuses = _missingStatusCounter,
                 LastStartedTime = _lastStartedTime,
                 LastCompletedTime = _lastCompletedTime,
                 NextPlannedTime = _nextPlannedTime,
@@ -70,6 +91,7 @@ namespace WebAPI.Services
             _isUpdatingInProgress = true;
             _lastStartedTime = DateTime.UtcNow;
             _nextPlannedTime = _lastStartedTime.AddMinutes(2);
+            ResetMissingCounters();
         }
 
         public void SetUpdatingCompleted()
@@ -94,15 +116,6 @@ namespace WebAPI.Services
             _returnedResultsQuantity = 0;
             _failedResultsQuantity = 0;
             _totalResultsQuantity = qty;
-        }
-
-        private float GetProcessMemoryUsed()
-        {
-            Process proc = Process.GetCurrentProcess();
-            long mem = proc.WorkingSet64;
-            ProcessDataModel process = new ProcessDataModel() { MemoryMegabytesUsage = (mem / 1024f) / 1024f };
-            return process.MemoryMegabytesUsage;
-
         }
 
         public int GetTotalResultsQuantity()
@@ -133,6 +146,43 @@ namespace WebAPI.Services
         public void AddToReturnedResultsQuantity()
         {
             _returnedResultsQuantity++;
+        }
+
+        public void UpdateMissingProperties(VesselUpdateModel updatedVessel)
+        {
+            if (!updatedVessel.Lat.HasValue) _missingLatCounter++;
+            if (!updatedVessel.Lon.HasValue) _missingLonCounter++;
+            if (!updatedVessel.Draught.HasValue) _missingDraughtCounter++;
+            if (!updatedVessel.Speed.HasValue) _missingSpeedCounter++;
+            if (!updatedVessel.Course.HasValue) _missingCourseCounter++;
+            if (!updatedVessel.AISLatestActivity.HasValue) _missingActivityCounter++;
+            if (!updatedVessel.ETA.HasValue) _missingEtaCounter++;
+            if (string.IsNullOrEmpty(updatedVessel.Destination)) _missingDestinationCounter++;
+            if (string.IsNullOrEmpty(updatedVessel.AISStatus)) _missingStatusCounter++;
+            if (string.IsNullOrEmpty(updatedVessel.GeographicalArea)) _missingAreaCounter++;
+        }
+
+        private void ResetMissingCounters()
+        {
+            _missingLatCounter = 0;
+            _missingLonCounter = 0;
+            _missingDestinationCounter = 0;
+            _missingDraughtCounter = 0;
+            _missingSpeedCounter = 0;
+            _missingCourseCounter = 0;
+            _missingActivityCounter = 0;
+            _missingEtaCounter = 0;
+            _missingStatusCounter = 0;
+            _missingAreaCounter = 0;
+        }
+
+        private float GetProcessMemoryUsed()
+        {
+            Process proc = Process.GetCurrentProcess();
+            long mem = proc.WorkingSet64;
+            ProcessDataModel process = new ProcessDataModel() { MemoryMegabytesUsage = (mem / 1024f) / 1024f };
+            return process.MemoryMegabytesUsage;
+
         }
     }
 }

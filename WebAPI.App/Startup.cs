@@ -29,7 +29,7 @@ namespace WebAPI
             services.AddTransient<IDataProcessor, DataProcessor>();
             services.AddTransient<IHttpService, HttpService>();
             services.AddTransient<IStringParser, StringParser>();
-            services.AddTransient<IVesselFactory, UpdatedVesselFactory>();
+            services.AddTransient<IUpdatedVesselFactory, UpdatedVesselFactory>();
             services.AddTransient<IScrapper, Scrapper>();
             services.AddTransient<INodeParser, NodeParser>();
             services.AddTransient<DataRepository>();

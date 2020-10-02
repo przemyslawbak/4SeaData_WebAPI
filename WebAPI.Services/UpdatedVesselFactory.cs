@@ -6,7 +6,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    public class UpdatedVesselFactory : IVesselFactory
+    public class UpdatedVesselFactory : IUpdatedVesselFactory
     {
         private readonly IScrapper _scrapper;
         private readonly IUpdatingProgress _progress;

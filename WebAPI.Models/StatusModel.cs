@@ -17,5 +17,15 @@ namespace WebAPI.Models
         public string LastUpdatedVessel { get; set; }
         public string LastError { get; set; }
         public float MemoryMegabytesUsage { get; set; }
+        public int MissingLats { get; set; }
+        public int MissingLongs { get; set; }
+        public int MissingDestinations { get; set; }
+        public int MissingDraughts { get; set; }
+        public int MissingSpeeds { get; set; }
+        public int MissingCourses { get; set; }
+        public int MissingActivityTimes { get; set; }
+        public int MissingEtas { get; set; }
+        public int MissingStatuses { get; set; }
+        public int MissingAreas { get; set; }
     }
 }

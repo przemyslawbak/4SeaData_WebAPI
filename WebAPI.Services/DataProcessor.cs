@@ -13,7 +13,7 @@ namespace WebAPI.Services
         //todo: too many dependencies, split service
         private readonly IUpdatingProgress _progress;
         private readonly IConfiguration _configuration;
-        private readonly IVesselFactory _tasksGenerator;
+        private readonly IUpdatedVesselFactory _vesselUpdates;
         private readonly IStringParser _stringParser;
         private readonly IDataAccessService _dataService;
 
@@ -22,11 +22,11 @@ namespace WebAPI.Services
         private readonly List<SeaModel> _seaAreas;
         private int _counter;
 
-        public DataProcessor(IUpdatingProgress progress, IConfiguration configuration, IVesselFactory tasksGenerator, IStringParser stringParser, IDataAccessService dataService)
+        public DataProcessor(IUpdatingProgress progress, IConfiguration configuration, IUpdatedVesselFactory vesselUpdates, IStringParser stringParser, IDataAccessService dataService)
         {
             _progress = progress;
             _configuration = configuration;
-            _tasksGenerator = tasksGenerator;
+            _vesselUpdates = vesselUpdates;
             _stringParser = stringParser;
             _dataService = dataService;
 
@@ -58,7 +58,8 @@ namespace WebAPI.Services
 
                 currentRunningTasks.Add(Task.Run(async () =>
                 {
-                    VesselUpdateModel updatedVessel = await _tasksGenerator.GetVesselUpdatesAsync(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
+                    VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
+                    _progress.UpdateMissingProperties(updatedVessel);
                     updatedVessels = AddToList(updatedVessels, updatedVessel);
 
                 }, tokenSource.Token));
