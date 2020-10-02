@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using WebAPI.Models;
 
 namespace WebAPI.Services
@@ -25,7 +24,7 @@ namespace WebAPI.Services
                 sb.Append("(no activity time)");
             }
             sb.Append(" | ");
-            if (string.IsNullOrEmpty(result.AISStatus))
+            if (!string.IsNullOrEmpty(result.AISStatus))
             {
                 sb.Append(result.AISStatus);
             }
@@ -34,7 +33,7 @@ namespace WebAPI.Services
                 sb.Append("(no status)");
             }
             sb.Append(" | ");
-            if (string.IsNullOrEmpty(result.Destination))
+            if (!string.IsNullOrEmpty(result.Destination))
             {
                 sb.Append(result.Destination);
             }
