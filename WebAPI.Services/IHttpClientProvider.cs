@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Services
 {
-    public interface IHttpService
+    public interface IHttpClientProvider
     {
         string GetHtmlDocument(string html);
     }

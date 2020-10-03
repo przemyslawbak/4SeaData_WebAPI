@@ -8,10 +8,10 @@ namespace WebAPI.Services
     public class Scrapper : IScrapper
     {
         private readonly IConfiguration _configuration;
-        private readonly IHttpService _http;
+        private readonly IHttpClientProvider _http;
         private readonly INodeParser _nodeParser;
 
-        public Scrapper(IConfiguration configuration, IHttpService http, INodeParser nodeParser)
+        public Scrapper(IConfiguration configuration, IHttpClientProvider http, INodeParser nodeParser)
         {
             _configuration = configuration;
             _http = http;

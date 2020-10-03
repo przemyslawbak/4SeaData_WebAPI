@@ -27,7 +27,7 @@ namespace WebAPI
             services.AddTransient<IUpdateInitializer, UpdateInitializer>();
             services.AddTransient<IDataAccessService, DataAccessService>();
             services.AddTransient<IDataProcessor, DataProcessor>();
-            services.AddTransient<IHttpService, HttpService>();
+            services.AddTransient<IHttpClientProvider, HttpClientProvider>();
             services.AddTransient<IStringParser, StringParser>();
             services.AddTransient<IUpdatedVesselFactory, UpdatedVesselFactory>();
             services.AddTransient<IScrapper, Scrapper>();
