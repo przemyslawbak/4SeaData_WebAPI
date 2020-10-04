@@ -32,6 +32,7 @@ namespace WebAPI
             services.AddTransient<IUpdatedVesselFactory, UpdatedVesselFactory>();
             services.AddTransient<IScrapper, Scrapper>();
             services.AddTransient<INodeParser, NodeParser>();
+            services.AddTransient<IGeoAreaFinder, GeoAreaFinder>();
             services.AddTransient<DataRepository>();
             services.AddMvc();
         }

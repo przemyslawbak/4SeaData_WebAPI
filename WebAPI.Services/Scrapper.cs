@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using WebAPI.Models;
 
 namespace WebAPI.Services
@@ -10,20 +9,22 @@ namespace WebAPI.Services
         private readonly IConfiguration _configuration;
         private readonly IHttpClientProvider _http;
         private readonly INodeParser _nodeParser;
+        private readonly IGeoAreaFinder _areaFinder;
 
-        public Scrapper(IConfiguration configuration, IHttpClientProvider http, INodeParser nodeParser)
+        public Scrapper(IConfiguration configuration, IHttpClientProvider http, INodeParser nodeParser, IGeoAreaFinder areaFinder)
         {
             _configuration = configuration;
             _http = http;
             _nodeParser = nodeParser;
+            _areaFinder = areaFinder;
         }
 
-        public VesselUpdateModel ScrapSingleVessel(int mmsi, int imo, List<SeaModel> seaAreas)
+        public VesselUpdateModel ScrapSingleVessel(int mmsi, int imo)
         {
             string html_document_1 = GetHtml1(imo);
             string html_document_2 = GetHtml2(mmsi, imo, html_document_1);
 
-            return GetVesselUpdates(html_document_1, html_document_2, seaAreas, imo, mmsi);
+            return GetVesselUpdates(html_document_1, html_document_2, imo, mmsi);
         }
 
         private string GetHtml2(int mmsi, int imo, string html_document_1)
@@ -41,7 +42,7 @@ namespace WebAPI.Services
             return _http.GetHtmlDocument(_configuration["Services:Url1"] + imo + ".html");
         }
 
-        private VesselUpdateModel GetVesselUpdates(string html_document_1, string html_document_2, List<SeaModel> seaAreas, int imo, int mmsi)
+        private VesselUpdateModel GetVesselUpdates(string html_document_1, string html_document_2, int imo, int mmsi)
         {
             double? lat = _nodeParser.ExtractLatFromHtml(html_document_2);
             double? lon = _nodeParser.ExtractLonFromHtml(html_document_2);
@@ -62,32 +63,9 @@ namespace WebAPI.Services
                 MMSI = mmsi
             };
 
-            vessel.GeographicalArea = GetGeographicalArea(lat, lon, seaAreas);
+            vessel.GeographicalArea = _areaFinder.GetGeographicalArea(lat, lon);
 
             return vessel;
-        }
-
-        private string GetGeographicalArea(double? lat, double? lon, List<SeaModel> areas)
-        {
-            string result = "";
-
-            foreach (SeaModel area in areas)
-            {
-                MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
-
-                if (VerifyPolygon(point, area))
-                    return area.Name;
-            }
-
-            return result;
-        }
-
-        private bool VerifyPolygon(MapPointModel point, SeaModel area)
-        {
-            if (point.Lat > area.MinLatitude && point.Lat < area.MaxLatitude && point.Lon > area.MinLongitude && point.Lon < area.MaxLongitude)
-                return true;
-
-            return false;
         }
     }
 }

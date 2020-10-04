@@ -8,6 +8,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
+    //todo: unit testing
     public class DataProcessor : IDataProcessor
     {
         //todo: too many dependencies, split service
@@ -19,7 +20,6 @@ namespace WebAPI.Services
 
         private readonly int _step;
         private readonly int _degreeOfParallelism;
-        private readonly List<SeaModel> _seaAreas;
         private int _counter;
 
         public DataProcessor(IUpdatingProgress progress, IConfiguration configuration, IUpdatedVesselFactory vesselUpdates, IStringParser stringParser, IDataAccessService dataService)
@@ -32,7 +32,6 @@ namespace WebAPI.Services
 
             _step = _configuration.GetValue<int>("Iteration:Step");
             _degreeOfParallelism = _configuration.GetValue<int>("Iteration:ParalelizmDegree");
-            _seaAreas = _dataService.GetSeaAreas();
         }
 
         public async Task IterateThroughUpdateObjectsAsync(List<VesselAisUpdateModel> updateList)
@@ -58,7 +57,7 @@ namespace WebAPI.Services
 
                 currentRunningTasks.Add(Task.Run(async () =>
                 {
-                    VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], _seaAreas, tokenSource.Token, semaphoreThrottel);
+                    VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], tokenSource.Token, semaphoreThrottel);
                     _progress.UpdateMissingProperties(updatedVessel);
                     updatedVessels = AddToList(updatedVessels, updatedVessel);
 

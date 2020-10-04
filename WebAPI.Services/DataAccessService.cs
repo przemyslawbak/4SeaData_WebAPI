@@ -5,6 +5,8 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
+    //todo: refactor
+    //todo: Resilient connections - https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/work-with-data-in-asp-net-core-apps
     public class DataAccessService : IDataAccessService
     {
         private readonly IServiceScopeFactory _scopeFactory;

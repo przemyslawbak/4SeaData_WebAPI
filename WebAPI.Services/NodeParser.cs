@@ -5,6 +5,7 @@ using System.Net;
 
 namespace WebAPI.Services
 {
+    //todo: refactor
     public class NodeParser : INodeParser
     {
         public DateTime? ExtractAisUpdateTimeFromHtml(string html_document_1, string html_document_2)

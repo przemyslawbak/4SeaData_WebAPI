@@ -39,7 +39,7 @@ namespace WebAPI.Tests.Services
                 Lon = 3.7294
             };
 
-            _scrapperMock.Setup(mock => mock.ScrapSingleVessel(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<List<SeaModel>>())).Returns(vslModel);
+            _scrapperMock.Setup(mock => mock.ScrapSingleVessel(It.IsAny<int>(), It.IsAny<int>())).Returns(vslModel);
             _progressMock.Setup(mock => mock.GetIsUpdatingDatabase()).Returns(false);
             _progressMock.Setup(mock => mock.GetIsUpdatingPaused()).Returns(false);
 
@@ -51,7 +51,7 @@ namespace WebAPI.Tests.Services
         {
             VesselAisUpdateModel updateModel = new VesselAisUpdateModel() { Mmsi = 0 };
 
-            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new List<SeaModel>(), new CancellationToken(), new SemaphoreSlim(1));
+            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new CancellationToken(), new SemaphoreSlim(1));
 
             Assert.Null(result.Result);
             _progressMock.Verify(mock => mock.GetIsUpdatingDatabase(), Times.Once());
@@ -63,7 +63,7 @@ namespace WebAPI.Tests.Services
         {
             VesselAisUpdateModel updateModel = new VesselAisUpdateModel() { Speed = null };
 
-            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new List<SeaModel>(), new CancellationToken(), new SemaphoreSlim(1));
+            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new CancellationToken(), new SemaphoreSlim(1));
 
             Assert.Null(result.Result);
             _progressMock.Verify(mock => mock.GetIsUpdatingDatabase(), Times.Once());
@@ -75,7 +75,7 @@ namespace WebAPI.Tests.Services
         {
             VesselAisUpdateModel updateModel = new VesselAisUpdateModel() { Mmsi = 12345678, Speed = 0.1, Imo = _correctImo };
 
-            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new List<SeaModel>(), new CancellationToken(), new SemaphoreSlim(1));
+            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new CancellationToken(), new SemaphoreSlim(1));
 
             Assert.NotNull(result.Result);
             Assert.Equal(new DateTime(2020, 10, 02), result.Result.AISLatestActivity);
@@ -97,10 +97,10 @@ namespace WebAPI.Tests.Services
         private void GetVesselUpdatesAsync_OnExceptionThrownByScrapSingleVessel_CallsMethodsInCatchOnce()
         {
             string ex = "some_exception";
-            _scrapperMock.Setup(mock => mock.ScrapSingleVessel(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<List<SeaModel>>())).Throws(new Exception(ex));
+            _scrapperMock.Setup(mock => mock.ScrapSingleVessel(It.IsAny<int>(), It.IsAny<int>())).Throws(new Exception(ex));
             VesselAisUpdateModel updateModel = new VesselAisUpdateModel() { Mmsi = 12345678, Speed = 0.1, Imo = _correctImo };
 
-            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new List<SeaModel>(), new CancellationToken(), new SemaphoreSlim(1));
+            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new CancellationToken(), new SemaphoreSlim(1));
 
             Assert.Null(result.Result);
             _progressMock.Verify(mock => mock.GetIsUpdatingDatabase(), Times.Once());
@@ -116,9 +116,9 @@ namespace WebAPI.Tests.Services
             string ex = "Received vessel imo differs from the one passed.";
             VesselAisUpdateModel updateModel = new VesselAisUpdateModel() { Imo = 9482469, Mmsi = 12345678, Speed = 0.1 };
             VesselUpdateModel returnedModel = new VesselUpdateModel() { IMO = _incorrectImo };
-            _scrapperMock.Setup(mock => mock.ScrapSingleVessel(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<List<SeaModel>>())).Returns(returnedModel);
+            _scrapperMock.Setup(mock => mock.ScrapSingleVessel(It.IsAny<int>(), It.IsAny<int>())).Returns(returnedModel);
 
-            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new List<SeaModel>(), new CancellationToken(), new SemaphoreSlim(1));
+            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new CancellationToken(), new SemaphoreSlim(1));
 
             Assert.Null(result.Result);
             _progressMock.Verify(mock => mock.GetIsUpdatingDatabase(), Times.Once());

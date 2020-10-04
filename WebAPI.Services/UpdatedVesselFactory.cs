@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WebAPI.Models;
@@ -17,7 +16,7 @@ namespace WebAPI.Services
             _progress = progress;
         }
 
-        public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel, List<SeaModel> seaAreas, CancellationToken token, SemaphoreSlim semaphoreThrottel)
+        public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel, CancellationToken token, SemaphoreSlim semaphoreThrottel)
         {
             bool skip = false;
             VesselUpdateModel vessel = null;
@@ -31,7 +30,7 @@ namespace WebAPI.Services
             {
                 if (!skip)
                 {
-                    vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo, seaAreas); 
+                    vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo); 
 
                     if (vessel.IMO != aisUpdateModel.Imo)
                     {

@@ -9,6 +9,8 @@ using System.Reflection;
 
 namespace WebAPI.DAL
 {
+    //todo: refactor
+    //todo: performance test and compare with sql connection
     public class DataRepository : IDataRepository
     {
         private readonly ApplicationDbContext _context;
