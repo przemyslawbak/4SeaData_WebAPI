@@ -4,18 +4,24 @@ namespace WebAPI.Services
 {
     public class GeoAreaFinder : IGeoAreaFinder
     {
+        private readonly IMemoryAccess _memoryAccess;
+
+        public GeoAreaFinder(IMemoryAccess memoryAccess)
+        {
+            _memoryAccess = memoryAccess;
+        }
+
         public string GetGeographicalArea(double? lat, double? lon)
         {
             string result = "";
-            /*
-            foreach (SeaModel area in areas) //todo: caching
+
+            foreach (SeaModel area in _memoryAccess.GetSeaAreas())
             {
                 MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
 
                 if (VerifyPolygon(point, area))
                     return area.Name;
             }
-            */
 
             return result;
         }

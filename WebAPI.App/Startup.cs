@@ -33,7 +33,9 @@ namespace WebAPI
             services.AddTransient<IScrapper, Scrapper>();
             services.AddTransient<INodeParser, NodeParser>();
             services.AddTransient<IGeoAreaFinder, GeoAreaFinder>();
+            services.AddTransient<IMemoryAccess, MemoryAccess>();
             services.AddTransient<DataRepository>();
+            services.AddMemoryCache();
             services.AddMvc();
         }
 
