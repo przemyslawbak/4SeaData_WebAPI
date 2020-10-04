@@ -7,7 +7,7 @@ namespace WebAPI.Services
         public string GetGeographicalArea(double? lat, double? lon)
         {
             string result = "";
-
+            /*
             foreach (SeaModel area in areas) //todo: caching
             {
                 MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
@@ -15,6 +15,7 @@ namespace WebAPI.Services
                 if (VerifyPolygon(point, area))
                     return area.Name;
             }
+            */
 
             return result;
         }
