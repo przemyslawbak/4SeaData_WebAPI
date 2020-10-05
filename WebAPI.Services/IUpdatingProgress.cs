@@ -22,5 +22,6 @@ namespace WebAPI.Services
         void SetLastUpdatedVessel(string v);
         void AddToReturnedResultsQuantity();
         void UpdateMissingProperties(VesselUpdateModel updatedVessel);
+        void AddSkipped();
     }
 }

@@ -122,7 +122,7 @@ namespace WebAPI.Services
                     string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
                     string destination = WebUtility.HtmlDecode(rowText).Trim();
 
-                    if (string.IsNullOrEmpty(destination))
+                    if (!string.IsNullOrEmpty(destination) && destination != "-")
                     {
                         return destination;
                     }
@@ -150,7 +150,7 @@ namespace WebAPI.Services
                     string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
                     string draught = WebUtility.HtmlDecode(rowText).Trim();
 
-                    if (string.IsNullOrEmpty(draught) && draught.Contains(" m"))
+                    if (!string.IsNullOrEmpty(draught) && draught.Contains(" m"))
                     {
                         draught = draught.Replace(" m", "");
 

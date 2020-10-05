@@ -11,6 +11,7 @@ namespace WebAPI.Models
         public bool IsUpdatingInProgress { get; set; }
         public bool Finalizing { get; set; }
         public bool UpdatingDatabase { get; set; }
+        public int SkippedResultsQuantity { get; set; }
         public int FailedResultsQuantity { get; set; }
         public int TotalResultsQuantity { get; set; }
         public int ReurnedVesselsInCurrent { get; set; }

@@ -18,6 +18,7 @@ namespace WebAPI.Services
         private int _failedResultsQuantity;
         private int _totalResultsQuantity;
         private int _returnedResultsQuantity;
+        private int _skippedResultsQuantity;
         private string _lastUpdatedVessel;
         private string _lastError;
         private CancellationTokenSource _tokenSource;
@@ -72,7 +73,8 @@ namespace WebAPI.Services
                 Finalizing = _finalizing,
                 UpdatingDatabase = _updatingDatabase,
                 LastError = _lastError,
-                MemoryMegabytesUsage = GetProcessMemoryUsed()
+                MemoryMegabytesUsage = GetProcessMemoryUsed(),
+                SkippedResultsQuantity = _skippedResultsQuantity
             };
         }
 
@@ -115,6 +117,7 @@ namespace WebAPI.Services
             _lastUpdatedVessel = string.Empty;
             _returnedResultsQuantity = 0;
             _failedResultsQuantity = 0;
+            _skippedResultsQuantity = 0;
             _totalResultsQuantity = qty;
         }
 
@@ -183,6 +186,11 @@ namespace WebAPI.Services
             ProcessDataModel process = new ProcessDataModel() { MemoryMegabytesUsage = (mem / 1024f) / 1024f };
             return process.MemoryMegabytesUsage;
 
+        }
+
+        public void AddSkipped()
+        {
+            _skippedResultsQuantity++;
         }
     }
 }

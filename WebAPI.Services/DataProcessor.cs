@@ -61,8 +61,8 @@ namespace WebAPI.Services
                     if (updatedVessel != null)
                     {
                         _progress.UpdateMissingProperties(updatedVessel);
-                        updatedVessels = AddToList(updatedVessels, updatedVessel);
                     }
+                    updatedVessels = AddToList(updatedVessels, updatedVessel);
 
                 }, tokenSource.Token));
             }
@@ -96,7 +96,6 @@ namespace WebAPI.Services
         private List<VesselUpdateModel> AddToList(List<VesselUpdateModel> updatedVessels, VesselUpdateModel updateVessel)
         {
             _counter++;
-            _progress.AddToReturnedResultsQuantity();
 
             if (updateVessel != null)
             {

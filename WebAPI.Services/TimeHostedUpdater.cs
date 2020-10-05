@@ -8,12 +8,10 @@ namespace WebAPI.Services
     public class TimeHostedUpdater : IHostedService, IDisposable
     {
         private Timer _timer;
-        private readonly IUpdatingProgress _progress;
         private readonly IUpdateInitializer _initializer;
 
-        public TimeHostedUpdater(IUpdatingProgress progress, IUpdateInitializer initializer)
+        public TimeHostedUpdater(IUpdateInitializer initializer)
         {
-            _progress = progress;
             _initializer = initializer;
         }
 

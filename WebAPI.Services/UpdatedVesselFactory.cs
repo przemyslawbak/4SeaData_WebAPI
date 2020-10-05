@@ -22,7 +22,10 @@ namespace WebAPI.Services
             VesselUpdateModel vessel = null;
 
             if (aisUpdateModel.Mmsi == 0 || !aisUpdateModel.Speed.HasValue) //if could not be scrapped with "full"
-                skip = true;
+            {
+                //skip = true;
+                //_progress.AddSkipped();
+            }
 
             await semaphoreThrottel.WaitAsync();
 
@@ -41,6 +44,8 @@ namespace WebAPI.Services
                     {
                         await Task.Delay(100);
                     }
+
+                    _progress.AddToReturnedResultsQuantity();
                 }
                 else
                 {
