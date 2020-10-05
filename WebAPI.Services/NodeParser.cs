@@ -10,274 +10,347 @@ namespace WebAPI.Services
     {
         public DateTime? ExtractAisUpdateTimeFromHtml(string html_document_1, string html_document_2)
         {
-            DateTime? time1 = null;
-            DateTime? time2 = null;
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_1);
-
-            HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//div[@class='row']");
-            if (rows != null)
+            try
             {
-                foreach (HtmlNode row in rows)
-                {
-                    if (row.InnerHtml.ToString().Contains("Last seen:"))
-                    {
-                        if (row.InnerHtml.ToString().Contains("<span>") && row.InnerHtml.ToString().Contains("<"))
-                        {
-                            string time = row.InnerHtml.ToString()
-                            .Split(new string[] { "<span>" }, StringSplitOptions.None)[1]
-                            .Split('<')[0];
+                DateTime? time1 = null;
+                DateTime? time2 = null;
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_1);
 
-                            if (DateTime.TryParse(time, out DateTime date))
+                HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//div[@class='row']");
+                if (rows != null)
+                {
+                    foreach (HtmlNode row in rows)
+                    {
+                        if (row.InnerHtml.ToString().Contains("Last seen:"))
+                        {
+                            if (row.InnerHtml.ToString().Contains("<span>") && row.InnerHtml.ToString().Contains("<"))
                             {
-                                time1 = DateTime.Parse(time);
+                                string time = row.InnerHtml.ToString()
+                                .Split(new string[] { "<span>" }, StringSplitOptions.None)[1]
+                                .Split('<')[0];
+
+                                if (DateTime.TryParse(time, out DateTime date))
+                                {
+                                    time1 = DateTime.Parse(time);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            doc.LoadHtml(html_document_2);
-            HtmlNode feedTime = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[12]/td[2]");
-            if (feedTime != null && feedTime.OuterHtml.ToString().Contains(" UTC") && feedTime.OuterHtml.ToString().Contains("<td class=\"v3 tooltip expand\" data-title=\""))
-            {
-                string time = feedTime.OuterHtml.ToString().Split(new string[] { "<td class=\"v3 tooltip expand\" data-title=\"" }, StringSplitOptions.None)[1]
-                    .Split(new string[] { " UTC" }, StringSplitOptions.None)[0].Trim();
-
-                if (DateTime.TryParse(time, out DateTime date))
+                doc.LoadHtml(html_document_2);
+                HtmlNode feedTime = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[12]/td[2]");
+                if (feedTime != null && feedTime.OuterHtml.ToString().Contains(" UTC") && feedTime.OuterHtml.ToString().Contains("<td class=\"v3 tooltip expand\" data-title=\""))
                 {
-                    time2 = DateTime.Parse(time);
-                }
-            }
+                    string time = feedTime.OuterHtml.ToString().Split(new string[] { "<td class=\"v3 tooltip expand\" data-title=\"" }, StringSplitOptions.None)[1]
+                        .Split(new string[] { " UTC" }, StringSplitOptions.None)[0].Trim();
 
-            if (time1.HasValue)
-            {
-                if (time2.HasValue)
-                {
-                    if (time1 > time2)
+                    if (DateTime.TryParse(time, out DateTime date))
                     {
-                        return time1;
+                        time2 = DateTime.Parse(time);
+                    }
+                }
+
+                if (time1.HasValue)
+                {
+                    if (time2.HasValue)
+                    {
+                        if (time1 > time2)
+                        {
+                            return time1;
+                        }
+                        else
+                        {
+                            return time2;
+                        }
                     }
                     else
                     {
-                        return time2;
+                        return time1;
                     }
                 }
                 else
                 {
-                    return time1;
+                    return time2;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return time2;
+                return null;
             }
         }
 
         public double? ExtractCourseFromHtml(string html_document_2)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_2);
-
-            HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[9]/td[2]");
-            if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
+            try
             {
-                string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
-                string course = WebUtility.HtmlDecode(rowText).Trim().Split('°')[0].Trim();
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_2);
 
-                if (double.TryParse(course, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[9]/td[2]");
+                if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
                 {
-                    return double.Parse(course, CultureInfo.InvariantCulture);
-                }
-            }
+                    string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+                    string course = WebUtility.HtmlDecode(rowText).Trim().Split('°')[0].Trim();
 
-            return null;
+                    if (double.TryParse(course, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                    {
+                        return double.Parse(course, CultureInfo.InvariantCulture);
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            
         }
 
         public string ExtractDestinationFromHtml(string html_document_2)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_2);
-
-            HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[3]/td[2]");
-            if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
+            try
             {
-                string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
-                string destination = WebUtility.HtmlDecode(rowText).Trim();
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_2);
 
-                if (string.IsNullOrEmpty(destination))
+                HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[3]/td[2]");
+                if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
                 {
-                    return destination;
-                }
-            }
+                    string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+                    string destination = WebUtility.HtmlDecode(rowText).Trim();
 
-            return null;
+                    if (string.IsNullOrEmpty(destination))
+                    {
+                        return destination;
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            
         }
 
         public double? ExtractDraughtFromHtml(string html_document_2)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_2);
-
-            HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[8]/td[2]");
-            if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
+            try
             {
-                string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
-                string draught = WebUtility.HtmlDecode(rowText).Trim();
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_2);
 
-                if (string.IsNullOrEmpty(draught) && draught.Contains(" m"))
+                HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[8]/td[2]");
+                if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
                 {
-                    draught = draught.Replace(" m", "");
+                    string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+                    string draught = WebUtility.HtmlDecode(rowText).Trim();
 
-                    if (double.TryParse(draught, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                    if (string.IsNullOrEmpty(draught) && draught.Contains(" m"))
                     {
-                        return double.Parse(draught, CultureInfo.InvariantCulture);
-                    }
-                     
-                }
-            }
+                        draught = draught.Replace(" m", "");
 
-            return null;
+                        if (double.TryParse(draught, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                        {
+                            return double.Parse(draught, CultureInfo.InvariantCulture);
+                        }
+
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            
         }
 
         public DateTime? ExtractEtaTimeFromHtml(string html_document_2)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_2);
-
-            HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[4]/td[2]");
-            if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
+            try
             {
-                string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
-                string eta = WebUtility.HtmlDecode(rowText).Trim();
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_2);
 
-                if (DateTime.TryParse(eta, out DateTime date))
+                HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[4]/td[2]");
+                if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
                 {
-                    return DateTime.Parse(eta);
-                }
-            }
+                    string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+                    string eta = WebUtility.HtmlDecode(rowText).Trim();
 
-            return null;
+                    if (DateTime.TryParse(eta, out DateTime date))
+                    {
+                        return DateTime.Parse(eta);
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public double? ExtractLatFromHtml(string html_document_2)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_2);
-
-            HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[8]/td[2]");
-            if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
+            try
             {
-                string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
-                string lat_lon = WebUtility.HtmlDecode(rowText).Trim();
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_2);
 
-                if (lat_lon != "-" && !string.IsNullOrEmpty(lat_lon))
+                HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[10]/td[2]");
+                if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
                 {
-                    string lat = lat_lon.Split('/')[0];
-                    if (lat.Contains("N")) lat = lat.Split(' ')[0].Trim(); else if (lat.Contains("S")) lat = "-" + lat.Split(' ')[0].Trim();
+                    string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+                    string lat_lon = WebUtility.HtmlDecode(rowText).Trim();
 
-                    if (double.TryParse(lat, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                    if (lat_lon != "-" && !string.IsNullOrEmpty(lat_lon))
                     {
-                        return double.Parse(lat, CultureInfo.InvariantCulture);
+                        string lat = lat_lon.Split('/')[0];
+                        if (lat.Contains("N")) lat = lat.Split(' ')[0].Trim(); else if (lat.Contains("S")) lat = "-" + lat.Split(' ')[0].Trim();
+
+                        if (double.TryParse(lat, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                        {
+                            return double.Parse(lat, CultureInfo.InvariantCulture);
+                        }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public double? ExtractLonFromHtml(string html_document_2)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_2);
-
-            HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[8]/td[2]");
-            if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
+            try
             {
-                string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
-                string lat_lon = WebUtility.HtmlDecode(rowText).Trim();
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_2);
 
-                if (lat_lon != "-" && !string.IsNullOrEmpty(lat_lon))
+                HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[10]/td[2]");
+                if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
                 {
-                    string lon = lat_lon.Split('/')[1];
-                    if (lon.Contains("E")) lon = lon.Split(' ')[0].Trim(); else if (lon.Contains("W")) lon = "-" + lon.Split(' ')[0].Trim();
+                    string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+                    string lat_lon = WebUtility.HtmlDecode(rowText).Trim();
 
-                    if (double.TryParse(lon, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                    if (lat_lon != "-" && !string.IsNullOrEmpty(lat_lon))
                     {
-                        return double.Parse(lon, CultureInfo.InvariantCulture);
+                        string lon = lat_lon.Split('/')[1];
+                        if (lon.Contains("E")) lon = lon.Split(' ')[0].Trim(); else if (lon.Contains("W")) lon = "-" + lon.Split(' ')[0].Trim();
+
+                        if (double.TryParse(lon, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                        {
+                            return double.Parse(lon, CultureInfo.InvariantCulture);
+                        }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public int ExtractMmsiFromHtml(string html_document_1, int imo)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_1);
-
-            HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//div[@class='row']");
-            if (rows != null)
+            try
             {
-                foreach (HtmlNode row in rows)
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_1);
+
+                HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//div[@class='row']");
+                if (rows != null)
                 {
-                    if (row.InnerHtml.ToString().Contains("MMSI:"))
+                    foreach (HtmlNode row in rows)
                     {
-                        string mmsi = row.ChildNodes[1].InnerText;
-                        if (int.TryParse(mmsi, out int i))
+                        if (row.InnerHtml.ToString().Contains("MMSI:"))
                         {
-                            return int.Parse(mmsi);
+                            string mmsi = row.ChildNodes[1].InnerText;
+                            if (int.TryParse(mmsi, out int i))
+                            {
+                                return int.Parse(mmsi);
+                            }
                         }
                     }
                 }
-            }
 
-            return 0;
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
         }
 
         public string ExtractNaviStatusFromHtml(string html_document_1, DateTime? aISLatestActivity)
         {
-            string aISStatus = null;
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_1);
-
-            HtmlNode naviStatus = doc.DocumentNode.SelectSingleNode("/html/body");
-            if (naviStatus != null && naviStatus.OuterHtml.ToString().Contains("Navigational status:"))
+            try
             {
-                aISStatus = naviStatus.OuterHtml.ToString().Split(new string[] { "Navigational status:</div><div class=" }, StringSplitOptions.None)[1].Split('>')[1].Split('<')[0].Trim();
-                aISStatus = WebUtility.HtmlDecode(aISStatus);
-            }
+                string aISStatus = null;
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_1);
 
-            if (aISLatestActivity.HasValue)
-            {
-                if (aISLatestActivity.Value < DateTime.UtcNow.AddDays(-2))
+                HtmlNode naviStatus = doc.DocumentNode.SelectSingleNode("/html/body");
+                if (naviStatus != null && naviStatus.OuterHtml.ToString().Contains("Navigational status:"))
                 {
-                    return "(out-of-date)";
+                    aISStatus = naviStatus.OuterHtml.ToString().Split(new string[] { "Navigational status:</div><div class=" }, StringSplitOptions.None)[1].Split('>')[1].Split('<')[0].Trim();
+                    aISStatus = WebUtility.HtmlDecode(aISStatus);
                 }
-            }
 
-            return aISStatus;
+                if (aISLatestActivity.HasValue)
+                {
+                    if (aISLatestActivity.Value < DateTime.UtcNow.AddDays(-2))
+                    {
+                        return "(out-of-date)";
+                    }
+                }
+
+                return aISStatus;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public double? ExtractSpeedFromHtml(string html_document_2)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html_document_2);
-
-            HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[9]/td[2]");
-            if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
+            try
             {
-                string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
-                string speed = WebUtility.HtmlDecode(rowText).Trim().Split('/')[1].Split('k')[0].Trim();
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html_document_2);
 
-                if (double.TryParse(speed, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                HtmlNode row = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[9]/td[2]");
+                if (row != null && row.OuterHtml.ToString().Contains("<td class=\"v3\">"))
                 {
-                    return double.Parse(speed, CultureInfo.InvariantCulture);
-                }
-            }
+                    string rowText = row.OuterHtml.ToString().Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+                    string speed = WebUtility.HtmlDecode(rowText).Trim().Split('/')[1].Split('k')[0].Trim();
 
-            return null;
+                    if (double.TryParse(speed, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+                    {
+                        return double.Parse(speed, CultureInfo.InvariantCulture);
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }
