@@ -30,7 +30,7 @@ namespace WebAPI.Services
             {
                 if (!skip)
                 {
-                    vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo); 
+                    vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo);
 
                     if (vessel.IMO != aisUpdateModel.Imo)
                     {

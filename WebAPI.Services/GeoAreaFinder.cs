@@ -13,14 +13,17 @@ namespace WebAPI.Services
 
         public string GetGeographicalArea(double? lat, double? lon)
         {
-            string result = "";
+            string result = null;
 
-            foreach (SeaModel area in _memoryAccess.GetSeaAreas())
+            if (lat.HasValue && lon.HasValue)
             {
-                MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
+                foreach (SeaModel area in _memoryAccess.GetSeaAreas())
+                {
+                    MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
 
-                if (VerifyPolygon(point, area))
-                    return area.Name;
+                    if (VerifyPolygon(point, area))
+                        return area.Name;
+                }
             }
 
             return result;

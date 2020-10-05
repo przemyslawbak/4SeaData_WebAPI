@@ -36,7 +36,6 @@ namespace WebAPI.Services
             HttpClientHandler handler = new HttpClientHandler();
             _httpClient = new HttpClient(handler);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3703.0 Safari/537.36");
-            _httpClient.DefaultRequestHeaders.ConnectionClose = false; //todo: performance testing
 
             return _httpClient;
         }

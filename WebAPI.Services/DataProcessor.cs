@@ -58,8 +58,11 @@ namespace WebAPI.Services
                 currentRunningTasks.Add(Task.Run(async () =>
                 {
                     VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], tokenSource.Token, semaphoreThrottel);
-                    _progress.UpdateMissingProperties(updatedVessel);
-                    updatedVessels = AddToList(updatedVessels, updatedVessel);
+                    if (updatedVessel != null)
+                    {
+                        _progress.UpdateMissingProperties(updatedVessel);
+                        updatedVessels = AddToList(updatedVessels, updatedVessel);
+                    }
 
                 }, tokenSource.Token));
             }
