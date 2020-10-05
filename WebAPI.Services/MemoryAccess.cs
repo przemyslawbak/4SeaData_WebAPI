@@ -32,7 +32,7 @@ namespace WebAPI.Services
         }
     }
 
-    internal class CacheKeys
+    public class CacheKeys
     {
         public static string SeaAreas { get { return "_SeaAreas"; } }
     }

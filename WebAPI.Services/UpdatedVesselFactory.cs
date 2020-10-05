@@ -23,8 +23,8 @@ namespace WebAPI.Services
 
             if (aisUpdateModel.Mmsi == 0 || !aisUpdateModel.Speed.HasValue) //if could not be scrapped with "full"
             {
-                //skip = true;
-                //_progress.AddSkipped();
+                skip = true;
+                _progress.AddSkipped();
             }
 
             await semaphoreThrottel.WaitAsync();

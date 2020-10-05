@@ -17,7 +17,7 @@ namespace WebAPI.Services
             _dataProcessor = dataProcessor;
         }
 
-        public async Task StartUpdatesAsync() //todo: unit test
+        public async Task StartUpdatesAsync()
         {
             if (!_progress.GetIsUpdatingStarted())
             {

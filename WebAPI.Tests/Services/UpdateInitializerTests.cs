@@ -27,7 +27,7 @@ namespace WebAPI.Tests.Services
         }
 
         [Fact]
-        private async Task StartUpdatesAsync_OnUpdatingStarted_NeverCallsNoMethod()
+        private async Task StartUpdatesAsync_OnUpdatingStarted_NeverCallsMethods()
         {
             _progressMock.Setup(mock => mock.GetIsUpdatingStarted()).Returns(true);
 
