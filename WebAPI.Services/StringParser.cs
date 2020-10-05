@@ -7,7 +7,12 @@ namespace WebAPI.Services
     {
         public string BuildUpdatedVesselInfo(VesselUpdateModel result)
         {
-            return BuildResult(result);
+            if (result != null) //todo: unit test
+            {
+                return BuildResult(result);
+            }
+
+            else return null;
         }
 
         private string BuildResult(VesselUpdateModel result)

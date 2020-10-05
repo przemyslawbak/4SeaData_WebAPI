@@ -143,7 +143,10 @@ namespace WebAPI.Services
 
         public void SetLastUpdatedVessel(string vessel)
         {
-            _lastUpdatedVessel = vessel;
+            if (!string.IsNullOrEmpty(vessel)) //todo: unit test
+            {
+                _lastUpdatedVessel = vessel;
+            }
         }
 
         public void AddToReturnedResultsQuantity()
@@ -153,16 +156,19 @@ namespace WebAPI.Services
 
         public void UpdateMissingProperties(VesselUpdateModel updatedVessel)
         {
-            if (!updatedVessel.Lat.HasValue) _missingLatCounter++;
-            if (!updatedVessel.Lon.HasValue) _missingLonCounter++;
-            if (!updatedVessel.Draught.HasValue) _missingDraughtCounter++;
-            if (!updatedVessel.Speed.HasValue) _missingSpeedCounter++;
-            if (!updatedVessel.Course.HasValue) _missingCourseCounter++;
-            if (!updatedVessel.AISLatestActivity.HasValue) _missingActivityCounter++;
-            if (!updatedVessel.ETA.HasValue) _missingEtaCounter++;
-            if (string.IsNullOrEmpty(updatedVessel.Destination)) _missingDestinationCounter++;
-            if (string.IsNullOrEmpty(updatedVessel.AISStatus)) _missingStatusCounter++;
-            if (string.IsNullOrEmpty(updatedVessel.GeographicalArea)) _missingAreaCounter++;
+            if (updatedVessel != null) //todo: unit test
+            {
+                if (!updatedVessel.Lat.HasValue) _missingLatCounter++;
+                if (!updatedVessel.Lon.HasValue) _missingLonCounter++;
+                if (!updatedVessel.Draught.HasValue) _missingDraughtCounter++;
+                if (!updatedVessel.Speed.HasValue) _missingSpeedCounter++;
+                if (!updatedVessel.Course.HasValue) _missingCourseCounter++;
+                if (!updatedVessel.AISLatestActivity.HasValue) _missingActivityCounter++;
+                if (!updatedVessel.ETA.HasValue) _missingEtaCounter++;
+                if (string.IsNullOrEmpty(updatedVessel.Destination)) _missingDestinationCounter++;
+                if (string.IsNullOrEmpty(updatedVessel.AISStatus)) _missingStatusCounter++;
+                if (string.IsNullOrEmpty(updatedVessel.GeographicalArea)) _missingAreaCounter++;
+            }
         }
 
         private void ResetMissingCounters()
@@ -191,6 +197,18 @@ namespace WebAPI.Services
         public void AddSkipped()
         {
             _skippedResultsQuantity++;
+        }
+
+        public int GetCurrentUpdateStep(int counter, int step) //todo: unit test
+        {
+            if (counter + step > GetTotalResultsQuantity())
+            {
+                return GetTotalResultsQuantity();
+            }
+            else
+            {
+                return counter + step;
+            }
         }
     }
 }

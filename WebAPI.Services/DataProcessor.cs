@@ -8,10 +8,8 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    //todo: unit testing
     public class DataProcessor : IDataProcessor
     {
-        //todo: too many dependencies, split service
         private readonly IUpdatingProgress _progress;
         private readonly IConfiguration _configuration;
         private readonly IUpdatedVesselFactory _vesselUpdates;
@@ -34,7 +32,21 @@ namespace WebAPI.Services
             _degreeOfParallelism = _configuration.GetValue<int>("Iteration:ParalelizmDegree");
         }
 
-        public async Task IterateThroughUpdateObjectsAsync(List<VesselAisUpdateModel> updateList)
+        public async Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType) //todo: unit test
+        {
+            VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(new VesselAisUpdateModel() { Mmsi = mmsi, Imo = imo, Speed = 0 }, GetCancellationTokenSource().Token, GetSemaphoreThrottel());
+
+            if (updatedVessel != null)
+            {
+                _dataService.SaveUpdatedVessel(updatedVessel);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task UpdateListOfVesselsAsync(List<VesselAisUpdateModel> updateList)
         {
             _counter = 0;
 
@@ -48,21 +60,26 @@ namespace WebAPI.Services
         {
             List<VesselUpdateModel> updatedVessels = new List<VesselUpdateModel>();
             List<Task> currentRunningTasks = new List<Task>();
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
-            SemaphoreSlim semaphoreThrottel = new SemaphoreSlim(_degreeOfParallelism);
+            CancellationTokenSource tokenSource = GetCancellationTokenSource();
+            SemaphoreSlim semaphoreThrottel = GetSemaphoreThrottel();
 
-            for (int i = _counter; i < GetCurrentStep(_counter, _step); i++)
+            for (int i = _counter; i < _progress.GetCurrentUpdateStep(_counter, _step); i++)
             {
                 int iteration = i;
 
                 currentRunningTasks.Add(Task.Run(async () =>
                 {
                     VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], tokenSource.Token, semaphoreThrottel);
-                    if (updatedVessel != null)
+
+                    _progress.UpdateMissingProperties(updatedVessel);
+                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updatedVessel));
+
+                    lock (((ICollection)updatedVessels).SyncRoot)
                     {
-                        _progress.UpdateMissingProperties(updatedVessel);
+                        updatedVessels.Add(updatedVessel);
                     }
-                    updatedVessels = AddToList(updatedVessels, updatedVessel);
+
+                    _counter++;
 
                 }, tokenSource.Token));
             }
@@ -77,42 +94,26 @@ namespace WebAPI.Services
             }
             finally
             {
-                _dataService.SaveUpdatedVessels(updatedVessels);
+                SaveUpdatedVessels(updatedVessels);
             }
         }
 
-        private int GetCurrentStep(int counter, int step)
+        private void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels)
         {
-            if (counter + step > _progress.GetTotalResultsQuantity())
+            foreach (var vessel in updatedVessels)
             {
-                return _progress.GetTotalResultsQuantity();
-            }
-            else
-            {
-                return counter + step;
+                _dataService.SaveUpdatedVessel(vessel);
             }
         }
 
-        private List<VesselUpdateModel> AddToList(List<VesselUpdateModel> updatedVessels, VesselUpdateModel updateVessel)
+        private SemaphoreSlim GetSemaphoreThrottel()
         {
-            _counter++;
-
-            if (updateVessel != null)
-            {
-                lock (((ICollection)updatedVessels).SyncRoot)
-                {
-                    updatedVessels.Add(updateVessel);
-
-                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updateVessel));
-                }
-            }
-
-            return updatedVessels;
+            return new SemaphoreSlim(_degreeOfParallelism);
         }
 
-        public Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType)
+        private CancellationTokenSource GetCancellationTokenSource()
         {
-            throw new NotImplementedException(); //todo: implement
+            return new CancellationTokenSource();
         }
     }
 }

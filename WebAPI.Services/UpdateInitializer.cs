@@ -34,7 +34,7 @@ namespace WebAPI.Services
             List<VesselAisUpdateModel> updateList = PopulateUpdateList();
             _dataService.SaveDatabaseQuantities();
 
-            await _dataProcessor.IterateThroughUpdateObjectsAsync(updateList);
+            await _dataProcessor.UpdateListOfVesselsAsync(updateList);
         }
 
         private List<VesselAisUpdateModel> PopulateUpdateList()

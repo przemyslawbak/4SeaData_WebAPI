@@ -34,7 +34,7 @@ namespace WebAPI.Services
             };
         }
 
-        public void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels)
+        public void SaveUpdatedVessel(VesselUpdateModel updatedVessels) //todo: make sure if not null
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {

@@ -36,7 +36,7 @@ namespace WebAPI.Tests.Services
             _progressMock.Verify(mock => mock.SetUpdatingStarted(), Times.Never());
             _progressMock.Verify(mock => mock.SetUpdatingCompleted(), Times.Never());
             _dataServiceMock.Verify(mock => mock.SaveDatabaseQuantities(), Times.Never());
-            _dataProcessorMock.Verify(mock => mock.IterateThroughUpdateObjectsAsync(It.IsAny<List<VesselAisUpdateModel>>()), Times.Never());
+            _dataProcessorMock.Verify(mock => mock.UpdateListOfVesselsAsync(It.IsAny<List<VesselAisUpdateModel>>()), Times.Never());
             _dataServiceMock.Verify(mock => mock.GetVesselsToBeUpdated(), Times.Never());
             _progressMock.Verify(mock => mock.SetTotalResultsQuantities(It.IsAny<int>()), Times.Never());
         }
@@ -49,7 +49,7 @@ namespace WebAPI.Tests.Services
             _progressMock.Verify(mock => mock.SetUpdatingStarted(), Times.Once());
             _progressMock.Verify(mock => mock.SetUpdatingCompleted(), Times.Once());
             _dataServiceMock.Verify(mock => mock.SaveDatabaseQuantities(), Times.Once());
-            _dataProcessorMock.Verify(mock => mock.IterateThroughUpdateObjectsAsync(It.IsAny<List<VesselAisUpdateModel>>()), Times.Once());
+            _dataProcessorMock.Verify(mock => mock.UpdateListOfVesselsAsync(It.IsAny<List<VesselAisUpdateModel>>()), Times.Once());
             _dataServiceMock.Verify(mock => mock.GetVesselsToBeUpdated(), Times.Once());
             _progressMock.Verify(mock => mock.SetTotalResultsQuantities(It.IsAny<int>()), Times.Once());
         }
