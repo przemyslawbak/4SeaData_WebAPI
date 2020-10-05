@@ -32,7 +32,9 @@ namespace WebAPI.Services
         private bool VerifyPolygon(MapPointModel point, SeaModel area)
         {
             if (point.Lat > area.MinLatitude && point.Lat < area.MaxLatitude && point.Lon > area.MinLongitude && point.Lon < area.MaxLongitude)
+            {
                 return true;
+            }
 
             return false;
         }
