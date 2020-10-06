@@ -15,40 +15,56 @@ namespace WebAPI.Services
             _stringParser = stringParser;
         }
 
+        public double? ExtractSpeedFromHtml(string html_document_2)
+        {
+            string node = CreatePrepareAndVerifyDocument(html_document_2);
+            string speed = _stringParser.GetTrimmedSpeed(node);
+            return _stringParser.ParsedTrimmedNullableDouble(speed);
+        }
+
         public double? ExtractCourseFromHtml(string html_document_2)
         {
-            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedCourse(CreatePrepareAndVerifyDocument(html_document_2)));
+            string node = CreatePrepareAndVerifyDocument(html_document_2);
+            string course = _stringParser.GetTrimmedCourse(node);
+            return _stringParser.ParsedTrimmedNullableDouble(course);
         }
 
         public string ExtractDestinationFromHtml(string html_document_2)
         {
-            return _stringParser.GetUndashedDestination(CreatePrepareAndVerifyDocument(html_document_2));
+            string node = CreatePrepareAndVerifyDocument(html_document_2);
+            return _stringParser.GetUndashedDestination(node);
         }
 
         public double? ExtractDraughtFromHtml(string html_document_2)
         {
-            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedDraught(CreatePrepareAndVerifyDocument(html_document_2)));
+            string node = CreatePrepareAndVerifyDocument(html_document_2);
+            string draught = _stringParser.GetTrimmedDraught(node);
+            return _stringParser.ParsedTrimmedNullableDouble(draught);
         }
 
         public DateTime? ExtractEtaTimeFromHtml(string html_document_2)
         {
-            return _stringParser.ParsedTrimmedNullableDateTime(_stringParser.GetTrimmedCourse(CreatePrepareAndVerifyDocument(html_document_2)));
+            string node = CreatePrepareAndVerifyDocument(html_document_2);
+            string eta = _stringParser.GetTrimmedText(node);
+            return _stringParser.ParsedTrimmedNullableDateTime(eta);
         }
 
         public double? ExtractLatFromHtml(string html_document_2)
         {
-            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedLatitude(CreatePrepareAndVerifyDocument(html_document_2)));
+            string node = CreatePrepareAndVerifyDocument(html_document_2);
+            string lat = _stringParser.GetTrimmedLatitude(node);
+            return _stringParser.ParsedTrimmedNullableDouble(lat);
         }
 
         public double? ExtractLonFromHtml(string html_document_2)
         {
-            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedLongitude(CreatePrepareAndVerifyDocument(html_document_2)));
+            string node = CreatePrepareAndVerifyDocument(html_document_2);
+            string lon = _stringParser.GetTrimmedLongitude(node);
+            return _stringParser.ParsedTrimmedNullableDouble(lon);
         }
 
-        public double? ExtractSpeedFromHtml(string html_document_2)
-        {
-            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedCourse(CreatePrepareAndVerifyDocument(html_document_2)));
-        }
+
+
 
         public int ExtractMmsiFromHtml(string html_document_1, int imo)
         {
@@ -168,15 +184,21 @@ namespace WebAPI.Services
 
         private string CreatePrepareAndVerifyDocument(string html, [CallerMemberName] string callerName = "")
         {
-            HtmlDocument doc = CreateNodeDocument(html);
+            HtmlNode row = CreateDocumentAndRowNode(html, callerName);
 
-            HtmlNode row = doc.DocumentNode.SelectSingleNode(_stringParser.GetXpath(callerName));
             if (_stringParser.IsTableRowCorrect(row.OuterHtml.ToString()))
             {
                 return _stringParser.SplitRow(row.OuterHtml.ToString());
             }
 
             return null;
+        }
+
+        private HtmlNode CreateDocumentAndRowNode(string html, string callerName)
+        {
+            HtmlDocument doc = CreateNodeDocument(html);
+
+            return doc.DocumentNode.SelectSingleNode(_stringParser.GetXpath(callerName));
         }
     }
 }
