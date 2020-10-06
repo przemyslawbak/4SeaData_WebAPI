@@ -2,6 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WebAPI.Models;
@@ -90,12 +93,19 @@ namespace WebAPI.Services
             }
             catch (Exception ex)
             {
-                _progress.SetLastError(ex.Message);
+                _progress.SetLastError(ex.Message + " from: " + GetMethodNameThrowingException(ex));
             }
             finally
             {
                 SaveUpdatedVessels(updatedVessels);
             }
+        }
+
+        private string GetMethodNameThrowingException(Exception ex)
+        {
+            StackTrace s = new StackTrace(ex);
+            Assembly thisasm = Assembly.GetExecutingAssembly();
+            return s.GetFrames().Select(f => f.GetMethod()).First(m => m.Module.Assembly == thisasm).Name;
         }
 
         private void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels)
