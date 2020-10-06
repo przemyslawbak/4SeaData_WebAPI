@@ -9,31 +9,6 @@ namespace WebAPI.Services
 {
     public class StringParser : IStringParser
     {
-        public string BuildUpdatedVesselInfo(VesselUpdateModel result)
-        {
-            if (result != null) //todo: unit test
-            {
-                return BuildResult(result);
-            }
-
-            else return null;
-        }
-
-        public string GetTrimmedCourse(string rowText)
-        {
-            return DecodeAndTrim(rowText).Split('°')[0].Trim();
-        }
-
-        public string GetTrimmedSpeed(string rowText)
-        {
-            return DecodeAndTrim(rowText).Split('/')[1].Split('k')[0].Trim();
-        }
-
-        public string GetTrimmedText(string rowText)
-        {
-            return DecodeAndTrim(rowText);
-        }
-
         public string GetXpath(string methodName)
         {
             Dictionary<string, string> xpathDict = new Dictionary<string, string>()
@@ -54,22 +29,113 @@ namespace WebAPI.Services
             return xpathDict["methodName"];
         }
 
-        public bool IsTableRowCorrect(string row)
+        public string BuildUpdatedVesselInfo(VesselUpdateModel result)
         {
-            if (string.IsNullOrEmpty(row))
+            if (result != null) //todo: unit test
             {
-                if (row.Contains("<td class=\"v3\">"))
-                {
-                    return true;
-                }
+                return BuildResult(result);
+            }
+            
+            return null;
+        }
+
+        public string GetUndashedDestination(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            return DecodeAndTrim(text);
+        }
+
+        public string GetTrimmedCourse(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            return DecodeAndTrim(text).Split('°')[0].Trim();
+        }
+
+        public string GetTrimmedSpeed(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            return DecodeAndTrim(text).Split('/')[1].Split('k')[0].Trim();
+        }
+
+
+        public string GetTrimmedLongitude(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            string trimmed = GetTrimmedText(text).Split('/')[0];
+
+            if (trimmed.Contains("E"))
+            {
+                return trimmed.Split(' ')[0].Trim();
+            }
+            else if (trimmed.Contains("W"))
+            {
+                return "-" + trimmed.Split(' ')[0].Trim();
+            }
+
+            return null;
+        }
+
+        public string GetTrimmedLatitude(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            string trimmed = GetTrimmedText(text).Split('/')[0];
+
+            if (trimmed.Contains("N"))
+            {
+                return trimmed.Split(' ')[0].Trim();
+            }
+            else if (trimmed.Contains("S"))
+            {
+                return "-" + trimmed.Split(' ')[0].Trim();
+            }
+
+            return null;
+        }
+
+        public string GetTrimmedText(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            if (text != "-")
+            {
+                return DecodeAndTrim(text);
+            }
+
+            return null;
+        }
+
+        public string GetTrimmedDraught(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            if (text.Contains(" m"))
+            {
+                return GetTrimmedText(text).Replace(" m", "");
+            }
+
+            return null;
+        }
+
+        public bool IsTableRowCorrect(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+
+            if (text.Contains("<td class=\"v3\">"))
+            {
+                return true;
             }
 
             return false;
         }
 
-        public DateTime? ParsedNullableDateTime(string eta)
+        public DateTime? ParsedTrimmedNullableDateTime(string text)
         {
-            if (DateTime.TryParse(eta, out DateTime date))
+            if (DateTime.TryParse(text.Trim(), out DateTime date))
             {
                 return date;
             }
@@ -77,9 +143,9 @@ namespace WebAPI.Services
             return null;
         }
 
-        public double? ParsedNullableDouble(string speed)
+        public double? ParsedTrimmedNullableDouble(string text)
         {
-            if (double.TryParse(speed, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
+            if (double.TryParse(text.Trim(), NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
             {
                 return d;
             }
@@ -87,9 +153,9 @@ namespace WebAPI.Services
             return null;
         }
 
-        public int ParsedInt(string mmsi)
+        public int ParsedInt(string text)
         {
-            if (int.TryParse(mmsi, out int i))
+            if (int.TryParse(text, out int i))
             {
                 return i;
             }
@@ -97,9 +163,11 @@ namespace WebAPI.Services
             return 0;
         }
 
-        public string SplitRow(string outerHtml)
+        public string SplitRow(string text)
         {
-            return outerHtml.Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+            if (string.IsNullOrEmpty(text)) return null;
+
+            return text.Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
         }
 
         private string BuildResult(VesselUpdateModel result)
@@ -137,9 +205,11 @@ namespace WebAPI.Services
             return sb.ToString();
         }
 
-        private string DecodeAndTrim(string rowText)
+        private string DecodeAndTrim(string text)
         {
-            return WebUtility.HtmlDecode(rowText).Trim();
+            if (string.IsNullOrEmpty(text)) return null;
+
+            return WebUtility.HtmlDecode(text).Trim();
         }
     }
 }

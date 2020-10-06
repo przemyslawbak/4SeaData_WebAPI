@@ -12,8 +12,12 @@ namespace WebAPI.Services
         string GetTrimmedText(string rowText);
         bool IsTableRowCorrect(string v);
         string GetTrimmedSpeed(string rowText);
-        double? ParsedNullableDouble(string speed);
-        DateTime? ParsedNullableDateTime(string eta);
+        double? ParsedTrimmedNullableDouble(string speed);
+        DateTime? ParsedTrimmedNullableDateTime(string eta);
         int ParsedInt(string mmsi);
+        string GetTrimmedDraught(string rowText);
+        string GetUndashedDestination(string v);
+        string GetTrimmedLatitude(string v);
+        string GetTrimmedLongitude(string v);
     }
 }

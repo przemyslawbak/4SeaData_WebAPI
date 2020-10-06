@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace WebAPI.Services
 {
@@ -16,124 +17,38 @@ namespace WebAPI.Services
 
         public double? ExtractCourseFromHtml(string html_document_2)
         {
-            string rowText = CreatePrepareAndVerifyDocument(html_document_2);
-
-            if (!string.IsNullOrEmpty(rowText))
-            {
-                return _stringParser.ParsedNullableDouble(_stringParser.GetTrimmedCourse(rowText));
-            }
-
-            return null;
+            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedCourse(CreatePrepareAndVerifyDocument(html_document_2)));
         }
 
         public string ExtractDestinationFromHtml(string html_document_2)
         {
-            string rowText = CreatePrepareAndVerifyDocument(html_document_2);
-
-            if (!string.IsNullOrEmpty(rowText))
-            {
-                string text = _stringParser.GetTrimmedText(rowText);
-
-                if (!string.IsNullOrEmpty(text) && text != "-")
-                {
-                    return text;
-                }
-            }
-
-            return null;
+            return _stringParser.GetUndashedDestination(CreatePrepareAndVerifyDocument(html_document_2));
         }
 
         public double? ExtractDraughtFromHtml(string html_document_2)
         {
-            string rowText = CreatePrepareAndVerifyDocument(html_document_2);
-
-            if (!string.IsNullOrEmpty(rowText))
-            {
-                string text = _stringParser.GetTrimmedText(rowText);
-
-                if (!string.IsNullOrEmpty(text) && text.Contains(" m"))
-                {
-                    text = text.Replace(" m", "");
-
-                    return _stringParser.ParsedNullableDouble(text);
-
-                }
-            }
-
-            return null;
+            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedDraught(CreatePrepareAndVerifyDocument(html_document_2)));
         }
 
         public DateTime? ExtractEtaTimeFromHtml(string html_document_2)
         {
-            string rowText = CreatePrepareAndVerifyDocument(html_document_2);
-
-            if (!string.IsNullOrEmpty(rowText))
-            {
-                return _stringParser.ParsedNullableDateTime(_stringParser.GetTrimmedCourse(rowText));
-            }
-
-            return null;
+            return _stringParser.ParsedTrimmedNullableDateTime(_stringParser.GetTrimmedCourse(CreatePrepareAndVerifyDocument(html_document_2)));
         }
 
         public double? ExtractLatFromHtml(string html_document_2)
         {
-            string rowText = CreatePrepareAndVerifyDocument(html_document_2);
-
-            if (!string.IsNullOrEmpty(rowText))
-            {
-                string text = _stringParser.GetTrimmedText(rowText);
-
-                if (text != "-" && !string.IsNullOrEmpty(text))
-                {
-                    string lat = text.Split('/')[0];
-                    if (lat.Contains("N")) lat = lat.Split(' ')[0].Trim(); else if (lat.Contains("S")) lat = "-" + lat.Split(' ')[0].Trim();
-
-                    return _stringParser.ParsedNullableDouble(lat);
-                }
-            }
-
-            return null;
+            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedLatitude(CreatePrepareAndVerifyDocument(html_document_2)));
         }
 
         public double? ExtractLonFromHtml(string html_document_2)
         {
-            string rowText = CreatePrepareAndVerifyDocument(html_document_2);
-
-            if (!string.IsNullOrEmpty(rowText))
-            {
-                string text = _stringParser.GetTrimmedText(rowText);
-
-                if (text != "-" && !string.IsNullOrEmpty(text))
-                {
-                    string lon = text.Split('/')[1];
-                    if (lon.Contains("E")) lon = lon.Split(' ')[0].Trim(); else if (lon.Contains("W")) lon = "-" + lon.Split(' ')[0].Trim();
-
-                    return _stringParser.ParsedNullableDouble(lon);
-                }
-            }
-
-            return null;
+            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedLongitude(CreatePrepareAndVerifyDocument(html_document_2)));
         }
 
         public double? ExtractSpeedFromHtml(string html_document_2)
         {
-            string rowText = CreatePrepareAndVerifyDocument(html_document_2);
-
-            if (!string.IsNullOrEmpty(rowText))
-            {
-                return _stringParser.ParsedNullableDouble(_stringParser.GetTrimmedCourse(rowText));
-            }
-
-            return null;
+            return _stringParser.ParsedTrimmedNullableDouble(_stringParser.GetTrimmedCourse(CreatePrepareAndVerifyDocument(html_document_2)));
         }
-
-
-
-
-
-
-
-
 
         public int ExtractMmsiFromHtml(string html_document_1, int imo)
         {
@@ -251,11 +166,11 @@ namespace WebAPI.Services
             return doc;
         }
 
-        private string CreatePrepareAndVerifyDocument(string html_document_2)
+        private string CreatePrepareAndVerifyDocument(string html, [CallerMemberName] string callerName = "")
         {
-            HtmlDocument doc = CreateNodeDocument(html_document_2);
+            HtmlDocument doc = CreateNodeDocument(html);
 
-            HtmlNode row = doc.DocumentNode.SelectSingleNode(_stringParser.GetXpath(MethodBase.GetCurrentMethod().Name));
+            HtmlNode row = doc.DocumentNode.SelectSingleNode(_stringParser.GetXpath(callerName));
             if (_stringParser.IsTableRowCorrect(row.OuterHtml.ToString()))
             {
                 return _stringParser.SplitRow(row.OuterHtml.ToString());
