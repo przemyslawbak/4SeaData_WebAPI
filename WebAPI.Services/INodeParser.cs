@@ -8,7 +8,7 @@ namespace WebAPI.Services
         double? ExtractCourseFromHtml(string html_document_2);
         double? ExtractSpeedFromHtml(string html_document_2);
         double? ExtractDraughtFromHtml(string html_document_2);
-        int ExtractMmsiFromHtml(string html_document_1, int imo);
+        int ExtractMmsiFromHtml(string html_document_1);
         DateTime? ExtractAisUpdateTimeFromHtml(string html_document_1, string html_document_2);
         DateTime? ExtractEtaTimeFromHtml(string html_document_2);
         double? ExtractLatFromHtml(string html_document_2);

@@ -22,24 +22,24 @@ namespace WebAPI.Services
         public VesselUpdateModel ScrapSingleVessel(int mmsi, int imo)
         {
             string html_document_1 = GetHtml1(imo);
-            string html_document_2 = GetHtml2(mmsi, imo, html_document_1);
+            string html_document_2 = GetHtml2(mmsi, html_document_1);
 
             return GetVesselUpdates(html_document_1, html_document_2, imo, mmsi);
-        }
-
-        private string GetHtml2(int mmsi, int imo, string html_document_1)
-        {
-            if (mmsi == 0)
-            {
-                mmsi = _nodeParser.ExtractMmsiFromHtml(html_document_1, imo);
-            }
-
-            return _http.GetHtmlDocument(_configuration["Services:Url2"] + mmsi);
         }
 
         private string GetHtml1(int imo)
         {
             return _http.GetHtmlDocument(_configuration["Services:Url1"] + imo + ".html");
+        }
+
+        private string GetHtml2(int mmsi, string html_document_1)
+        {
+            if (mmsi == 0)
+            {
+                mmsi = _nodeParser.ExtractMmsiFromHtml(html_document_1);
+            }
+
+            return _http.GetHtmlDocument(_configuration["Services:Url2"] + mmsi);
         }
 
         private VesselUpdateModel GetVesselUpdates(string html_document_1, string html_document_2, int imo, int mmsi)

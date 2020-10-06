@@ -6,18 +6,23 @@ namespace WebAPI.Services
     public interface IStringParser
     {
         string BuildUpdatedVesselInfo(VesselUpdateModel result);
-        string SplitRow(string v);
-        string GetXpath(string name);
-        string GetTrimmedCourse(string rowText);
-        string GetTrimmedText(string rowText);
-        bool IsTableRowCorrect(string v);
-        string GetTrimmedSpeed(string rowText);
-        double? ParsedTrimmedNullableDouble(string speed);
-        DateTime? ParsedTrimmedNullableDateTime(string eta);
-        int ParsedInt(string mmsi);
-        string GetTrimmedDraught(string rowText);
-        string GetUndashedDestination(string v);
-        string GetTrimmedLatitude(string v);
-        string GetTrimmedLongitude(string v);
+        string SplitRow(string text);
+        string GetXpath(string text);
+        string GetTrimmedCourse(string text);
+        string GetTrimmedText(string text);
+        bool IsTableRowCorrect(string text);
+        string GetTrimmedSpeed(string text);
+        double? ParsedTrimmedNullableDouble(string text);
+        DateTime? ParsedTrimmedNullableDateTime(string text);
+        int ParsedInt(string text);
+        string GetTrimmedDraught(string text);
+        string GetUndashedDestination(string text);
+        string GetTrimmedLatitude(string text);
+        string GetTrimmedLongitude(string text);
+        bool IsContainingMmsi(string text);
+        string GetAisStatusTrimmed(string text);
+        string GetTrimmedTime1(string node);
+        bool IsRowTimeRow(string innerHtml);
+        string GetTrimmedTime2(string innerHtml);
     }
 }

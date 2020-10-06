@@ -26,12 +26,14 @@ namespace WebAPI.Services
                 { "ExtractAisUpdateTimeFromHtml2", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[12]/td[2]" },
             };
 
-            return xpathDict["methodName"];
+            string result = xpathDict[methodName];
+
+            return result;
         }
 
         public string BuildUpdatedVesselInfo(VesselUpdateModel result)
         {
-            if (result != null) //todo: unit test
+            if (result != null)
             {
                 return BuildResult(result);
             }
@@ -39,11 +41,41 @@ namespace WebAPI.Services
             return null;
         }
 
+        public string GetTrimmedTime2(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            return text.Split(new string[] { "<span>" }, StringSplitOptions.None)[1]
+                            .Split('<')[0];
+        }
+
+        public string GetTrimmedTime1(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            if (!text.Contains(" UTC")) return null;
+
+            if (!text.Contains("<td class=\"v3 tooltip expand\" data-title=\"")) return null;
+
+            return DecodeAndTrim(text).Split(new string[] { "<td class=\"v3 tooltip expand\" data-title=\"" }, StringSplitOptions.None)[1]
+                    .Split(new string[] { " UTC" }, StringSplitOptions.None)[0].Trim();
+        }
+
+        public string GetAisStatusTrimmed(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            if (!text.Contains("Navigational status:")) return null;
+
+            return DecodeAndTrim(text).Split(new string[] { "Navigational status:</div><div class=" }, StringSplitOptions.None)[1].Split('>')[1].Split('<')[0].Trim();
+
+        }
+
         public string GetUndashedDestination(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
 
-            return DecodeAndTrim(text);
+            return GetTrimmedText(text);
         }
 
         public string GetTrimmedCourse(string text)
@@ -135,6 +167,8 @@ namespace WebAPI.Services
 
         public DateTime? ParsedTrimmedNullableDateTime(string text)
         {
+            if (string.IsNullOrEmpty(text)) return null;
+
             if (DateTime.TryParse(text.Trim(), out DateTime date))
             {
                 return date;
@@ -145,6 +179,8 @@ namespace WebAPI.Services
 
         public double? ParsedTrimmedNullableDouble(string text)
         {
+            if (string.IsNullOrEmpty(text)) return null;
+
             if (double.TryParse(text.Trim(), NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
             {
                 return d;
@@ -155,6 +191,8 @@ namespace WebAPI.Services
 
         public int ParsedInt(string text)
         {
+            if (string.IsNullOrEmpty(text)) return 0;
+
             if (int.TryParse(text, out int i))
             {
                 return i;
@@ -210,6 +248,33 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
 
             return WebUtility.HtmlDecode(text).Trim();
+        }
+
+        public bool IsContainingMmsi(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            
+            if (text.Contains("MMSI:"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsRowTimeRow(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+
+            if (text.Contains("Last seen:"))
+            {
+                if (text.Contains("<span>") && text.Contains("<"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
