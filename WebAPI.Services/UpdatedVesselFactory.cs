@@ -20,19 +20,20 @@ namespace WebAPI.Services
 
         public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel, CancellationToken token, SemaphoreSlim semaphoreThrottel)
         {
-            bool skip = false;
             VesselUpdateModel vessel = null;
-
-            if (aisUpdateModel.Mmsi == 0 || !aisUpdateModel.Speed.HasValue) //if could not be scrapped with "full"
-            {
-                skip = true;
-                _progress.AddSkipped();
-            }
-
-            await semaphoreThrottel.WaitAsync();
 
             try
             {
+                bool skip = false;
+
+                if (aisUpdateModel.Mmsi == 0 || !aisUpdateModel.Speed.HasValue) //if could not be scrapped with "full"
+                {
+                    skip = true;
+                    _progress.AddSkipped();
+                }
+
+                await semaphoreThrottel.WaitAsync();
+
                 if (!skip)
                 {
                     vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo);
