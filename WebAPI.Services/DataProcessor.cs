@@ -17,8 +17,6 @@ namespace WebAPI.Services
         private readonly IDataAccessService _dataService;
         private readonly IExceptionProcessor _exceptionProcessor;
 
-        private readonly int _step;
-        private readonly int _degreeOfParallelism;
         private int _counter;
 
         public DataProcessor
@@ -35,14 +33,12 @@ namespace WebAPI.Services
             _stringParser = stringParser;
             _dataService = dataService;
             _exceptionProcessor = exceptionProcessor;
-
-            _step = _configuration.GetValue<int>("Iteration:Step");
-            _degreeOfParallelism = _configuration.GetValue<int>("Iteration:ParalelizmDegree");
         }
 
         public async Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType) //todo: unit test
         {
-            VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(new VesselAisUpdateModel() { Mmsi = mmsi, Imo = imo, Speed = 0 }, GetCancellationTokenSource().Token, GetSemaphoreThrottel());
+            VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync
+                (new VesselAisUpdateModel() { Mmsi = mmsi, Imo = imo, Speed = 0 }, GetCancellationTokenSource().Token, GetSemaphoreThrottel());
 
             if (updatedVessel != null)
             {
@@ -67,37 +63,39 @@ namespace WebAPI.Services
         private async Task ProcessNextStepAsync(List<VesselAisUpdateModel> updateList)
         {
             List<VesselUpdateModel> updatedVessels = new List<VesselUpdateModel>();
-            List<Task> currentRunningTasks = new List<Task>();
-            CancellationTokenSource tokenSource = GetCancellationTokenSource();
-            SemaphoreSlim semaphoreThrottel = GetSemaphoreThrottel();
-
-            for (int i = _counter; i < _progress.GetCurrentUpdateStep(_counter, _step); i++)
-            {
-                int iteration = i;
-
-                currentRunningTasks.Add(Task.Run(async () =>
-                {
-                    VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], tokenSource.Token, semaphoreThrottel);
-
-                    _progress.UpdateMissingProperties(updatedVessel);
-                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updatedVessel));
-
-                    lock (((ICollection)updatedVessels).SyncRoot)
-                    {
-                        updatedVessels.Add(updatedVessel);
-                    }
-
-                    _counter++;
-
-                }, tokenSource.Token));
-            }
 
             try
             {
+                List<Task> currentRunningTasks = new List<Task>();
+                CancellationTokenSource tokenSource = GetCancellationTokenSource();
+                SemaphoreSlim semaphoreThrottel = GetSemaphoreThrottel();
+
+                for (int i = _counter; i < _progress.GetCurrentUpdateStep(_counter, _configuration.GetValue<int>("Iteration:Step")); i++)
+                {
+                    int iteration = i;
+
+                    currentRunningTasks.Add(Task.Run(async () =>
+                    {
+                        VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], tokenSource.Token, semaphoreThrottel);
+
+                        _progress.UpdateMissingProperties(updatedVessel);
+                        _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updatedVessel));
+
+                        lock (((ICollection)updatedVessels).SyncRoot)
+                        {
+                            updatedVessels.Add(updatedVessel);
+                        }
+
+                        _counter++;
+
+                    }, tokenSource.Token));
+                }
+
                 await Task.WhenAll(currentRunningTasks);
             }
-            catch (Exception ex) //todo: unit test
+            catch (Exception ex)
             {
+                _counter++;
                 _progress.SetLastError(ex.Message + " from: " + _exceptionProcessor.GetMethodNameThrowingException(ex));
             }
             finally
@@ -116,7 +114,7 @@ namespace WebAPI.Services
 
         private SemaphoreSlim GetSemaphoreThrottel()
         {
-            return new SemaphoreSlim(_degreeOfParallelism);
+            return new SemaphoreSlim(_configuration.GetValue<int>("Iteration:ParalelizmDegree"));
         }
 
         private CancellationTokenSource GetCancellationTokenSource()
