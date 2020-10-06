@@ -9,11 +9,13 @@ namespace WebAPI.Services
     {
         private readonly IScrapper _scrapper;
         private readonly IUpdatingProgress _progress;
+        private readonly IExceptionProcessor _exceptionProcessor;
 
-        public UpdatedVesselFactory(IScrapper scrapper, IUpdatingProgress progress)
+        public UpdatedVesselFactory(IScrapper scrapper, IUpdatingProgress progress, IExceptionProcessor exceptionProcessor)
         {
             _scrapper = scrapper;
             _progress = progress;
+            _exceptionProcessor = exceptionProcessor;
         }
 
         public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel, CancellationToken token, SemaphoreSlim semaphoreThrottel)
@@ -47,15 +49,11 @@ namespace WebAPI.Services
 
                     _progress.AddToReturnedResultsQuantity();
                 }
-                else
-                {
-                    //todo: do nothing? or log?
-                }
             }
             catch (Exception ex)
             {
+                _progress.SetLastError(ex.Message + " from: " + _exceptionProcessor.GetMethodNameThrowingException(ex));
                 _progress.AddFailedRequest();
-                _progress.SetLastError(ex.Message);
                 vessel = null;
             }
             finally

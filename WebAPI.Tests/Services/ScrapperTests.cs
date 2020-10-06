@@ -23,7 +23,7 @@ namespace WebAPI.Tests.Services
             _areaFinder = new Mock<IGeoAreaFinder>();
 
             _httpClientMock.Setup(mock => mock.GetHtmlDocument(It.IsAny<string>())).Returns("some_html_document");
-            _nodeParserMock.Setup(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>(), It.IsAny<int>())).Returns(11111111);
+            _nodeParserMock.Setup(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>())).Returns(11111111);
             _nodeParserMock.Setup(mock => mock.ExtractLatFromHtml(It.IsAny<string>())).Returns(11.111);
             _nodeParserMock.Setup(mock => mock.ExtractLonFromHtml(It.IsAny<string>())).Returns(12.112);
             _nodeParserMock.Setup(mock => mock.ExtractAisUpdateTimeFromHtml(It.IsAny<string>(), It.IsAny<string>())).Returns(new DateTime(2020, 01, 01));
@@ -36,7 +36,7 @@ namespace WebAPI.Tests.Services
         {
             VesselUpdateModel model = _service.ScrapSingleVessel(0, 11111112);
 
-            _nodeParserMock.Verify(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+            _nodeParserMock.Verify(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>()), Times.Once());
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace WebAPI.Tests.Services
         {
             VesselUpdateModel model = _service.ScrapSingleVessel(11111111, 11111112);
 
-            _nodeParserMock.Verify(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+            _nodeParserMock.Verify(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>()), Times.Never());
         }
     }
 }

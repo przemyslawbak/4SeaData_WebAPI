@@ -1,6 +1,5 @@
 ﻿using Moq;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WebAPI.Models;
@@ -13,15 +12,19 @@ namespace WebAPI.Tests.Services
     {
         private readonly Mock<IUpdatingProgress> _progressMock;
         private readonly Mock<IScrapper> _scrapperMock;
+        private readonly Mock<IExceptionProcessor> _exceptionProcessorMock;
         private readonly UpdatedVesselFactory _service;
 
         private readonly int _correctImo;
+        private readonly string _exMethodName;
 
         public UpdatedVesselFactoryTests()
         {
             _progressMock = new Mock<IUpdatingProgress>();
             _scrapperMock = new Mock<IScrapper>();
+            _exceptionProcessorMock = new Mock<IExceptionProcessor>();
 
+            _exMethodName = "method_name";
             _correctImo = 9482469;
             VesselUpdateModel vslModel = new VesselUpdateModel()
             {
@@ -42,8 +45,9 @@ namespace WebAPI.Tests.Services
             _scrapperMock.Setup(mock => mock.ScrapSingleVessel(It.IsAny<int>(), It.IsAny<int>())).Returns(vslModel);
             _progressMock.Setup(mock => mock.GetIsUpdatingDatabase()).Returns(false);
             _progressMock.Setup(mock => mock.GetIsUpdatingPaused()).Returns(false);
+            _exceptionProcessorMock.Setup(mock => mock.GetMethodNameThrowingException(It.IsAny<Exception>())).Returns(_exMethodName);
 
-            _service = new UpdatedVesselFactory(_scrapperMock.Object, _progressMock.Object);
+            _service = new UpdatedVesselFactory(_scrapperMock.Object, _progressMock.Object, _exceptionProcessorMock.Object);
         }
 
         [Fact]
@@ -106,7 +110,7 @@ namespace WebAPI.Tests.Services
             _progressMock.Verify(mock => mock.GetIsUpdatingDatabase(), Times.Once());
             _progressMock.Verify(mock => mock.GetIsUpdatingPaused(), Times.Once());
             _progressMock.Verify(mock => mock.AddFailedRequest(), Times.Once());
-            _progressMock.Verify(mock => mock.SetLastError(ex), Times.Once());
+            _progressMock.Verify(mock => mock.SetLastError(ex + " from: " + _exMethodName), Times.Once());
         }
 
         [Fact]
@@ -124,7 +128,7 @@ namespace WebAPI.Tests.Services
             _progressMock.Verify(mock => mock.GetIsUpdatingDatabase(), Times.Once());
             _progressMock.Verify(mock => mock.GetIsUpdatingPaused(), Times.Once());
             _progressMock.Verify(mock => mock.AddFailedRequest(), Times.Once());
-            _progressMock.Verify(mock => mock.SetLastError(ex), Times.Once());
+            _progressMock.Verify(mock => mock.SetLastError(ex + " from: " + _exMethodName), Times.Once());
         }
     }
 }

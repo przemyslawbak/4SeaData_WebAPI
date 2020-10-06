@@ -2,9 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WebAPI.Models;
@@ -18,18 +15,26 @@ namespace WebAPI.Services
         private readonly IUpdatedVesselFactory _vesselUpdates;
         private readonly IStringParser _stringParser;
         private readonly IDataAccessService _dataService;
+        private readonly IExceptionProcessor _exceptionProcessor;
 
         private readonly int _step;
         private readonly int _degreeOfParallelism;
         private int _counter;
 
-        public DataProcessor(IUpdatingProgress progress, IConfiguration configuration, IUpdatedVesselFactory vesselUpdates, IStringParser stringParser, IDataAccessService dataService)
+        public DataProcessor
+            (IUpdatingProgress progress,
+            IConfiguration configuration,
+            IUpdatedVesselFactory vesselUpdates,
+            IStringParser stringParser,
+            IDataAccessService dataService,
+            IExceptionProcessor exceptionProcessor)
         {
             _progress = progress;
             _configuration = configuration;
             _vesselUpdates = vesselUpdates;
             _stringParser = stringParser;
             _dataService = dataService;
+            _exceptionProcessor = exceptionProcessor;
 
             _step = _configuration.GetValue<int>("Iteration:Step");
             _degreeOfParallelism = _configuration.GetValue<int>("Iteration:ParalelizmDegree");
@@ -91,21 +96,14 @@ namespace WebAPI.Services
             {
                 await Task.WhenAll(currentRunningTasks);
             }
-            catch (Exception ex)
+            catch (Exception ex) //todo: unit test
             {
-                _progress.SetLastError(ex.Message + " from: " + GetMethodNameThrowingException(ex));
+                _progress.SetLastError(ex.Message + " from: " + _exceptionProcessor.GetMethodNameThrowingException(ex));
             }
             finally
             {
                 SaveUpdatedVessels(updatedVessels);
             }
-        }
-
-        private string GetMethodNameThrowingException(Exception ex)
-        {
-            StackTrace s = new StackTrace(ex);
-            Assembly thisasm = Assembly.GetExecutingAssembly();
-            return s.GetFrames().Select(f => f.GetMethod()).First(m => m.Module.Assembly == thisasm).Name;
         }
 
         private void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels)
