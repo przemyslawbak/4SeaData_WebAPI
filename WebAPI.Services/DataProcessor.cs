@@ -35,7 +35,7 @@ namespace WebAPI.Services
             _exceptionProcessor = exceptionProcessor;
         }
 
-        public async Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType) //todo: unit test
+        public async Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType)
         {
             VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync
                 (new VesselAisUpdateModel() { Mmsi = mmsi, Imo = imo, Speed = 0 }, GetCancellationTokenSource().Token, GetSemaphoreThrottel());
