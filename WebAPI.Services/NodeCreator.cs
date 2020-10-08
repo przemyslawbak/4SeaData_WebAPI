@@ -12,9 +12,9 @@ namespace WebAPI.Services
             _stringParser = stringParser;
         }
 
-        public string CreatePrepareAndVerifyRowNodeOuterHtml(string html, [CallerMemberName] string callerName = "")//todo: CallerMemberName
+        public string CreatePrepareAndVerifyRowNodeOuterHtml(string html, [CallerMemberName] string callerName = "")
         {
-            HtmlNode row = CreateDocumentAndRowNode(html, callerName);
+            HtmlNode row = GetDocumentAndSelectSingleNode(html, callerName);
 
             if (row != null)
             {
@@ -24,9 +24,9 @@ namespace WebAPI.Services
             return null;
         }
 
-        public string CreatePrepareAndVerifyRowNodeString(string html, [CallerMemberName] string callerName = "")//todo: CallerMemberName
+        public string CreatePrepareAndVerifyRowNodeString(string html, [CallerMemberName] string callerName = "")
         {
-            HtmlNode row = CreateDocumentAndRowNode(html, callerName);
+            HtmlNode row = GetDocumentAndSelectSingleNode(html, callerName);
 
             if (row != null)
             {
@@ -39,24 +39,25 @@ namespace WebAPI.Services
             return null;
         }
 
-        public HtmlNodeCollection CreateNodeCollection(string html_document_1, [CallerMemberName] string callerName = "")//todo: CallerMemberName
+        public HtmlNodeCollection CreateNodeCollection(string html, [CallerMemberName] string callerName = "")
         {
-            HtmlDocument doc = CreateNodeDocument(html_document_1);
+            HtmlDocument doc = CreateNodeDocument(html);
 
             return doc.DocumentNode.SelectNodes(_stringParser.GetXpath(callerName));
         }
+
+        private HtmlNode GetDocumentAndSelectSingleNode(string html, string callerName)
+        {
+            HtmlDocument doc = CreateNodeDocument(html);
+
+            return doc.DocumentNode.SelectSingleNode(_stringParser.GetXpath(callerName));
+        }
+
         private HtmlDocument CreateNodeDocument(string html)
         {
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
             return doc;
-        }
-
-        private HtmlNode CreateDocumentAndRowNode(string html, string callerName)
-        {
-            HtmlDocument doc = CreateNodeDocument(html);
-
-            return doc.DocumentNode.SelectSingleNode(_stringParser.GetXpath(callerName));
         }
     }
 }
