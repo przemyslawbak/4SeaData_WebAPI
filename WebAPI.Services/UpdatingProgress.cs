@@ -7,14 +7,12 @@ namespace WebAPI.Services
 {
     public class UpdatingProgress : IUpdatingProgress
     {
-        //todo: remove unused props and fields
         private bool _updatingDatabase;
         private DateTime _lastStartedTime;
         private DateTime _lastCompletedTime;
         private DateTime _nextPlannedTime;
         private bool _isUpdatingPaused;
         private bool _isUpdatingInProgress;
-        private bool _finalizing;
         private int _failedResultsQuantity;
         private int _totalResultsQuantity;
         private int _returnedResultsQuantity;
@@ -34,13 +32,6 @@ namespace WebAPI.Services
         private int _missingEtaCounter;
         private int _missingStatusCounter;
         private int _missingAreaCounter;
-
-        public CancellationToken GetNewCalnellationToken()
-        {
-            _tokenSource = new CancellationTokenSource();
-
-            return _tokenSource.Token;
-        }
 
         public CancellationToken GetCurrentCalnellationToken()
         {
@@ -70,7 +61,6 @@ namespace WebAPI.Services
                 TotalResultsQuantity = _totalResultsQuantity,
                 ReurnedVesselsInCurrent = _returnedResultsQuantity,
                 LastUpdatedVessel = _lastUpdatedVessel,
-                Finalizing = _finalizing,
                 UpdatingDatabase = _updatingDatabase,
                 LastError = _lastError,
                 MemoryMegabytesUsage = GetProcessMemoryUsed(),
@@ -143,7 +133,7 @@ namespace WebAPI.Services
 
         public void SetLastUpdatedVessel(string vessel)
         {
-            if (!string.IsNullOrEmpty(vessel)) //todo: unit test
+            if (!string.IsNullOrEmpty(vessel))
             {
                 _lastUpdatedVessel = vessel;
             }
@@ -156,7 +146,7 @@ namespace WebAPI.Services
 
         public void UpdateMissingProperties(VesselUpdateModel updatedVessel)
         {
-            if (updatedVessel != null) //todo: unit test
+            if (updatedVessel != null)
             {
                 if (!updatedVessel.Lat.HasValue) _missingLatCounter++;
                 if (!updatedVessel.Lon.HasValue) _missingLonCounter++;
@@ -191,7 +181,6 @@ namespace WebAPI.Services
             long mem = proc.WorkingSet64;
             ProcessDataModel process = new ProcessDataModel() { MemoryMegabytesUsage = (mem / 1024f) / 1024f };
             return process.MemoryMegabytesUsage;
-
         }
 
         public void AddSkipped()
@@ -199,9 +188,9 @@ namespace WebAPI.Services
             _skippedResultsQuantity++;
         }
 
-        public int GetCurrentUpdateStep(int counter, int step) //todo: unit test
+        public int GetCurrentUpdateStep(int counter, int step)
         {
-            if (counter + step > GetTotalResultsQuantity())
+            if (counter + step >= GetTotalResultsQuantity())
             {
                 return GetTotalResultsQuantity();
             }

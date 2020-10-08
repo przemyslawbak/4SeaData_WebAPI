@@ -20,8 +20,6 @@ namespace WebAPI.Tests.Services
             _progressMock = new Mock<IUpdatingProgress>();
             _dataProcessorMock = new Mock<IDataProcessor>();
 
-            _progressMock.Setup(mock => mock.GetNewCalnellationToken()).Returns(new CancellationToken());
-
             _service = new UpdaterService(_hostedUpdaterMock.Object, _progressMock.Object, _dataProcessorMock.Object);
         }
 

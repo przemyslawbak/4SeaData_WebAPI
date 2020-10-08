@@ -10,7 +10,6 @@ namespace WebAPI.Services
         bool GetIsUpdatingPaused();
         void SetUpdatingPaused();
         void SetUpdatingUnpaused();
-        CancellationToken GetNewCalnellationToken();
         void SetUpdatingStarted();
         void SetUpdatingCompleted();
         CancellationToken GetCurrentCalnellationToken();
