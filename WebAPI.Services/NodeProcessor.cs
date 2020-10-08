@@ -31,7 +31,7 @@ namespace WebAPI.Services
         public string ExtractDestinationFromHtml(string html_document_2)
         {
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
-            return _stringParser.GetUndashedDestination(node);
+            return _stringParser.GetUndashedTrimmedText(node);
         }
 
         public double? ExtractDraughtFromHtml(string html_document_2)
@@ -44,7 +44,7 @@ namespace WebAPI.Services
         public DateTime? ExtractEtaTimeFromHtml(string html_document_2)
         {
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
-            string eta = _stringParser.GetTrimmedText(node);
+            string eta = _stringParser.GetUndashedTrimmedText(node);
             return _stringParser.ParsedTrimmedNullableDateTime(eta);
         }
 

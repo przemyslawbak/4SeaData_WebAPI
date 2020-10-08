@@ -32,7 +32,7 @@ namespace WebAPI.Services
             {
                 if (_stringParser.IsTableRowCorrect(row.OuterHtml))
                 {
-                    return _stringParser.SplitRow(row.OuterHtml);
+                    return _stringParser.SplitTableRow(row.OuterHtml);
                 }
             }
 

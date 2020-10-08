@@ -44,6 +44,7 @@ namespace WebAPI.Services
         public string GetTrimmedTime2(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("<span>")) return null;
 
             return text.Split(new string[] { "<span>" }, StringSplitOptions.None)[1]
                             .Split('<')[0];
@@ -52,9 +53,7 @@ namespace WebAPI.Services
         public string GetTrimmedTime1(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
-
             if (!text.Contains(" UTC")) return null;
-
             if (!text.Contains("<td class=\"v3 tooltip expand\" data-title=\"")) return null;
 
             return DecodeAndTrim(text).Split(new string[] { "<td class=\"v3 tooltip expand\" data-title=\"" }, StringSplitOptions.None)[1]
@@ -64,23 +63,27 @@ namespace WebAPI.Services
         public string GetAisStatusTrimmed(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
-
-            if (!text.Contains("Navigational status:")) return null;
+            if (!text.Contains("Navigational status:</div><div class=")) return null;
 
             return DecodeAndTrim(text).Split(new string[] { "Navigational status:</div><div class=" }, StringSplitOptions.None)[1].Split('>')[1].Split('<')[0].Trim();
 
         }
 
-        public string GetUndashedDestination(string text)
+        public string GetUndashedTrimmedText(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (text != "-")
+            {
+                return DecodeAndTrim(text);
+            }
 
-            return GetTrimmedText(text);
+            return null;
         }
 
         public string GetTrimmedCourse(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("°")) return null;
 
             return DecodeAndTrim(text).Split('°')[0].Trim();
         }
@@ -88,6 +91,8 @@ namespace WebAPI.Services
         public string GetTrimmedSpeed(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("k")) return null;
+            if (!text.Contains("/")) return null;
 
             return DecodeAndTrim(text).Split('/')[1].Split('k')[0].Trim();
         }
@@ -96,9 +101,9 @@ namespace WebAPI.Services
         public string GetTrimmedLongitude(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
-
-            string trimmed = GetTrimmedText(text).Split('/')[0];
-
+            if (!text.Contains("/")) return null;
+            if (!text.Contains(" ")) return null;
+            string trimmed = DecodeAndTrim(text).Split('/')[0];
             if (trimmed.Contains("E"))
             {
                 return trimmed.Split(' ')[0].Trim();
@@ -114,9 +119,9 @@ namespace WebAPI.Services
         public string GetTrimmedLatitude(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
-
-            string trimmed = GetTrimmedText(text).Split('/')[0];
-
+            if (!text.Contains("/")) return null;
+            if (!text.Contains(" ")) return null;
+            string trimmed = DecodeAndTrim(text).Split('/')[0];
             if (trimmed.Contains("N"))
             {
                 return trimmed.Split(' ')[0].Trim();
@@ -129,34 +134,28 @@ namespace WebAPI.Services
             return null;
         }
 
-        public string GetTrimmedText(string text)
+        public string GetTrimmedDraught(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
-
-            if (text != "-")
+            if (text.Contains(" m"))
             {
-                return DecodeAndTrim(text);
+                return DecodeAndTrim(text).Replace(" m", "");
             }
 
             return null;
         }
 
-        public string GetTrimmedDraught(string text)
+        public string SplitTableRow(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("<td class=\"v3\">")) return null;
 
-            if (text.Contains(" m"))
-            {
-                return GetTrimmedText(text).Replace(" m", "");
-            }
-
-            return null;
+            return text.Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
         }
 
         public bool IsTableRowCorrect(string text)
         {
             if (string.IsNullOrEmpty(text)) return false;
-
             if (text.Contains("<td class=\"v3\">"))
             {
                 return true;
@@ -165,22 +164,33 @@ namespace WebAPI.Services
             return false;
         }
 
-        public DateTime? ParsedTrimmedNullableDateTime(string text)
+        public bool IsContainingMmsi(string text)
         {
-            if (string.IsNullOrEmpty(text)) return null;
-
-            if (DateTime.TryParse(text.Trim(), out DateTime date))
+            if (string.IsNullOrEmpty(text)) return false;
+            if (text.Contains("MMSI:"))
             {
-                return date;
+                return true;
             }
 
-            return null;
+            return false;
+        }
+
+        public bool IsRowTimeRow(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            if (!text.Contains("Last seen:")) return false;
+
+            if (text.Contains("<span>"))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public double? ParsedTrimmedNullableDouble(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
-
             if (double.TryParse(text.Trim(), NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out double d))
             {
                 return d;
@@ -192,7 +202,6 @@ namespace WebAPI.Services
         public int ParsedInt(string text)
         {
             if (string.IsNullOrEmpty(text)) return 0;
-
             if (int.TryParse(text, out int i))
             {
                 return i;
@@ -201,11 +210,15 @@ namespace WebAPI.Services
             return 0;
         }
 
-        public string SplitRow(string text)
+        public DateTime? ParsedTrimmedNullableDateTime(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (DateTime.TryParse(text.Trim(), out DateTime date))
+            {
+                return date;
+            }
 
-            return text.Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+            return null;
         }
 
         private string BuildResult(VesselUpdateModel result)
@@ -248,33 +261,6 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
 
             return WebUtility.HtmlDecode(text).Trim();
-        }
-
-        public bool IsContainingMmsi(string text)
-        {
-            if (string.IsNullOrEmpty(text)) return false;
-            
-            if (text.Contains("MMSI:"))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsRowTimeRow(string text)
-        {
-            if (string.IsNullOrEmpty(text)) return false;
-
-            if (text.Contains("Last seen:"))
-            {
-                if (text.Contains("<span>") && text.Contains("<"))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }
