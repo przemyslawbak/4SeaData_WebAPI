@@ -116,11 +116,9 @@ namespace WebAPI.Tests.Services
 
         [Theory]
         [InlineData(null, null)]
-        [InlineData("12.4 E /", "12.4")]
-        [InlineData("12.4 W /", "-12.4")]
-        [InlineData("12.4E", null)]
-        [InlineData("12.4W", null)]
-        [InlineData("12.4 / ", null)]
+        [InlineData("12.4 N/12.4 E", "12.4")]
+        [InlineData("12.4 N/12.4 W", "-12.4")]
+        [InlineData("12.4 / 12.4", null)]
         private void GetTrimmedLongitude_OnPropeTextParameter_ReturnsProperResult(string text, string expected)
         {
             string result = _service.GetTrimmedLongitude(text);

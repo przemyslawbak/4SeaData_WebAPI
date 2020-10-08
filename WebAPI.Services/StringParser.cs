@@ -103,7 +103,7 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
             if (!text.Contains("/")) return null;
             if (!text.Contains(" ")) return null;
-            string trimmed = DecodeAndTrim(text).Split('/')[0];
+            string trimmed = DecodeAndTrim(text).Split('/')[1];
             if (trimmed.Contains("E"))
             {
                 return trimmed.Split(' ')[0].Trim();
