@@ -84,7 +84,7 @@ namespace WebAPI.Services
             return CheckActivityTime(_stringParser.GetAisStatusTrimmed(node), aISLatestActivity);
         }
 
-        public DateTime? ExtractAisUpdateTimeFromHtml(string html_document_1, string html_document_2)//todo: unit test
+        public DateTime? ExtractAisUpdateTimeFromHtml(string html_document_1, string html_document_2)
         {
             DateTime? time1 = ExtractAisUpdateTimeFromHtml1(html_document_1);
             DateTime? time2 = ExtractAisUpdateTimeFromHtml2(html_document_2);
