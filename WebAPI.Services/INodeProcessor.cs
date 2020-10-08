@@ -2,7 +2,7 @@
 
 namespace WebAPI.Services
 {
-    public interface INodeParser
+    public interface INodeProcessor
     {
         string ExtractDestinationFromHtml(string html_document_2);
         double? ExtractCourseFromHtml(string html_document_2);

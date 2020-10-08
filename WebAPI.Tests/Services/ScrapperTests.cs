@@ -11,7 +11,7 @@ namespace WebAPI.Tests.Services
     {
         private readonly Mock<IConfiguration> _configMock;
         private readonly Mock<IHttpClientProvider> _httpClientMock;
-        private readonly Mock<INodeParser> _nodeParserMock;
+        private readonly Mock<INodeProcessor> _nodeParserMock;
         private readonly Mock<IGeoAreaFinder> _areaFinder;
         private readonly Scrapper _service;
 
@@ -19,7 +19,7 @@ namespace WebAPI.Tests.Services
         {
             _configMock = new Mock<IConfiguration>();
             _httpClientMock = new Mock<IHttpClientProvider>();
-            _nodeParserMock = new Mock<INodeParser>();
+            _nodeParserMock = new Mock<INodeProcessor>();
             _areaFinder = new Mock<IGeoAreaFinder>();
 
             _httpClientMock.Setup(mock => mock.GetHtmlDocument(It.IsAny<string>())).Returns("some_html_document");

@@ -31,10 +31,11 @@ namespace WebAPI
             services.AddTransient<IStringParser, StringParser>();
             services.AddTransient<IUpdatedVesselFactory, UpdatedVesselFactory>();
             services.AddTransient<IScrapper, Scrapper>();
-            services.AddTransient<INodeParser, NodeParser>();
+            services.AddTransient<INodeProcessor, NodeProcessor>();
             services.AddTransient<IGeoAreaFinder, GeoAreaFinder>();
             services.AddTransient<IMemoryAccess, MemoryAccess>();
             services.AddTransient<IExceptionProcessor, ExceptionProcessor>();
+            services.AddTransient<INodeCreator, NodeCreator>();
             services.AddTransient<DataRepository>();
             services.AddMemoryCache();
             services.AddMvc();
