@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebAPI.App\WebAPI.App.csproj" />
-    <ProjectReference Include="..\WebAPI.Client\WebAPI.Client.csproj" />
     <ProjectReference Include="..\WebAPI.Models\WebAPI.Models.csproj" />
     <ProjectReference Include="..\WebAPI.Services\WebAPI.Services.csproj" />
   </ItemGroup>
