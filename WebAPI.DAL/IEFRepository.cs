@@ -3,7 +3,7 @@ using WebAPI.Models;
 
 namespace WebAPI.DAL
 {
-    public interface IDataRepository
+    public interface IEFRepository
     {
         List<SeaModel> GetAllSeaAreas();
         List<VesselAisUpdateModel> GetAllVesselsUpdateModels();

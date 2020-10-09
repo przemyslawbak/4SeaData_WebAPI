@@ -22,7 +22,7 @@ namespace WebAPI.Services
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
-                IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
                 return _repo.GetAllSeaAreas();
             };
         }
@@ -31,7 +31,7 @@ namespace WebAPI.Services
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
-                IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
                 return _repo.GetAllVesselsUpdateModels();
             };
         }
@@ -40,7 +40,7 @@ namespace WebAPI.Services
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
-                IDataRepository _repo = scope.ServiceProvider.GetRequiredService<DataRepository>();
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
                 _repo.SaveDatabaseQuantities();
             };
         }
@@ -55,11 +55,9 @@ namespace WebAPI.Services
 
         private void UpdateAllVessels(List<VesselUpdateModel> updatedVessels)
         {
-            string query = string.Empty;
-
             if (updatedVessels.Count > 0)
             {
-                query = _queryBuilder.GetCompleteQuery(updatedVessels);
+                _queryBuilder.CreateAndSendUpdatesQuery(updatedVessels);
             }
         }
     }

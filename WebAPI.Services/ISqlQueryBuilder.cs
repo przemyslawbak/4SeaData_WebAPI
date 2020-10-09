@@ -5,6 +5,6 @@ namespace WebAPI.Services
 {
     public interface ISqlQueryBuilder
     {
-        string GetCompleteQuery(List<VesselUpdateModel> updatedVessels);
+        void CreateAndSendUpdatesQuery(List<VesselUpdateModel> updatedVessels);
     }
 }

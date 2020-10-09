@@ -23,5 +23,6 @@ namespace WebAPI.Services
         string GetTrimmedTime1(string node);
         bool IsRowTimeRow(string innerHtml);
         string GetTrimmedTime2(string innerHtml);
+        string MakeFirstCharactersToUpper(string aISStatus);
     }
 }

@@ -9,11 +9,11 @@ namespace WebAPI.DAL
 {
     //todo: refactor
     //todo: performance test and compare with sql connection
-    public class DataRepository : IDataRepository
+    public class EFRepository : IEFRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public DataRepository(ApplicationDbContext ctx)
+        public EFRepository(ApplicationDbContext ctx)
         {
             _context = ctx;
         }
