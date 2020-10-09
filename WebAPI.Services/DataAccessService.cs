@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using WebAPI.DAL;
 using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    //todo: Resilient connections - https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/work-with-data-in-asp-net-core-apps
     public class DataAccessService : IDataAccessService
     {
         private readonly IServiceScopeFactory _scopeFactory;

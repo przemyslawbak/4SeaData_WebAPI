@@ -204,5 +204,15 @@ namespace WebAPI.Services
         {
             return _returnedResultsQuantity;
         }
+
+        public void SetUpdatingDatabaseTrue()
+        {
+            _updatingDatabase = true;
+        }
+
+        public void SetUpdatingDatabaseFalse()
+        {
+            _updatingDatabase = false;
+        }
     }
 }

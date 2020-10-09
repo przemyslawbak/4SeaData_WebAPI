@@ -24,5 +24,7 @@ namespace WebAPI.Services
         void AddSkipped();
         int GetCurrentUpdateStep(int counter, int step);
         int GetReturnedResultsQuantity();
+        void SetUpdatingDatabaseTrue();
+        void SetUpdatingDatabaseFalse();
     }
 }

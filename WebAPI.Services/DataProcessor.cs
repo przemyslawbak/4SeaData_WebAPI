@@ -100,7 +100,9 @@ namespace WebAPI.Services
             }
             finally
             {
+                _progress.SetUpdatingDatabaseTrue();
                 SaveUpdatedVessels(updatedVessels);
+                _progress.SetUpdatingDatabaseFalse();
             }
         }
 
