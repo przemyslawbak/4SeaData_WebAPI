@@ -12,6 +12,7 @@ namespace WebAPI.Services
         private readonly IADORepository _adoRepo;
         private readonly IStringParser _stringParser;
 
+        //todo: unit testing, some day
         public SqlQueryBuilder(IUpdatingProgress progress, IADORepository adoRepo, IStringParser stringParser)
         {
             _progress = progress;
