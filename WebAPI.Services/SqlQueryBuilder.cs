@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using WebAPI.DAL;
 using WebAPI.Models;
@@ -37,24 +38,23 @@ namespace WebAPI.Services
         {
             if (update == null) return false;
 
-            if (update.AISLatestActivity == null &&
-                update.AISStatus == null &&
-                update.ETA == null &&
-                update.GeographicalArea == null &&
-                update.Course == null &&
-                update.Destination == null &&
-                update.Draught == null &&
-                update.Lat == null &&
-                update.Lon == null &&
-                update.Speed == null) return false;
+            if (NonNullPropertiesCount(update) <= 2) return false;
 
             return true;
+        }
+
+        private int NonNullPropertiesCount(VesselUpdateModel entity)
+        {
+            return entity.GetType()
+                         .GetProperties()
+                         .Select(x => x.GetValue(entity, null))
+                         .Count(v => v != null);
         }
 
         private string GetVesselUpdateQuery(VesselUpdateModel update)
         {
             VesselAisUpdateModel existingVessel = FindExistingVessel(update.IMO);
-            existingVessel.Imo = update.IMO.Value;
+            existingVessel.Imo = update.IMO;
 
             return BuildSingleVesselQuery(existingVessel, update);
         }
