@@ -36,6 +36,7 @@ namespace WebAPI
             services.AddTransient<IMemoryAccess, MemoryAccess>();
             services.AddTransient<IExceptionProcessor, ExceptionProcessor>();
             services.AddTransient<INodeCreator, NodeCreator>();
+            services.AddTransient<ISqlQueryBuilder, SqlQueryBuilder>();
             services.AddTransient<DataRepository>();
             services.AddMemoryCache();
             services.AddMvc();

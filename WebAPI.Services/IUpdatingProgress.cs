@@ -23,5 +23,6 @@ namespace WebAPI.Services
         void UpdateMissingProperties(VesselUpdateModel updatedVessel);
         void AddSkipped();
         int GetCurrentUpdateStep(int counter, int step);
+        int GetReturnedResultsQuantity();
     }
 }

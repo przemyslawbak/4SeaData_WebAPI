@@ -42,7 +42,7 @@ namespace WebAPI.Services
 
             if (updatedVessel != null)
             {
-                _dataService.SaveUpdatedVessel(updatedVessel);
+                _dataService.SaveUpdatedVessels(new List<VesselUpdateModel>() { updatedVessel });
 
                 return true;
             }
@@ -106,10 +106,7 @@ namespace WebAPI.Services
 
         private void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels)
         {
-            foreach (var vessel in updatedVessels)
-            {
-                _dataService.SaveUpdatedVessel(vessel);
-            }
+            _dataService.SaveUpdatedVessels(updatedVessels);
         }
 
         private SemaphoreSlim GetSemaphoreThrottel()

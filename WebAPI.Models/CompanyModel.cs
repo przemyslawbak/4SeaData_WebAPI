@@ -24,6 +24,7 @@ namespace WebAPI.Models
         public string[] FleetTypes { get; set; } //vsl repo
         public string Website { get; set; } //csv
         public bool? WebsiteStatus { get; set; } //csv
+
         public List<EmailModel> EmailList { get; set; } //.Include(c => c.EmailList)
         public List<VesselModel> VesselOwner { get; set; } //.Include(c => c.VesselOwner)
         public List<VesselModel> VesselManager { get; set; } //.Include(c => c.VesselManager)

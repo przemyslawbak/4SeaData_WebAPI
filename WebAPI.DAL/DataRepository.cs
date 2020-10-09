@@ -4,8 +4,6 @@ using WebAPI.Models;
 using System.Linq;
 using Updater.Models;
 using System;
-using System.Text.RegularExpressions;
-using System.Reflection;
 
 namespace WebAPI.DAL
 {
@@ -18,27 +16,6 @@ namespace WebAPI.DAL
         public DataRepository(ApplicationDbContext ctx)
         {
             _context = ctx;
-        }
-
-        public void SaveUpdatedVessels(List<VesselModel> updatedVessels)
-        {
-            foreach (var vessel in updatedVessels)
-            {
-                VesselModel vsl = _context.Vessels.First(v => v.VesselId == vessel.VesselId);
-                VesselModel vsl_updated = vessel;
-
-                foreach (PropertyInfo fromProp in typeof(VesselModel).GetProperties())
-                {
-                    PropertyInfo toProp = typeof(VesselModel).GetProperty(fromProp.Name);
-                    object toValue = toProp.GetValue(vsl_updated, null);
-                    if (toValue != null)
-                    {
-                        fromProp.SetValue(vsl, toValue, null);
-                    }
-                }
-            }
-
-            _context.SaveChanges();
         }
 
         public List<SeaModel> GetAllSeaAreas()
@@ -145,18 +122,6 @@ namespace WebAPI.DAL
         private AppSettings GetSettings()
         {
             return _context.Settings.FirstOrDefault();
-        }
-
-        private string CleanUpStringCases(string someString) //todo: service
-        {
-            if (!string.IsNullOrEmpty(someString))
-            {
-                someString = Regex.Replace(someString.Trim().ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
-                if (someString.Contains("'"))
-                    someString = someString.Replace("'", "`");
-            }
-
-            return someString;
         }
     }
 }

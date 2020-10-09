@@ -9,19 +9,15 @@ namespace WebAPI.DAL
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<LogModel> UpdatingLogs { get; set; }
         public DbSet<CompanyModel> Companies { get; set; }
         public DbSet<EmailModel> Emails { get; set; }
         public DbSet<VesselModel> Vessels { get; set; }
         public DbSet<AppSettings> Settings { get; set; }
         public DbSet<SeaModel> Seas { get; set; }
 
-        //credits: https://stackoverflow.com/a/53703521
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            //one-to-many
 
             modelBuilder.Entity<CompanyModel>()
                .HasMany(c => c.VesselOwner)
@@ -30,6 +26,7 @@ namespace WebAPI.DAL
             modelBuilder.Entity<CompanyModel>()
                .HasMany(c => c.VesselManager)
                .WithOne(e => e.CompanyManager);
+
             modelBuilder.Entity<CompanyModel>()
                .HasMany(c => c.EmailList)
                .WithOne(e => e.Company);

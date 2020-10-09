@@ -8,6 +8,6 @@ namespace WebAPI.Services
         List<VesselAisUpdateModel> GetVesselsToBeUpdated();
         void SaveDatabaseQuantities();
         List<SeaModel> GetSeaAreas();
-        void SaveUpdatedVessel(VesselUpdateModel updatedVessels);
+        void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels);
     }
 }

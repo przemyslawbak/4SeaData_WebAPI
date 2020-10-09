@@ -199,5 +199,10 @@ namespace WebAPI.Services
                 return counter + step;
             }
         }
+
+        public int GetReturnedResultsQuantity()
+        {
+            return _returnedResultsQuantity;
+        }
     }
 }

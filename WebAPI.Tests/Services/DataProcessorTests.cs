@@ -19,7 +19,8 @@ namespace WebAPI.Tests.Services
         private readonly Mock<IDataAccessService> _dataServMock;
         private readonly Mock<IExceptionProcessor> _exceptionsMock;
         private readonly DataProcessor _service;
-        private readonly VesselUpdateModel _returnedVessel;
+        private readonly List<VesselUpdateModel> _returnedVessels;
+        private readonly VesselUpdateModel _returnedSingleVessel;
         private readonly string _exMethodName;
 
         public DataProcessorTests()
@@ -32,7 +33,7 @@ namespace WebAPI.Tests.Services
             _exceptionsMock = new Mock<IExceptionProcessor>();
 
             _exMethodName = "method_name";
-            _returnedVessel = new VesselUpdateModel()
+            _returnedSingleVessel = new VesselUpdateModel()
             {
                 Course = 0.1,
                 AISLatestActivity = null,
@@ -46,6 +47,10 @@ namespace WebAPI.Tests.Services
                 Lon = 1.12,
                 MMSI = 11111112,
                 Speed = 1.3
+            };
+            _returnedVessels = new List<VesselUpdateModel>()
+            {
+                _returnedSingleVessel
             };
 
             _exceptionsMock.Setup(mock => mock.GetMethodNameThrowingException(It.IsAny<Exception>())).Returns(_exMethodName);
@@ -67,12 +72,12 @@ namespace WebAPI.Tests.Services
         private async Task UpdateSingleVesselAsync_OnReceivedVessel_ReturnsTrueAndCallsSaveUpdatedVesselOnce()
         {
             _updatesMock.Setup(mock => mock.GetVesselUpdatesAsync(It.IsAny<VesselAisUpdateModel>(), It.IsAny<CancellationToken>(), It.IsAny<SemaphoreSlim>()))
-                .ReturnsAsync(_returnedVessel);
+                .ReturnsAsync(_returnedSingleVessel);
 
             bool result = await _service.UpdateSingleVesselAsync(11111111, 11111112, "basic");
 
             Assert.True(result);
-            _dataServMock.Verify(mock => mock.SaveUpdatedVessel(_returnedVessel), Times.Once); ;
+            _dataServMock.Verify(mock => mock.SaveUpdatedVessels(_returnedVessels), Times.Once);
         }
 
         [Fact]
@@ -84,7 +89,7 @@ namespace WebAPI.Tests.Services
             bool result = await _service.UpdateSingleVesselAsync(11111111, 11111112, "basic");
 
             Assert.False(result);
-            _dataServMock.Verify(mock => mock.SaveUpdatedVessel(_returnedVessel), Times.Never); ;
+            _dataServMock.Verify(mock => mock.SaveUpdatedVessels(_returnedVessels), Times.Never);
         }
 
         [Fact]
