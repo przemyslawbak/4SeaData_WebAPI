@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using WebAPI.Models;
 
 namespace WebAPI.Services
@@ -29,6 +30,17 @@ namespace WebAPI.Services
             string result = xpathDict[methodName];
 
             return result;
+        }
+        public string MakeFirstCharactersToUpper(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                text = Regex.Replace(text.Trim().ToLower(), @"(^\w)|(\s\w)", m => m.Value.ToUpper());
+                if (text.Contains("'"))
+                    text = text.Replace("'", "`");
+            }
+
+            return text;
         }
 
         public string BuildUpdatedVesselInfo(VesselUpdateModel result)

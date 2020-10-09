@@ -219,6 +219,16 @@ namespace WebAPI.Tests.Services
             Assert.Equal(expected, result);
         }
 
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("some string to process", "Some String To Process")]
+        private void MakeFirstCharactersToUpper_OnPropeTextParameter_ReturnsProperResult(string text, string expected)
+        {
+            string result = _service.MakeFirstCharactersToUpper(text);
+
+            Assert.Equal(expected, result);
+        }
+
         public static readonly object[][] dates =
         {
             new object[] { "2020/10/08", new DateTime(2020, 10, 08)},
