@@ -7,8 +7,6 @@ using System;
 
 namespace WebAPI.DAL
 {
-    //todo: refactor
-    //todo: performance test and compare with sql connection
     public class EFRepository : IEFRepository
     {
         private readonly ApplicationDbContext _context;
@@ -36,7 +34,7 @@ namespace WebAPI.DAL
             return result;
         }
 
-        public void SaveDatabaseQuantities() //todo: service
+        public void SaveDatabaseQuantities()
         {
             AppSettings settings = GetSettings();
 

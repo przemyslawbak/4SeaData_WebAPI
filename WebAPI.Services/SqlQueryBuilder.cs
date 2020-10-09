@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using WebAPI.DAL;
 using WebAPI.Models;
@@ -59,6 +57,25 @@ namespace WebAPI.Services
             existingVessel.Imo = update.IMO.Value;
 
             return BuildSingleVesselQuery(existingVessel, update);
+        }
+
+        private VesselAisUpdateModel FindExistingVessel(int? iMO)
+        {
+            string searchQuery = BuildSearchQuery(iMO);
+
+            return _adoRepo.GetVesselData(searchQuery);
+        }
+
+        private string BuildSearchQuery(int? iMO)
+        {
+            if (_progress.GetReturnedResultsQuantity() < _progress.GetTotalResultsQuantity() / 2)
+            {
+                return "SELECT TOP 1 VesselId,MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + " ORDER BY VesselId DESC;";
+            }
+            else
+            {
+                return "SELECT TOP 1 VesselId,MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + ";";
+            }
         }
 
         private string BuildSingleVesselQuery(VesselAisUpdateModel existingVessel, VesselUpdateModel update)
@@ -121,25 +138,6 @@ namespace WebAPI.Services
             vesselQuerySb.AppendLine();
 
             return vesselQuerySb.ToString();
-        }
-
-        private VesselAisUpdateModel FindExistingVessel(int? iMO)
-        {
-            string searchQuery = BuildSearchQuery(iMO);
-
-            return _adoRepo.GetVesselData(searchQuery);
-        }
-
-        private string BuildSearchQuery(int? iMO)
-        {
-            if (_progress.GetReturnedResultsQuantity() < _progress.GetTotalResultsQuantity() / 2)
-            {
-                return "SELECT TOP 1 VesselId,MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + " ORDER BY VesselId DESC;";
-            }
-            else
-            {
-                return "SELECT TOP 1 VesselId,MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + ";";
-            }
         }
     }
 }
