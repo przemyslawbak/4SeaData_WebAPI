@@ -194,6 +194,116 @@ namespace WebAPI.Client
             }
         }
 
+        private int _missingLat;
+        public int MissingLat
+        {
+            get => _missingLat;
+            set
+            {
+                _missingLat = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingLon;
+        public int MissingLon
+        {
+            get => _missingLon;
+            set
+            {
+                _missingLon = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingDest;
+        public int MissingDest
+        {
+            get => _missingDest;
+            set
+            {
+                _missingDest = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingDra;
+        public int MissingDra
+        {
+            get => _missingDra;
+            set
+            {
+                _missingDra = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingSpeed;
+        public int MissingSpeed
+        {
+            get => _missingSpeed;
+            set
+            {
+                _missingSpeed = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingCog;
+        public int MissingCog
+        {
+            get => _missingCog;
+            set
+            {
+                _missingCog = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingTime;
+        public int MissingTime
+        {
+            get => _missingTime;
+            set
+            {
+                _missingTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingEtas;
+        public int MissingEtas
+        {
+            get => _missingEtas;
+            set
+            {
+                _missingEtas = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingStat;
+        public int MissingStat
+        {
+            get => _missingStat;
+            set
+            {
+                _missingStat = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _missingAreas;
+        public int MissingAreas
+        {
+            get => _missingAreas;
+            set
+            {
+                _missingAreas = value;
+                OnPropertyChanged();
+            }
+        }
+
         private async void TimedMehodTrigger()
         {
             await DispatcherTimer_ExecuteStatusUpdate();
