@@ -51,6 +51,21 @@ namespace WebAPI.Client
             }
         }
 
+        private async void TimedMehodTrigger()
+        {
+            await DispatcherTimer_ExecuteStatusUpdate();
+
+            RunStatusUpdates();
+        }
+
+        private void RunStatusUpdates()
+        {
+            DispatcherTimer dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += async (s, e) => await DispatcherTimer_ExecuteStatusUpdate();
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
+            dispatcherTimer.Start();
+        }
+
         private string _status;
         public string Status
         {
@@ -304,21 +319,6 @@ namespace WebAPI.Client
             }
         }
 
-        private async void TimedMehodTrigger()
-        {
-            await DispatcherTimer_ExecuteStatusUpdate();
-
-            RunStatusUpdates();
-        }
-
-        private void RunStatusUpdates()
-        {
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += async (s, e) => await DispatcherTimer_ExecuteStatusUpdate();
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
-            dispatcherTimer.Start();
-        }
-
         private async Task DispatcherTimer_ExecuteStatusUpdate()
         {
             StatusModel status = new StatusModel();
@@ -332,12 +332,11 @@ namespace WebAPI.Client
                     string jsonString = await response.Content.ReadAsStringAsync();
                     status = JsonConvert.DeserializeObject<StatusModel>(jsonString);
 
-                    UpdateProerties(status);
+                    UpdateProperties(status);
                 }
                 else
                 {
-                    Status = "ERROR";
-                    //TODO log
+                    Status = "ERROR code: " + response.StatusCode;
                 }
             }
             catch (Exception ex)
@@ -348,7 +347,7 @@ namespace WebAPI.Client
             //TODO: update props
         }
 
-        private void UpdateProerties(StatusModel status)
+        private void UpdateProperties(StatusModel status)
         {
             LastStartedTime = status.LastStartedTime;
             LastCompletedTime = status.LastCompletedTime;
@@ -362,36 +361,40 @@ namespace WebAPI.Client
             LastUpdatedVessel = status.LastUpdatedVessel;
             MemoryMegabytesUsage = status.MemoryMegabytesUsage;
             UpdatingDatabase = status.UpdatingDatabase;
+            MissingAreas = status.MissingAreas;
+            MissingCog = status.MissingCourses;
+            MissingDest = status.MissingDestinations;
+            MissingDra = status.MissingDraughts;
+            MissingEtas = status.MissingEtas;
+            MissingLat = status.MissingLats;
+            MissingLon = status.MissingLongs;
+            MissingSpeed = status.MissingSpeeds;
+            MissingStat = status.MissingStatuses;
+            MissingTime = status.MissingActivityTimes;
 
-            Status = ResolveStatus();
+            Status = GetStatus();
         }
 
-        private string ResolveStatus()
+        private string GetStatus()
         {
-            string status = "ERROR";
-
             if (Finalizing)
             {
-                status = "Finalizing";
-            }
-            else if (UpdatingDatabase) //TODO: not displayed
-            {
-                status = "Updating DB";
+                return "Finalizing";
             }
             else if (IsUpdatingPaused)
             {
-                status = "Paused";
+                return "Paused";
+            }
+            else if (UpdatingDatabase)
+            {
+                return "Updating DB";
             }
             else if (IsUpdatingInProgress)
             {
-                status = "Running";
-            }
-            else
-            {
-                status = "Stopped";
+                return "Running";
             }
 
-            return status;
+            return "Undefined";
         }
 
         private async void BtnStop_Click(object sender, RoutedEventArgs e)
