@@ -387,12 +387,26 @@ namespace WebAPI.Client
 
         private async void BtnStop_Click(object sender, RoutedEventArgs e)
         {
-            //todo: implement
+            HttpResponseMessage response = await _client.GetAsync(_stopEndpoint);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string message = await response.Content.ReadAsStringAsync();
+                MessageBox.Show("Can not proceed, error: " + message + ", status:" + response.StatusCode);
+            }
         }
 
         private async void BtnPauseContinue_Click(object sender, RoutedEventArgs e)
         {
-            //todo: implement
+            HttpResponseMessage response = await _client.GetAsync(_pauseEndpoint);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string message = await response.Content.ReadAsStringAsync();
+                MessageBox.Show("Can not proceed, error: " + message + ", status:" + response.StatusCode);
+            }
+
+            await DispatcherTimer_ExecuteStatusUpdate();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
