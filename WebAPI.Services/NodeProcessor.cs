@@ -70,7 +70,7 @@ namespace WebAPI.Services
                 {
                     if (_stringParser.IsContainingMmsi(row.InnerHtml))
                     {
-                        return _stringParser.ParsedInt(row.ChildNodes[1].InnerText);
+                        return _stringParser.ParsedInt(_stringParser.GetTrimmedMmsi(row.InnerHtml));
                     }
                 }
             }

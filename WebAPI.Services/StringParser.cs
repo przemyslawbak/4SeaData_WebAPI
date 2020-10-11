@@ -53,13 +53,25 @@ namespace WebAPI.Services
             return null;
         }
 
+        public string GetTrimmedMmsi(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("MMSI:")) return null;
+
+            return DecodeAndTrim(text).Split(new string[] { "MMSI:" }, StringSplitOptions.None)[1]
+                .Split('>')[2]
+                .Split('<')[0]
+                .Trim();
+        }
+
         public string GetTrimmedTime2(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
             if (!text.Contains("<span>")) return null;
 
-            return text.Split(new string[] { "<span>" }, StringSplitOptions.None)[1]
-                            .Split('<')[0];
+            return DecodeAndTrim(text).Split(new string[] { "<span>" }, StringSplitOptions.None)[1]
+                            .Split('<')[0]
+                            .Trim();
         }
 
         public string GetTrimmedTime1(string text)
@@ -69,7 +81,8 @@ namespace WebAPI.Services
             if (!text.Contains("<td class=\"v3 tooltip expand\" data-title=\"")) return null;
 
             return DecodeAndTrim(text).Split(new string[] { "<td class=\"v3 tooltip expand\" data-title=\"" }, StringSplitOptions.None)[1]
-                    .Split(new string[] { " UTC" }, StringSplitOptions.None)[0].Trim();
+                    .Split(new string[] { " UTC" }, StringSplitOptions.None)[0]
+                    .Trim();
         }
 
         public string GetAisStatusTrimmed(string text)
@@ -77,7 +90,10 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
             if (!text.Contains("Navigational status:</div><div class=")) return null;
 
-            return DecodeAndTrim(text).Split(new string[] { "Navigational status:</div><div class=" }, StringSplitOptions.None)[1].Split('>')[1].Split('<')[0].Trim();
+            return DecodeAndTrim(text).Split(new string[] { "Navigational status:</div><div class=" }, StringSplitOptions.None)[1]
+                .Split('>')[1]
+                .Split('<')[0]
+                .Trim();
 
         }
 
@@ -97,7 +113,9 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
             if (!text.Contains("°")) return null;
 
-            return DecodeAndTrim(text).Split('°')[0].Trim();
+            return DecodeAndTrim(text)
+                .Split('°')[0]
+                .Trim();
         }
 
         public string GetTrimmedSpeed(string text)
@@ -106,7 +124,10 @@ namespace WebAPI.Services
             if (!text.Contains("k")) return null;
             if (!text.Contains("/")) return null;
 
-            return DecodeAndTrim(text).Split('/')[1].Split('k')[0].Trim();
+            return DecodeAndTrim(text)
+                .Split('/')[1]
+                .Split('k')[0]
+                .Trim();
         }
 
 
@@ -115,14 +136,19 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
             if (!text.Contains("/")) return null;
             if (!text.Contains(" ")) return null;
-            string trimmed = DecodeAndTrim(text).Split('/')[1];
+            string trimmed = DecodeAndTrim(text)
+                .Split('/')[1];
             if (trimmed.Contains("E"))
             {
-                return trimmed.Split(' ')[0].Trim();
+                return trimmed
+                    .Split(' ')[0]
+                    .Trim();
             }
             else if (trimmed.Contains("W"))
             {
-                return "-" + trimmed.Split(' ')[0].Trim();
+                return "-" + trimmed
+                    .Split(' ')[0]
+                    .Trim();
             }
 
             return null;
@@ -133,14 +159,19 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
             if (!text.Contains("/")) return null;
             if (!text.Contains(" ")) return null;
-            string trimmed = DecodeAndTrim(text).Split('/')[0];
+            string trimmed = DecodeAndTrim(text)
+                .Split('/')[0];
             if (trimmed.Contains("N"))
             {
-                return trimmed.Split(' ')[0].Trim();
+                return trimmed
+                    .Split(' ')[0]
+                    .Trim();
             }
             else if (trimmed.Contains("S"))
             {
-                return "-" + trimmed.Split(' ')[0].Trim();
+                return "-" + trimmed
+                    .Split(' ')[0]
+                    .Trim();
             }
 
             return null;
@@ -151,7 +182,8 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
             if (text.Contains(" m"))
             {
-                return DecodeAndTrim(text).Replace(" m", "");
+                return DecodeAndTrim(text)
+                    .Replace(" m", "");
             }
 
             return null;
@@ -162,7 +194,10 @@ namespace WebAPI.Services
             if (string.IsNullOrEmpty(text)) return null;
             if (!text.Contains("<td class=\"v3\">")) return null;
 
-            return text.Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1].Split('<')[0];
+            return text
+                .Split(new string[] { "<td class=\"v3\">" }, StringSplitOptions.None)[1]
+                .Split('<')[0]
+                .Trim();
         }
 
         public bool IsTableRowCorrect(string text)

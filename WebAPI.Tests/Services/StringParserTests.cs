@@ -163,6 +163,17 @@ namespace WebAPI.Tests.Services
         }
 
         [Theory]
+        [InlineData(null, null)]
+        [InlineData("MMSI:<td class=\"v3\">some_text<div>11111111<div>", "11111111")]
+        [InlineData("MMSI<td class=\"v3\">some_text<div>11111111<div>", null)]
+        private void GetTrimmedMmsi_OnPropeTextParameter_ReturnsProperResult(string text, string expected)
+        {
+            string result = _service.GetTrimmedMmsi(text);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
         [InlineData(null, false)]
         [InlineData("<td class=\"v3\">", true)]
         [InlineData("<td class=\"v4\">", false)]
