@@ -99,17 +99,6 @@ namespace WebAPI.Client
             }
         }
 
-        private DateTime _nextPlannedTime;
-        public DateTime NextPlannedTime
-        {
-            get => _nextPlannedTime;
-            set
-            {
-                _nextPlannedTime = value;
-                OnPropertyChanged();
-            }
-        }
-
         private bool _isUpdatingPaused;
         public bool IsUpdatingPaused
         {
@@ -351,7 +340,6 @@ namespace WebAPI.Client
         {
             LastStartedTime = status.LastStartedTime;
             LastCompletedTime = status.LastCompletedTime;
-            NextPlannedTime = status.NextPlannedTime;
             IsUpdatingPaused = status.IsUpdatingPaused;
             IsUpdatingInProgress = status.IsUpdatingInProgress;
             Finalizing = status.Finalizing;

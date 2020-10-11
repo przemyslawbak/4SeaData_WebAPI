@@ -6,7 +6,6 @@ namespace WebAPI.Models
     {
         public DateTime LastStartedTime { get; set; }
         public DateTime LastCompletedTime { get; set; }
-        public DateTime NextPlannedTime { get; set; }
         public bool IsUpdatingPaused { get; set; }
         public bool IsUpdatingInProgress { get; set; }
         public bool Finalizing { get; set; }

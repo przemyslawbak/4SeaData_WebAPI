@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WebAPI.Client"
         mc:Ignorable="d"
-        Title="Updater Client" Height="500" Width="533" MinWidth="400" MinHeight="300">
+        Title="Updater Client" Height="510" Width="533" MinWidth="400" MinHeight="300">
     <Window.Resources>
         <ResourceDictionary>
             <BitmapImage x:Key="logo" UriSource="pack://siteoforigin:,,,/Resources/logo_blue_small.png" />
@@ -14,6 +14,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -152,41 +153,33 @@
                    Text="{Binding LastCompletedTime,StringFormat={}{0:HH:mm}, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="4"
                    Grid.Column="0"
-                   Text="Next planned: "
+                   Text="Checked: "
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="4"
                    Grid.Column="1"
                    Grid.ColumnSpan="2"
-                   Text="{Binding NextPlannedTime,StringFormat={}{0:HH:mm}, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="5"
-                   Grid.Column="0"
-                   Text="Checked: "
-                   TextAlignment="Right"/>
-        <TextBlock Grid.Row="5"
-                   Grid.Column="1"
-                   Grid.ColumnSpan="2"
                    Text="{Binding ReturnedVesselsInCurrent, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="6"
+        <TextBlock Grid.Row="5"
                    Grid.Column="0"
                    Text="Failed: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="6"
+        <TextBlock Grid.Row="5"
                    Grid.Column="1"
                    Grid.ColumnSpan="2"
                    Text="{Binding FailedResultsQuantity, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="7"
+        <TextBlock Grid.Row="6"
                    Grid.Column="0"
                    Text="Memory used (MB): "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="7"
+        <TextBlock Grid.Row="6"
                    Grid.Column="1"
                    Grid.ColumnSpan="2"
                    Text="{Binding MemoryMegabytesUsage, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="8"
+        <TextBlock Grid.Row="7"
                    Grid.Column="0"
                    Text="Last vessel: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="8"
+        <TextBlock Grid.Row="7"
                    Grid.Column="1"
                    Grid.ColumnSpan="2"
                    Text="{Binding LastUpdatedVessel, UpdateSourceTrigger=PropertyChanged}"/>

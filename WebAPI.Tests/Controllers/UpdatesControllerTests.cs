@@ -35,7 +35,6 @@ namespace WebAPI.Tests.Controllers
                 LastStartedTime = new DateTime(2000, 01, 03),
                 LastUpdatedVessel = "some_vessel",
                 MemoryMegabytesUsage = 152.66F,
-                NextPlannedTime = new DateTime(2000, 01, 04),
                 ReurnedVesselsInCurrent = 34623,
                 TotalResultsQuantity = 190300,
                 UpdatingDatabase = true,
@@ -163,7 +162,6 @@ namespace WebAPI.Tests.Controllers
             Assert.Equal(152.66F, resultData.MemoryMegabytesUsage);
             Assert.Equal(34623, resultData.ReurnedVesselsInCurrent);
             Assert.Equal(190300, resultData.TotalResultsQuantity);
-            Assert.Equal(new DateTime(2000, 01, 04).ToString(), resultData.NextPlannedTime.ToString());
             Assert.Equal(new DateTime(2000, 01, 03).ToString(), resultData.LastStartedTime.ToString());
             Assert.Equal(new DateTime(2000, 01, 02).ToString(), resultData.LastCompletedTime.ToString());
             Assert.Equal(2, resultData.MissingStatuses);

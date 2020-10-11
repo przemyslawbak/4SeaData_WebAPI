@@ -10,7 +10,6 @@ namespace WebAPI.Services
         private bool _updatingDatabase;
         private DateTime _lastStartedTime;
         private DateTime _lastCompletedTime;
-        private DateTime _nextPlannedTime;
         private bool _isUpdatingPaused;
         private bool _isUpdatingInProgress;
         private int _failedResultsQuantity;
@@ -19,7 +18,6 @@ namespace WebAPI.Services
         private int _skippedResultsQuantity;
         private string _lastUpdatedVessel;
         private string _lastError;
-        private CancellationTokenSource _tokenSource;
         private CancellationToken _cancellationToken;
 
         private int _missingLatCounter;
@@ -54,7 +52,6 @@ namespace WebAPI.Services
                 MissingStatuses = _missingStatusCounter,
                 LastStartedTime = _lastStartedTime,
                 LastCompletedTime = _lastCompletedTime,
-                NextPlannedTime = _nextPlannedTime,
                 IsUpdatingInProgress = _isUpdatingInProgress,
                 IsUpdatingPaused = _isUpdatingPaused,
                 FailedResultsQuantity = _failedResultsQuantity,
@@ -82,7 +79,6 @@ namespace WebAPI.Services
         {
             _isUpdatingInProgress = true;
             _lastStartedTime = DateTime.UtcNow;
-            _nextPlannedTime = _lastStartedTime.AddMinutes(2);
             ResetMissingCounters();
         }
 
