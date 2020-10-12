@@ -79,7 +79,7 @@ namespace WebAPI.Services
                     TotalResultsQuantity = statusModel.TotalResultsQuantity,
                 };
 
-                return _repo.SaveUpdateLogs(updateLog);
+                _repo.SaveUpdateLogs(updateLog);
             };
         }
 
