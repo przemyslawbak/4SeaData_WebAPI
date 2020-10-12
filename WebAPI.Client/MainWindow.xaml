@@ -133,7 +133,7 @@
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="1"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    Text="{Binding Status, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="2"
                    Grid.Column="0"
@@ -141,7 +141,7 @@
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="2"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    Text="{Binding LastStartedTime,StringFormat={}{0:HH:mm}, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="3"
                    Grid.Column="0"
@@ -149,7 +149,7 @@
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="3"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    Text="{Binding LastCompletedTime,StringFormat={}{0:HH:mm}, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="4"
                    Grid.Column="0"
@@ -157,7 +157,7 @@
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="4"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    Text="{Binding ReturnedVesselsInCurrent, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="5"
                    Grid.Column="0"
@@ -165,7 +165,7 @@
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="5"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    Text="{Binding FailedResultsQuantity, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="6"
                    Grid.Column="0"
@@ -173,7 +173,7 @@
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="6"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    Text="{Binding MemoryMegabytesUsage, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="7"
                    Grid.Column="0"
@@ -181,7 +181,7 @@
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="7"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    Text="{Binding LastUpdatedVessel, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </Window>
