@@ -45,9 +45,9 @@ namespace WebAPI.Client
             else
             {
                 _key = ConfigurationManager.AppSettings["clientToken"].ToString();
-                _pauseEndpoint = "http://localhost:44342/api/updates/pausing-updates" + "?key=" + _key;
-                _stopEndpoint = "http://localhost:44342/api/api/updates/stop-updates" + "?key=" + _key;
-                _statusEndpoint = "http://localhost:44342/api/updates/get-status" + "?key=" + _key;
+                _pauseEndpoint = "https://localhost:44342/api/updates/pausing-updates?key=" + _key;
+                _stopEndpoint = "https://localhost:44342/api/updates/stop-updates?key=" + _key;
+                _statusEndpoint = "https://localhost:44342/api/updates/get-status?key=" + _key;
             }
         }
 
@@ -179,7 +179,7 @@ namespace WebAPI.Client
         private string _lastUpdatedVessel;
         public string LastUpdatedVessel
         {
-            get => _lastUpdatedVessel;
+            get => _lastUpdatedVessel ?? "(no data found)";
             set
             {
                 _lastUpdatedVessel = value;
