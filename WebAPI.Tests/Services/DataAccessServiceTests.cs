@@ -10,6 +10,7 @@ namespace WebAPI.Tests.Services
     public class DataAccessServiceTests
     {
         private readonly Mock<IServiceScopeFactory> _scopeFactoryMock;
+        private readonly Mock<IUpdatingProgress> _progressMock;
         private readonly Mock<ISqlQueryBuilder> _sqlBuilderMock;
         private readonly DataAccessService _service;
 
@@ -18,7 +19,7 @@ namespace WebAPI.Tests.Services
             _scopeFactoryMock = new Mock<IServiceScopeFactory>();
             _sqlBuilderMock = new Mock<ISqlQueryBuilder>();
             
-            _service = new DataAccessService(_scopeFactoryMock.Object, _sqlBuilderMock.Object);
+            _service = new DataAccessService(_scopeFactoryMock.Object, _sqlBuilderMock.Object, _progressMock.Object);
         }
 
         [Fact]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using WebAPI.DAL;
 using WebAPI.Models;
@@ -9,11 +10,13 @@ namespace WebAPI.Services
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ISqlQueryBuilder _queryBuilder;
+        private readonly IUpdatingProgress _progress;
 
-        public DataAccessService(IServiceScopeFactory scopeFactory, ISqlQueryBuilder queryBuilder)
+        public DataAccessService(IServiceScopeFactory scopeFactory, ISqlQueryBuilder queryBuilder, IUpdatingProgress progress)
         {
             _scopeFactory = scopeFactory;
             _queryBuilder = queryBuilder;
+            _progress = progress;
         }
 
         public List<SeaModel> GetSeaAreas()
@@ -55,7 +58,15 @@ namespace WebAPI.Services
         {
             if (updatedVessels.Count > 0)
             {
-                _queryBuilder.CreateAndSendUpdatesQuery(updatedVessels);
+                try
+                {
+                    _queryBuilder.CreateAndSendUpdatesQuery(updatedVessels); //todo: unit test catch
+                }
+                catch (Exception ex)
+                {
+                    _progress.SetLastError(ex.Message);
+                    _progress.AddFailedRequest();
+                }
             }
         }
     }
