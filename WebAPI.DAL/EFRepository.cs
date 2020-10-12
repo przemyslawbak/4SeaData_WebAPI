@@ -121,5 +121,12 @@ namespace WebAPI.DAL
         {
             return _context.Settings.FirstOrDefault();
         }
+
+        public void SaveUpdateLogs(UpdateLogModel updateLog)
+        {
+            _context.UpdatingLogs.Add(updateLog);
+
+            _context.SaveChanges();
+        }
     }
 }

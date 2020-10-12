@@ -8,5 +8,6 @@ namespace WebAPI.DAL
         List<SeaModel> GetAllSeaAreas();
         List<VesselAisUpdateModel> GetAllVesselsUpdateModels();
         void SaveDatabaseQuantities();
+        void SaveUpdateLogs(UpdateLogModel updateLog);
     }
 }

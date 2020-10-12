@@ -9,5 +9,6 @@ namespace WebAPI.Services
         void SaveDatabaseQuantities();
         List<SeaModel> GetSeaAreas();
         void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels);
+        void SaveUpdateLogs(StatusModel statusModel);
     }
 }

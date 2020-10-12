@@ -54,6 +54,35 @@ namespace WebAPI.Services
             }
         }
 
+        public void SaveUpdateLogs(StatusModel statusModel)
+        {
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
+
+                var updateLog = new UpdateLogModel()
+                {
+                    TimeCompleted = statusModel.LastCompletedTime,
+                    TimeStarted = statusModel.LastStartedTime,
+                    MissingActivityTimes = statusModel.MissingActivityTimes,
+                    MissingAreas = statusModel.MissingAreas,
+                    FailedResultsQuantity = statusModel.FailedResultsQuantity,
+                    MissingCourses = statusModel.MissingCourses,
+                    MissingDestinations = statusModel.MissingDestinations,
+                    MissingDraughts = statusModel.MissingDraughts,
+                    MissingEtas = statusModel.MissingEtas,
+                    MissingLats = statusModel.MissingLats,
+                    MissingLongs = statusModel.MissingLongs,
+                    MissingSpeeds = statusModel.MissingSpeeds,
+                    MissingStatuses = statusModel.MissingStatuses,
+                    ReurnedVesselsInCurrent = statusModel.ReurnedVesselsInCurrent,
+                    TotalResultsQuantity = statusModel.TotalResultsQuantity,
+                };
+
+                return _repo.SaveUpdateLogs(updateLog);
+            };
+        }
+
         private void UpdateAllVessels(List<VesselUpdateModel> updatedVessels)
         {
             if (updatedVessels.Count > 0)

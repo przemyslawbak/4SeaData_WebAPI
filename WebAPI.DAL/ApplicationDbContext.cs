@@ -14,6 +14,7 @@ namespace WebAPI.DAL
         public DbSet<VesselModel> Vessels { get; set; }
         public DbSet<AppSettings> Settings { get; set; }
         public DbSet<SeaModel> Seas { get; set; }
+        public DbSet<UpdateLogModel> UpdatingLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
