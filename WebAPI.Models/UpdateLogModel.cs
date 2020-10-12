@@ -11,6 +11,7 @@ namespace WebAPI.Models
         public DateTime TimeCompleted { get; set; }
         public int ReurnedVesselsInCurrent { get; set; }
         public int FailedResultsQuantity { get; set; }
+        public int SkippedResultsQuantity { get; set; }
         public int TotalResultsQuantity { get; set; }
         public int MissingLats { get; set; }
         public int MissingLongs { get; set; }

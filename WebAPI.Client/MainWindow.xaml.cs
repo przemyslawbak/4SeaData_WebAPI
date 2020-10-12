@@ -319,6 +319,17 @@ namespace WebAPI.Client
             }
         }
 
+        private int _skippedResults;
+        public int SkippedResultsQuantity
+        {
+            get => _skippedResults;
+            set
+            {
+                _skippedResults = value;
+                OnPropertyChanged();
+            }
+        }
+
         private async Task DispatcherTimer_ExecuteStatusUpdate()
         {
             StatusModel status = new StatusModel();
@@ -360,6 +371,7 @@ namespace WebAPI.Client
             LastUpdatedVessel = status.LastUpdatedVessel;
             LastError = status.LastError;
             MemoryMegabytesUsage = status.MemoryMegabytesUsage;
+            SkippedResultsQuantity = status.SkippedResultsQuantity;
             UpdatingDatabase = status.UpdatingDatabase;
             MissingAreas = status.MissingAreas;
             MissingCog = status.MissingCourses;

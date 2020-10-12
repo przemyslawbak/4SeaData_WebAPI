@@ -29,6 +29,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -55,77 +56,77 @@
         <GroupBox Header="Missing"
 				  Grid.Column="0"
                   Grid.ColumnSpan="4"
-                  Grid.Row="9"
+                  Grid.Row="10"
                   Grid.RowSpan="6"
                           Margin="5"/>
-        <TextBlock Grid.Row="10"
+        <TextBlock Grid.Row="11"
                    Grid.Column="0"
                    Text="Latitudes: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="10"
+        <TextBlock Grid.Row="11"
                    Grid.Column="1"
                    Text="{Binding MissingLat, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="11"
+        <TextBlock Grid.Row="12"
                    Grid.Column="0"
                    Text="Longitudes: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="11"
+        <TextBlock Grid.Row="12"
                    Grid.Column="1"
                    Text="{Binding MissingLon, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="12"
+        <TextBlock Grid.Row="13"
                    Grid.Column="0"
                    Text="Destinations: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="12"
+        <TextBlock Grid.Row="13"
                    Grid.Column="1"
                    Text="{Binding MissingDest, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="13"
+        <TextBlock Grid.Row="14"
                    Grid.Column="0"
                    Text="Draughts: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="13"
+        <TextBlock Grid.Row="14"
                    Grid.Column="1"
                    Text="{Binding MissingDra, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="14"
+        <TextBlock Grid.Row="15"
                    Grid.Column="0"
                    Text="Sea areas: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="14"
+        <TextBlock Grid.Row="15"
                    Grid.Column="1"
                    Text="{Binding MissingAreas, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="10"
+        <TextBlock Grid.Row="11"
                    Grid.Column="2"
                    Text="Speeds: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="10"
+        <TextBlock Grid.Row="11"
                    Grid.Column="3"
                    Text="{Binding MissingSpeed, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="11"
+        <TextBlock Grid.Row="12"
                    Grid.Column="2"
                    Text="Courses: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="11"
+        <TextBlock Grid.Row="12"
                    Grid.Column="3"
                    Text="{Binding MissingCog, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="12"
+        <TextBlock Grid.Row="13"
                    Grid.Column="2"
                    Text="Activity times: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="12"
+        <TextBlock Grid.Row="13"
                    Grid.Column="3"
                    Text="{Binding MissingTime, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="13"
+        <TextBlock Grid.Row="14"
                    Grid.Column="2"
                    Text="ETAs: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="13"
+        <TextBlock Grid.Row="14"
                    Grid.Column="3"
                    Text="{Binding MissingEtas, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="14"
+        <TextBlock Grid.Row="15"
                    Grid.Column="2"
                    Text="Statuses: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="14"
+        <TextBlock Grid.Row="15"
                    Grid.Column="3"
                    Text="{Binding MissingStat, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="1"
@@ -154,7 +155,7 @@
                    Text="{Binding LastCompletedTime,StringFormat={}{0:HH:mm}, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="4"
                    Grid.Column="0"
-                   Text="Checked: "
+                   Text="Results: "
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="4"
                    Grid.Column="1"
@@ -170,25 +171,33 @@
                    Text="{Binding FailedResultsQuantity, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="6"
                    Grid.Column="0"
-                   Text="Memory used (MB): "
+                   Text="Skipped: "
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="6"
                    Grid.Column="1"
                    Grid.ColumnSpan="3"
-                   Text="{Binding MemoryMegabytesUsage, UpdateSourceTrigger=PropertyChanged}"/>
+                   Text="{Binding SkippedResultsQuantity, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="7"
                    Grid.Column="0"
-                   Text="Last vessel: "
+                   Text="Memory used (MB): "
                    TextAlignment="Right"/>
         <TextBlock Grid.Row="7"
                    Grid.Column="1"
                    Grid.ColumnSpan="3"
-                   Text="{Binding LastUpdatedVessel, UpdateSourceTrigger=PropertyChanged}"/>
+                   Text="{Binding MemoryMegabytesUsage, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="8"
+                   Grid.Column="0"
+                   Text="Last vessel: "
+                   TextAlignment="Right"/>
+        <TextBlock Grid.Row="8"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="3"
+                   Text="{Binding LastUpdatedVessel, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="9"
                    Grid.Column="0"
                    Text="Last error: "
                    TextAlignment="Right"/>
-        <TextBlock Grid.Row="8"
+        <TextBlock Grid.Row="9"
                    Grid.Column="1"
                    Grid.ColumnSpan="3"
                    Text="{Binding LastError, UpdateSourceTrigger=PropertyChanged}"/>

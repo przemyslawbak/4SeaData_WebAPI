@@ -77,6 +77,7 @@ namespace WebAPI.Services
                     MissingStatuses = statusModel.MissingStatuses,
                     ReurnedVesselsInCurrent = statusModel.ReurnedVesselsInCurrent,
                     TotalResultsQuantity = statusModel.TotalResultsQuantity,
+                    SkippedResultsQuantity = statusModel.SkippedResultsQuantity,
                 };
 
                 _repo.SaveUpdateLogs(updateLog);
