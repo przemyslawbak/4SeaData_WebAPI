@@ -23,7 +23,7 @@ namespace WebAPI.Client
         private string _statusEndpoint = "";
         private string _key = "";
 
-        private readonly bool _isLocalApi = true; //production: false
+        private readonly bool _isLocalApi = false; //production: false
 
         public MainWindow()
         {

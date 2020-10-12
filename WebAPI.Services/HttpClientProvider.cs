@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 
 namespace WebAPI.Services
 {
@@ -10,7 +11,7 @@ namespace WebAPI.Services
         {
             string html = string.Empty;
 
-            using (HttpResponseMessage response = GetHttpClient().GetAsync(url).Result)
+            using (HttpResponseMessage response = GetHttpClient().GetAsync(new Uri(url, UriKind.Absolute)).Result)
             {
                 using (HttpContent content = response.Content)
                 {
