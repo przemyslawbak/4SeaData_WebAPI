@@ -1,9 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebAPI.Models
 {
     public class UpdateLogModel
     {
+        [Key]
+        public int Id { get; set; }
         public DateTime TimeStarted { get; set; }
         public DateTime TimeCompleted { get; set; }
         public int ReurnedVesselsInCurrent { get; set; }

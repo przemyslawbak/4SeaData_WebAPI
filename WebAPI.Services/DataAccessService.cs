@@ -62,7 +62,7 @@ namespace WebAPI.Services
 
                 var updateLog = new UpdateLogModel()
                 {
-                    TimeCompleted = statusModel.LastCompletedTime,
+                    TimeCompleted = DateTime.UtcNow,
                     TimeStarted = statusModel.LastStartedTime,
                     MissingActivityTimes = statusModel.MissingActivityTimes,
                     MissingAreas = statusModel.MissingAreas,
