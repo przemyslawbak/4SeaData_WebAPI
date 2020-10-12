@@ -77,6 +77,17 @@ namespace WebAPI.Client
             }
         }
 
+        private string _lastError;
+        public string LastError
+        {
+            get => _lastError ?? "(no errors so far)";
+            set
+            {
+                _lastError = value;
+                OnPropertyChanged();
+            }
+        }
+
         private DateTime _lastStartedTime;
         public DateTime LastStartedTime
         {
@@ -347,6 +358,7 @@ namespace WebAPI.Client
             TotalResultsQuantity = status.TotalResultsQuantity;
             ReturnedVesselsInCurrent = status.ReurnedVesselsInCurrent;
             LastUpdatedVessel = status.LastUpdatedVessel;
+            LastError = status.LastError;
             MemoryMegabytesUsage = status.MemoryMegabytesUsage;
             UpdatingDatabase = status.UpdatingDatabase;
             MissingAreas = status.MissingAreas;
