@@ -111,11 +111,11 @@ namespace WebAPI.Services
         public string GetTrimmedCourse(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
-            if (!text.Contains("°")) return null;
+            if (!text.Contains("&deg")) return null;
 
             return DecodeAndTrim(text)
                 .Split('°')[0]
-                .Trim();
+                .Trim(); ;
         }
 
         public string GetTrimmedSpeed(string text)
