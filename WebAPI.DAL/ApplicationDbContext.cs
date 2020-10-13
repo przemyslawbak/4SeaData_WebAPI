@@ -15,6 +15,7 @@ namespace WebAPI.DAL
         public DbSet<AppSettings> Settings { get; set; }
         public DbSet<SeaModel> Seas { get; set; }
         public DbSet<UpdateLogModel> UpdatingLogs { get; set; }
+        public DbSet<DailyStatisticsModel> Statistics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
