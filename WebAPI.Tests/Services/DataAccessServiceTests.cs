@@ -18,7 +18,8 @@ namespace WebAPI.Tests.Services
         {
             _scopeFactoryMock = new Mock<IServiceScopeFactory>();
             _sqlBuilderMock = new Mock<ISqlQueryBuilder>();
-            
+            _progressMock = new Mock<IUpdatingProgress>();
+
             _service = new DataAccessService(_scopeFactoryMock.Object, _sqlBuilderMock.Object, _progressMock.Object);
         }
 

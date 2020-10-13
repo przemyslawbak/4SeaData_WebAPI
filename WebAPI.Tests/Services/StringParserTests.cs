@@ -93,7 +93,7 @@ namespace WebAPI.Tests.Services
 
         [Theory]
         [InlineData(null, null)]
-        [InlineData("125.4&deg ", "125.4")]
+        [InlineData("125.4° ", "125.4")]
         [InlineData("125.4", null)]
         private void GetTrimmedCourse_OnPropeTextParameter_ReturnsProperResult(string text, string expected)
         {
