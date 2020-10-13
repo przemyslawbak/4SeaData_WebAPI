@@ -10,6 +10,7 @@ namespace WebAPI.Services
         private Timer _timerUpdates;
         private Timer _timerStatistics;
         private readonly IUpdateInitializer _initializer;
+        private DateTime _nextDay = DateTime.UtcNow.AddDays(1);
 
         public TimeHostedUpdater(IUpdateInitializer initializer)
         {
@@ -18,8 +19,8 @@ namespace WebAPI.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timerUpdates = new Timer(InitUpdates, null, TimeSpan.Zero, TimeSpan.FromMinutes(2));
-            _timerStatistics = new Timer(InitStatistics, null, TimeSpan.Zero, TimeSpan.FromHours(24));
+            _timerUpdates = new Timer(InitUpdates, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+            _timerStatistics = new Timer(InitStatistics, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 
             return Task.CompletedTask;
         }
@@ -31,7 +32,12 @@ namespace WebAPI.Services
 
         private void InitStatistics(object sender)
         {
-            _initializer.UpdateStatisticsAsync();
+            if (DateTime.UtcNow.Day == _nextDay.Day)
+            {
+                _nextDay = DateTime.UtcNow.AddDays(1);
+
+                _initializer.UpdateStatisticsAsync();
+            }
         }
 
         public Task StopAsync(CancellationToken cancelToken)
