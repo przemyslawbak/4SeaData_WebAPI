@@ -60,7 +60,7 @@ namespace WebAPI.Services
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
 
-                var updateLog = new UpdateLogModel()
+                UpdateLogModel updateLog = new UpdateLogModel()
                 {
                     TimeCompleted = DateTime.UtcNow,
                     TimeStarted = statusModel.LastStartedTime,
@@ -81,6 +81,53 @@ namespace WebAPI.Services
                 };
 
                 _repo.SaveUpdateLogs(updateLog);
+            };
+        }
+
+        public void UpdateDailyStatistics()
+        {
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFStatRepository _repo = scope.ServiceProvider.GetRequiredService<EFStatRepository>();
+
+                DailyStatisticsModel updateStats = new DailyStatisticsModel()
+                {
+                    Date = DateTime.UtcNow,
+                    CargoExpired = _repo.GetCargoExpired(),
+                    CargoMissing = _repo.GetCargoMissing(),
+                    CargoMoving = _repo.GetCargoMoving(),
+                    CargoNotMoving = _repo.GetCargoNotMoving(),
+                    DredgingExpired = _repo.GetDredgingExpired(),
+                    DredgingMissing = _repo.GetDredgingMissing(),
+                    DredgingMoving = _repo.GetDredgingMoving(),
+                    DredgingNotMoving = _repo.GetDredgingNotMoving(),
+                    FishingExpired = _repo.GetFishingExpired(),
+                    FishingMissing = _repo.GetFishingMissing(),
+                    FishingMoving = _repo.GetFishingMoving(),
+                    FishingNotMoving = _repo.GetFishingNotMoving(),
+                    OffshoreExpired = _repo.GetOffshoreExpired(),
+                    OffshoreMissing = _repo.GetOffshoreMissing(),
+                    OffshoreMoving = _repo.GetOffshoreMoving(),
+                    OffshoreNotMoving = _repo.GetOffshoreNotMoving(),
+                    OtherExpired = _repo.GetOtherExpired(),
+                    OtherMissing = _repo.GetOtherMissing(),
+                    OtherMoving = _repo.GetOtherMoving(),
+                    OtherNotMoving = _repo.GetOtherNotMoving(),
+                    PassengerExpired = _repo.GetPassengerExpired(),
+                    PassengerMissing = _repo.GetPassengerMissing(),
+                    PassengerMoving = _repo.GetPassengerMoving(),
+                    PassengerNotMoving = _repo.GetPassengerNotMoving(),
+                    TankerExpired = _repo.GetTankerExpired(),
+                    TankerMissing = _repo.GetTankerMissing(),
+                    TankerMoving = _repo.GetTankerMoving(),
+                    TankerNotMoving = _repo.GetTankerNotMoving(),
+                    TugExpired = _repo.GetTugExpired(),
+                    TugMissing = _repo.GetTugMissing(),
+                    TugMoving = _repo.GetTugMoving(),
+                    TugNotMoving = _repo.GetTugNotMoving()
+                };
+
+                _repo.SaveStatistics(updateStats);
             };
         }
 

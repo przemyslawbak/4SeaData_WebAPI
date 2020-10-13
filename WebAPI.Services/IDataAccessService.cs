@@ -10,5 +10,6 @@ namespace WebAPI.Services
         List<SeaModel> GetSeaAreas();
         void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels);
         void SaveUpdateLogs(StatusModel statusModel);
+        void UpdateDailyStatistics();
     }
 }

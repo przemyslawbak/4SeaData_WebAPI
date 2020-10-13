@@ -39,6 +39,7 @@ namespace WebAPI
             services.AddTransient<ISqlQueryBuilder, SqlQueryBuilder>();
             services.AddTransient<IADORepository, ADORepository>();
             services.AddTransient<EFRepository>();
+            services.AddTransient<EFStatRepository>();
             services.AddMemoryCache();
             services.AddMvc();
         }

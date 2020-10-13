@@ -5,5 +5,6 @@ namespace WebAPI.Services
     public interface IUpdateInitializer
     {
         Task StartUpdatesAsync();
+        void UpdateStatisticsAsync();
     }
 }

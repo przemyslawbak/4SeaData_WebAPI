@@ -29,6 +29,11 @@ namespace WebAPI.Services
             }
         }
 
+        public void UpdateStatisticsAsync()
+        {
+            _dataService.UpdateDailyStatistics();
+        }
+
         private async Task InitializeWorkDataAsync()
         {
             List<VesselAisUpdateModel> updateList = PopulateUpdateList();
