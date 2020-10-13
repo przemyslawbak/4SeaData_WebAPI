@@ -9,16 +9,14 @@ namespace WebAPI.Services
     {
         private readonly IScrapper _scrapper;
         private readonly IUpdatingProgress _progress;
-        private readonly IExceptionProcessor _exceptionProcessor;
 
-        public UpdatedVesselFactory(IScrapper scrapper, IUpdatingProgress progress, IExceptionProcessor exceptionProcessor)
+        public UpdatedVesselFactory(IScrapper scrapper, IUpdatingProgress progress)
         {
             _scrapper = scrapper;
             _progress = progress;
-            _exceptionProcessor = exceptionProcessor;
         }
 
-        public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel)
+        public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel, CancellationToken token, SemaphoreSlim semaphoreThrottel)
         {
             VesselUpdateModel vessel = null;
 
@@ -31,6 +29,8 @@ namespace WebAPI.Services
                     skip = true;
                     _progress.AddSkipped();
                 }
+
+                await semaphoreThrottel.WaitAsync();
 
                 if (!skip)
                 {
@@ -51,7 +51,7 @@ namespace WebAPI.Services
             }
             catch (Exception ex)
             {
-                _progress.SetLastError(ex.Message + " from: " + _exceptionProcessor.GetMethodNameThrowingException(ex));
+                _progress.SetLastError(ex.Message);
                 _progress.AddFailedRequest();
                 vessel = null;
             }
@@ -61,6 +61,8 @@ namespace WebAPI.Services
                 {
                     await Task.Delay(100);
                 }
+
+                semaphoreThrottel.Release();
             }
 
             return vessel;
