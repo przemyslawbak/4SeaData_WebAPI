@@ -29,7 +29,7 @@ namespace WebAPI.Services
 
         private string GetHtml1(int imo)
         {
-            return _http.GetHtmlDocument(_configuration["Services:Url1"] + imo + ".html");
+            return _http.GetHtmlDocumentWithoutProxy(_configuration["Services:Url1"] + imo + ".html");
         }
 
         private string GetHtml2(int mmsi, string html_document_1) //todo: unit test
@@ -41,7 +41,7 @@ namespace WebAPI.Services
 
             if (mmsi == 0) return "";
 
-            return _http.GetHtmlDocument(_configuration["Services:Url2"] + mmsi);
+            return _http.GetHtmlDocumentWithProxy(_configuration["Services:Url2"] + mmsi);
         }
 
         private VesselUpdateModel GetVesselUpdates(string html_document_1, string html_document_2, int imo, int mmsi)

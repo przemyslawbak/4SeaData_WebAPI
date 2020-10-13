@@ -7,6 +7,7 @@ namespace WebAPI.Services
 {
     public class HttpClientProvider : IHttpClientProvider
     {
+        private static HttpClient _sharedClient = new HttpClient();
         private readonly IConfiguration _configuration;
         private readonly IProxyProvider _proxy;
 
@@ -16,7 +17,22 @@ namespace WebAPI.Services
             _proxy = proxy;
         }
 
-        public string GetHtmlDocument(string url)
+        public string GetHtmlDocumentWithoutProxy(string url)
+        {
+            string html = string.Empty;
+
+            using (HttpResponseMessage response = _sharedClient.GetAsync(url).Result)
+            {
+                using (HttpContent content = response.Content)
+                {
+                    html = content.ReadAsStringAsync().Result;
+                }
+
+                return html;
+            }
+        }
+
+        public string GetHtmlDocumentWithProxy(string url)
         {
             string html = string.Empty;
 

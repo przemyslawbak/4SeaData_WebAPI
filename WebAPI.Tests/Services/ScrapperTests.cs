@@ -22,7 +22,7 @@ namespace WebAPI.Tests.Services
             _nodeParserMock = new Mock<INodeProcessor>();
             _areaFinder = new Mock<IGeoAreaFinder>();
 
-            _httpClientMock.Setup(mock => mock.GetHtmlDocument(It.IsAny<string>())).Returns("some_html_document");
+            _httpClientMock.Setup(mock => mock.GetHtmlDocumentWithProxy(It.IsAny<string>())).Returns("some_html_document");
             _nodeParserMock.Setup(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>())).Returns(11111111);
             _nodeParserMock.Setup(mock => mock.ExtractLatFromHtml(It.IsAny<string>())).Returns(11.111);
             _nodeParserMock.Setup(mock => mock.ExtractLonFromHtml(It.IsAny<string>())).Returns(12.112);
