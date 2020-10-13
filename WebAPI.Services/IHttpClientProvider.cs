@@ -2,7 +2,7 @@
 {
     public interface IHttpClientProvider
     {
-        string GetHtmlDocumentWithProxy(string html);
-        string GetHtmlDocumentWithoutProxy(string v);
+        string GetHtmlDocumentWithProxy(string url);
+        string GetHtmlDocumentWithoutProxy(string url);
     }
 }

@@ -49,18 +49,23 @@ namespace WebAPI.Services
 
         private HttpClient GetNewHttpClient()
         {
-            var proxy = new WebProxy
+            WebProxy proxy = GetProxy();
+            HttpClientHandler handler = new HttpClientHandler() { Proxy = proxy };
+            HttpClient client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
+
+            return client;
+        }
+
+        private WebProxy GetProxy()
+        {
+            return new WebProxy
             {
                 Address = new Uri($"http://{_proxy.GetIpAddress()}:{"80"}"),
                 BypassProxyOnLocal = false,
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(userName: _configuration["Proxy:User"], password: _configuration["Proxy:Pass"])
             };
-            HttpClientHandler handler = new HttpClientHandler() { Proxy = proxy };
-            HttpClient client = new HttpClient(handler);
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
-
-            return client;
         }
     }
 }
