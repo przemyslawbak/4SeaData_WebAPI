@@ -5,40 +5,26 @@ namespace WebAPI.Services
 {
     public class HttpClientProvider : IHttpClientProvider
     {
-        private static HttpClient _httpClient;
+        private static HttpClient _httpClient = new HttpClient();
+
+        public HttpClientProvider()
+        {
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
+            _httpClient.Timeout = new TimeSpan(0, 0, 5);
+        }
 
         public string GetHtmlDocument(string url)
         {
             string html = string.Empty;
 
-            using (HttpResponseMessage response = GetHttpClient().GetAsync(new Uri(url, UriKind.Absolute)).Result)
+            HttpResponseMessage response = _httpClient.GetAsync(url).Result;
+
+            using (HttpContent content = response.Content)
             {
-                using (HttpContent content = response.Content)
-                {
-                    html = content.ReadAsStringAsync().Result;
-                }
+                html = content.ReadAsStringAsync().Result;
             }
 
             return html;
-        }
-
-        private HttpClient GetHttpClient()
-        {
-            if (_httpClient != null)
-            {
-                return _httpClient;
-            }
-
-            return CreateNewHttpClient();
-        }
-
-        private static HttpClient CreateNewHttpClient()
-        {
-            HttpClientHandler handler = new HttpClientHandler();
-            _httpClient = new HttpClient(handler);
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3703.0 Safari/537.36");
-
-            return _httpClient;
         }
     }
 }
