@@ -32,12 +32,14 @@ namespace WebAPI.Services
             return _http.GetHtmlDocument(_configuration["Services:Url1"] + imo + ".html");
         }
 
-        private string GetHtml2(int mmsi, string html_document_1)
+        private string GetHtml2(int mmsi, string html_document_1) //todo: unit test
         {
             if (mmsi == 0)
             {
                 mmsi = _nodeParser.ExtractMmsiFromHtml(html_document_1);
             }
+
+            if (mmsi == 0) return "";
 
             return _http.GetHtmlDocument(_configuration["Services:Url2"] + mmsi);
         }
