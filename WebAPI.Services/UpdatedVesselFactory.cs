@@ -18,7 +18,7 @@ namespace WebAPI.Services
             _exceptionProcessor = exceptionProcessor;
         }
 
-        public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel, CancellationToken token, SemaphoreSlim semaphoreThrottel)
+        public async Task<VesselUpdateModel> GetVesselUpdatesAsync(VesselAisUpdateModel aisUpdateModel)
         {
             VesselUpdateModel vessel = null;
 
@@ -31,8 +31,6 @@ namespace WebAPI.Services
                     skip = true;
                     _progress.AddSkipped();
                 }
-
-                await semaphoreThrottel.WaitAsync();
 
                 if (!skip)
                 {
@@ -63,8 +61,6 @@ namespace WebAPI.Services
                 {
                     await Task.Delay(100);
                 }
-
-                semaphoreThrottel.Release();
             }
 
             return vessel;

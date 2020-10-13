@@ -38,7 +38,7 @@ namespace WebAPI.Services
         public async Task<bool> UpdateSingleVesselAsync(int mmsi, int imo, string searchType)
         {
             VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync
-                (new VesselAisUpdateModel() { Mmsi = mmsi, Imo = imo, Speed = 0 }, GetCancellationTokenSource().Token, GetSemaphoreThrottel());
+                (new VesselAisUpdateModel() { Mmsi = mmsi, Imo = imo, Speed = 0 });
 
             if (updatedVessel != null)
             {
@@ -68,32 +68,22 @@ namespace WebAPI.Services
 
             try
             {
-                List<Task> currentRunningTasks = new List<Task>();
-                CancellationTokenSource tokenSource = GetCancellationTokenSource();
-                SemaphoreSlim semaphoreThrottel = GetSemaphoreThrottel();
-
                 for (int i = _counter; i < _progress.GetCurrentUpdateStep(_counter, _configuration.GetValue<int>("Iteration:Step")); i++)
                 {
                     int iteration = i;
 
-                    currentRunningTasks.Add(Task.Run(async () =>
+                    VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[i]);
+
+                    _progress.UpdateMissingProperties(updatedVessel);
+                    _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updatedVessel));
+
+                    lock (((ICollection)updatedVessels).SyncRoot)
                     {
-                        VesselUpdateModel updatedVessel = await _vesselUpdates.GetVesselUpdatesAsync(updateList[iteration], tokenSource.Token, semaphoreThrottel);
+                        updatedVessels.Add(updatedVessel);
+                    }
 
-                        _progress.UpdateMissingProperties(updatedVessel);
-                        _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updatedVessel));
-
-                        lock (((ICollection)updatedVessels).SyncRoot)
-                        {
-                            updatedVessels.Add(updatedVessel);
-                        }
-
-                        _counter++;
-
-                    }, tokenSource.Token));
+                    _counter++;
                 }
-
-                await Task.WhenAll(currentRunningTasks);
             }
             catch (Exception ex)
             {

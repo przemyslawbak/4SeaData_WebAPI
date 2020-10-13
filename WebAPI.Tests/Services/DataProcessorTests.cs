@@ -71,7 +71,7 @@ namespace WebAPI.Tests.Services
         [Fact]
         private async Task UpdateSingleVesselAsync_OnReceivedVessel_ReturnsTrueAndCallsSaveUpdatedVesselOnce()
         {
-            _updatesMock.Setup(mock => mock.GetVesselUpdatesAsync(It.IsAny<VesselAisUpdateModel>(), It.IsAny<CancellationToken>(), It.IsAny<SemaphoreSlim>()))
+            _updatesMock.Setup(mock => mock.GetVesselUpdatesAsync(It.IsAny<VesselAisUpdateModel>()))
                 .ReturnsAsync(_returnedSingleVessel);
 
             bool result = await _service.UpdateSingleVesselAsync(11111111, 11111112, "basic");
@@ -83,7 +83,7 @@ namespace WebAPI.Tests.Services
         [Fact]
         private async Task UpdateSingleVesselAsync_OnReceivedNull_ReturnsFalseAndNeverCallsSaveUpdatedVessel()
         {
-            _updatesMock.Setup(mock => mock.GetVesselUpdatesAsync(It.IsAny<VesselAisUpdateModel>(), It.IsAny<CancellationToken>(), It.IsAny<SemaphoreSlim>()))
+            _updatesMock.Setup(mock => mock.GetVesselUpdatesAsync(It.IsAny<VesselAisUpdateModel>()))
                 .ReturnsAsync((VesselUpdateModel)null);
 
             bool result = await _service.UpdateSingleVesselAsync(11111111, 11111112, "basic");
@@ -96,7 +96,7 @@ namespace WebAPI.Tests.Services
         private async Task ProcessNextStepAsync_OnCatchedException_CallsSetLastErrorOnce()
         {
             string ex = "some_exception";
-            _updatesMock.Setup(mock => mock.GetVesselUpdatesAsync(It.IsAny<VesselAisUpdateModel>(), It.IsAny<CancellationToken>(), It.IsAny<SemaphoreSlim>()))
+            _updatesMock.Setup(mock => mock.GetVesselUpdatesAsync(It.IsAny<VesselAisUpdateModel>()))
                 .Throws(new Exception(ex));
 
             await _service.UpdateListOfVesselsAsync(new List<VesselAisUpdateModel>() { new VesselAisUpdateModel() });
