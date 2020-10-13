@@ -66,6 +66,8 @@ namespace WebAPI.Client
             dispatcherTimer.Start();
         }
 
+        public bool ResponseAwaiting { get; set; }
+
         private string _status;
         public string Status
         {
@@ -332,30 +334,36 @@ namespace WebAPI.Client
 
         private async Task DispatcherTimer_ExecuteStatusUpdate()
         {
-            StatusModel status = new StatusModel();
-
-            try
+            if (!ResponseAwaiting)
             {
-                HttpResponseMessage response = await _client.GetAsync(_statusEndpoint);
+                ResponseAwaiting = true;
+                StatusModel status = new StatusModel();
 
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    string jsonString = await response.Content.ReadAsStringAsync();
-                    status = JsonConvert.DeserializeObject<StatusModel>(jsonString);
+                    HttpResponseMessage response = await _client.GetAsync(_statusEndpoint);
 
-                    UpdateProperties(status);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = await response.Content.ReadAsStringAsync();
+                        status = JsonConvert.DeserializeObject<StatusModel>(jsonString);
+
+                        UpdateProperties(status);
+                    }
+                    else
+                    {
+                        Status = "ERROR code: " + response.StatusCode;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Status = "ERROR code: " + response.StatusCode;
+                    Status = ex.Message;
+                }
+                finally
+                {
+                    ResponseAwaiting = false;
                 }
             }
-            catch (Exception ex)
-            {
-                Status = ex.Message;
-            }
-
-            //TODO: update props
         }
 
         private void UpdateProperties(StatusModel status)
