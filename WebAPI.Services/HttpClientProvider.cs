@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Net;
 using System.Net.Http;
 
@@ -6,27 +7,20 @@ namespace WebAPI.Services
 {
     public class HttpClientProvider : IHttpClientProvider
     {
-        private static HttpClient _client;
+        private readonly IConfiguration _configuration;
+        private readonly IProxyProvider _proxy;
 
-        public HttpClientProvider()
+        public HttpClientProvider(IConfiguration configuration, IProxyProvider proxy)
         {
-            var proxy = new WebProxy
-            {
-                Address = new Uri($"http://{"185.30.232.123"}:{"80"}"),
-                BypassProxyOnLocal = false,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(userName: "xzjoaonj-dest", password: "cci4lgnbjke8")
-            };
-            HttpClientHandler handler = new HttpClientHandler() { Proxy = proxy };
-            _client = new HttpClient(handler);
-            _client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
+            _configuration = configuration;
+            _proxy = proxy;
         }
 
         public string GetHtmlDocument(string url)
         {
             string html = string.Empty;
 
-            using (HttpResponseMessage response = _client.GetAsync(url).Result)
+            using (HttpResponseMessage response = GetNewHttpClient().GetAsync(url).Result)
             {
                 using (HttpContent content = response.Content)
                 {
@@ -37,15 +31,20 @@ namespace WebAPI.Services
             }
         }
 
-        public string GetHtmlDocument2(string url)
+        private HttpClient GetNewHttpClient()
         {
-            using (WebClient client = new WebClient())
+            var proxy = new WebProxy
             {
-                client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0";
-                string html = client.DownloadString(url);
+                Address = new Uri($"http://{_proxy.GetIpAddress()}:{"80"}"),
+                BypassProxyOnLocal = false,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(userName: _configuration["Proxy:User"], password: _configuration["Proxy:Pass"])
+            };
+            HttpClientHandler handler = new HttpClientHandler() { Proxy = proxy };
+            HttpClient client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
 
-                return html;
-            }
+            return client;
         }
     }
 }

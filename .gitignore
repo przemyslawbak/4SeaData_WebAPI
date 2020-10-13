@@ -15,6 +15,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+**/ProxyProvider.cs
 **/App.config
 **/appsettings.json
 **/appsettings.Development.json

@@ -37,6 +37,7 @@ namespace WebAPI
             services.AddTransient<IExceptionProcessor, ExceptionProcessor>();
             services.AddTransient<INodeCreator, NodeCreator>();
             services.AddTransient<ISqlQueryBuilder, SqlQueryBuilder>();
+            services.AddTransient<IProxyProvider, ProxyProvider>();
             services.AddTransient<IADORepository, ADORepository>();
             services.AddTransient<EFRepository>();
             services.AddTransient<EFStatRepository>();
