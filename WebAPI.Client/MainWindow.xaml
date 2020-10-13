@@ -22,7 +22,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -200,6 +200,7 @@
         <TextBlock Grid.Row="9"
                    Grid.Column="1"
                    Grid.ColumnSpan="3"
+                   TextWrapping="Wrap"
                    Text="{Binding LastError, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </Window>

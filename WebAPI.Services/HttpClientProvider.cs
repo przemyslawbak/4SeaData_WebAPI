@@ -1,20 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 
 namespace WebAPI.Services
 {
     public class HttpClientProvider : IHttpClientProvider
     {
-        private static HttpClient _sharedClient = new HttpClient();
-        private readonly IConfiguration _configuration;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IProxyProvider _proxy;
+        private static HttpClient _sharedClient = new HttpClient();
+        private static int _proxyNumber;
 
-        public HttpClientProvider(IConfiguration configuration, IProxyProvider proxy)
+        public HttpClientProvider(IProxyProvider proxy, IHttpClientFactory httpClientFactory)
         {
-            _configuration = configuration;
             _proxy = proxy;
+            _httpClientFactory = httpClientFactory;
         }
 
         public string GetHtmlDocumentWithoutProxy(string url)
@@ -49,23 +48,20 @@ namespace WebAPI.Services
 
         private HttpClient GetNewHttpClient()
         {
-            WebProxy proxy = GetProxy();
-            HttpClientHandler handler = new HttpClientHandler() { Proxy = proxy };
-            HttpClient client = new HttpClient(handler);
+            List<string> proxies = _proxy.GetProxies();
+            HttpClient client = _httpClientFactory.CreateClient(proxies[_proxyNumber]);
             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
 
-            return client;
-        }
-
-        private WebProxy GetProxy()
-        {
-            return new WebProxy
+            if (_proxyNumber == 99)
             {
-                Address = new Uri($"http://{_proxy.GetIpAddress()}:{"80"}"),
-                BypassProxyOnLocal = false,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(userName: _configuration["Proxy:User"], password: _configuration["Proxy:Pass"])
-            };
+                _proxyNumber = 0;
+            }
+            else
+            {
+                _proxyNumber++;
+            }
+
+            return client;
         }
     }
 }

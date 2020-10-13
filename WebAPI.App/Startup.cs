@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using WebAPI.DAL;
 using WebAPI.Services;
 
@@ -20,6 +24,8 @@ namespace WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            AddServiceProxyHttpClients(services);
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:4Sea_Server:ConnectionString"]));
             services.AddSingleton<IUpdatingProgress, UpdatingProgress>();
             services.AddTransient<IHostedService, TimeHostedUpdater>();
@@ -43,6 +49,29 @@ namespace WebAPI
             services.AddTransient<EFStatRepository>();
             services.AddMemoryCache();
             services.AddMvc();
+        }
+
+        private void AddServiceProxyHttpClients(IServiceCollection services)
+        {
+            ProxyProvider proxyProvider = new ProxyProvider();
+            List<string> proxies = proxyProvider.GetProxies();
+            foreach (var proxy in proxies)
+            {
+                services.AddHttpClient(proxy).ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    return new HttpClientHandler
+                    {
+                        Proxy = new WebProxy
+                        {
+                            Address = new Uri($"http://{proxy}:{"80"}"),
+                            BypassProxyOnLocal = false,
+                            UseDefaultCredentials = false,
+                            Credentials = new NetworkCredential(userName: Configuration["Proxy:User"], password: Configuration["Proxy:Pass"])
+                        },
+                        UseProxy = true
+                    };
+                });
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

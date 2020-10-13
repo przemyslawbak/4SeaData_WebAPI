@@ -1,7 +1,9 @@
-﻿namespace WebAPI.Services
+﻿using System.Collections.Generic;
+
+namespace WebAPI.Services
 {
     public interface IProxyProvider
     {
-        string GetIpAddress();
+        List<string> GetProxies();
     }
 }
