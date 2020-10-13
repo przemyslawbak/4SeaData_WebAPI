@@ -37,6 +37,7 @@ namespace WebAPI.Services
         public Task StopAsync(CancellationToken cancelToken)
         {
             _timerUpdates?.Change(Timeout.Infinite, 0);
+            _timerStatistics?.Change(Timeout.Infinite, 0);
 
             Dispose();
 
