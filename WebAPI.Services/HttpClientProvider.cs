@@ -52,16 +52,16 @@ namespace WebAPI.Services
             HttpClient client = _httpClientFactory.CreateClient(proxies[_proxyNumber]);
             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
 
-            if (_proxyNumber == 99)
-            {
-                _proxyNumber = 0;
-            }
-            else
-            {
-                _proxyNumber++;
-            }
+            _proxyNumber = UpdateProxyNumber(_proxyNumber);
 
             return client;
+        }
+
+        private int UpdateProxyNumber(int proxyNumber)
+        {
+            if (_proxyNumber == 99) return 0;
+
+            return proxyNumber++;
         }
     }
 }
