@@ -60,18 +60,6 @@ namespace WebAPI.Tests.Services
         }
 
         [Fact]
-        private void GetVesselUpdatesAsync_OnSpeedNull_ReturnsNullAndCallsMethodsInFinallyOnce()
-        {
-            VesselAisUpdateModel updateModel = new VesselAisUpdateModel() { Speed = null };
-
-            Task<VesselUpdateModel> result = _service.GetVesselUpdatesAsync(updateModel, new CancellationToken(), new SemaphoreSlim(1));
-
-            Assert.Null(result.Result);
-            _progressMock.Verify(mock => mock.GetIsUpdatingDatabase(), Times.Once());
-            _progressMock.Verify(mock => mock.GetIsUpdatingPaused(), Times.Once());
-        }
-
-        [Fact]
         private void GetVesselUpdatesAsync_OnCorrectVesselModel_ReturnsVesselUpdateModel()
         {
             VesselAisUpdateModel updateModel = new VesselAisUpdateModel() { Mmsi = 12345678, Speed = 0.1, Imo = _correctImo };

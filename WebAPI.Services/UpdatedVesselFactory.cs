@@ -24,7 +24,7 @@ namespace WebAPI.Services
             {
                 bool skip = false;
 
-                if (aisUpdateModel.Mmsi == 0 || !aisUpdateModel.Speed.HasValue) //if could not be scrapped with "full"
+                if (aisUpdateModel.Mmsi == 0) //if could not be scrapped with "full"
                 {
                     skip = true;
                     _progress.AddSkipped();
