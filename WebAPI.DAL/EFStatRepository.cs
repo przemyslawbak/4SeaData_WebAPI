@@ -36,7 +36,12 @@ namespace WebAPI.DAL
 
         public int GetCargoNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetCargoAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "Anchored")).Count();
         }
 
         public int GetDredgingExpired()
@@ -63,7 +68,12 @@ namespace WebAPI.DAL
 
         public int GetDredgingNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetDredgingAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "Anchored")).Count();
         }
 
         public int GetFishingExpired()
@@ -90,7 +100,12 @@ namespace WebAPI.DAL
 
         public int GetFishingNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetFishingAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "Anchored")).Count();
         }
 
         public int GetOffshoreExpired()
@@ -117,7 +132,12 @@ namespace WebAPI.DAL
 
         public int GetOffshoreNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetOffshoreAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "Anchored")).Count();
         }
 
         public int GetOtherExpired()
@@ -144,7 +164,12 @@ namespace WebAPI.DAL
 
         public int GetOtherNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetOtherAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "Anchored")).Count();
         }
 
         public int GetPassengerExpired()
@@ -171,7 +196,12 @@ namespace WebAPI.DAL
 
         public int GetPassengerNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetPassengerAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "Anchored")).Count();
         }
 
         public int GetTankerExpired()
@@ -198,7 +228,12 @@ namespace WebAPI.DAL
 
         public int GetTankerNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetTankerAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "Anchored")).Count();
         }
 
         public int GetTugExpired()
@@ -225,7 +260,12 @@ namespace WebAPI.DAL
 
         public int GetTugNotMoving()
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "Anchored" || v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            return _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+        }
+
+        public int GetTugAnchored()
+        {
+            return _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "Anchored")).Count();
         }
 
         public void SaveStatistics(DailyStatisticsModel updateStats)
@@ -234,6 +274,5 @@ namespace WebAPI.DAL
 
             _context.SaveChanges();
         }
-
     }
 }
