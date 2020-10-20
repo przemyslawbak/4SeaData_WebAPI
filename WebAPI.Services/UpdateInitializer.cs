@@ -29,7 +29,7 @@ namespace WebAPI.Services
             }
         }
 
-        public void UpdateStatisticsAsync()
+        public void UpdateStatistics()
         {
             _dataService.UpdateDailyStatistics();
         }

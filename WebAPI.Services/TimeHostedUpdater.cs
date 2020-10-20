@@ -36,7 +36,7 @@ namespace WebAPI.Services
             {
                 _nextDay = DateTime.UtcNow.AddDays(1);
 
-                _initializer.UpdateStatisticsAsync();
+                _initializer.UpdateStatistics();
             }
         }
 

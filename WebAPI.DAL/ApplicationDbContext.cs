@@ -21,6 +21,11 @@ namespace WebAPI.DAL
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder
+                .Entity<DailyStatisticsModel>()
+                .Property(d => d.Id)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<CompanyModel>()
                .HasMany(c => c.VesselOwner)
                .WithOne(e => e.CompanyOwner);

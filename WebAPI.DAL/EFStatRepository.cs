@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using WebAPI.Models;
 
 namespace WebAPI.DAL
 {
+    //todo: DRY
     public class EFStatRepository : IEFStatRepository
     {
         private readonly ApplicationDbContext _context;
@@ -12,260 +14,348 @@ namespace WebAPI.DAL
             _context = ctx;
         }
 
-        public int GetCargoExpired()
+        public int GetCargoMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetCargoMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetCargoMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Cargo" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetCargoNotMoving()
+        public int GetCargoNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetCargoAnchored()
+        public int GetCargoAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Cargo" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetDredgingExpired()
+        public int GetDredgingMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetDredgingMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetDredgingMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Dredging" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetDredgingNotMoving()
+        public int GetDredgingNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetDredgingAnchored()
+        public int GetDredgingAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Dredging" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetFishingExpired()
+        public int GetFishingMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetFishingMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetFishingMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Fishing" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetFishingNotMoving()
+        public int GetFishingNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetFishingAnchored()
+        public int GetFishingAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Fishing" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetOffshoreExpired()
+        public int GetOffshoreMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetOffshoreMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetOffshoreMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Offshore" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetOffshoreNotMoving()
+        public int GetOffshoreNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetOffshoreAnchored()
+        public int GetOffshoreAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Offshore" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetOtherExpired()
+        public int GetOtherMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Other" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetOtherMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetOtherMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Other" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Other" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetOtherNotMoving()
+        public int GetOtherNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetOtherAnchored()
+        public int GetOtherAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Other" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetPassengerExpired()
+        public int GetPassengerMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetPassengerMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetPassengerMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Passenger" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetPassengerNotMoving()
+        public int GetPassengerNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetPassengerAnchored()
+        public int GetPassengerAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Passenger" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetTankerExpired()
+        public int GetTankerMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetTankerMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetTankerMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Tanker" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetTankerNotMoving()
+        public int GetTankerNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetTankerAnchored()
+        public int GetTankerAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Tanker" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetTugExpired()
+        public int GetTugMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tug" && v.AISStatus == "(out-of-date)").Count();
-        }
-
-        public int GetTugMissing()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "" || v.AISStatus == "Undefined" || v.AISStatus == "N/a")).Count();
-        }
-
-        public int GetTugMoving()
-        {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tug" &&
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Tug" &&
             (v.AISStatus == "Constrained By Draught" ||
             v.AISStatus == "Fishing" ||
             v.AISStatus == "Not Under Command" ||
             v.AISStatus == "Restricted Movement" ||
             v.AISStatus == "Under Way" ||
             v.AISStatus == "Sailing" ||
-            v.AISStatus == "Moving")).Count();
+            v.AISStatus == "Moving"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetTugNotMoving()
+        public int GetTugNotMoving(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "Moored" || v.AISStatus == "Grounded"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
-        public int GetTugAnchored()
+        public int GetTugAnchored(string areaName)
         {
-            return _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "Anchored")).Count();
+            IQueryable<VesselModel> list = _context.Vessels.Where(v => v.VesselCategory == "Tug" && (v.AISStatus == "Anchored"));
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            return list.Count();
         }
 
         public void SaveStatistics(DailyStatisticsModel updateStats)

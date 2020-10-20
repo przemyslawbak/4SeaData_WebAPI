@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebAPI.DAL;
 using WebAPI.Models;
 
@@ -86,56 +87,49 @@ namespace WebAPI.Services
 
         public void UpdateDailyStatistics()
         {
+            List<string> areaNames = GetSeaAreas().Select(a => a.Name).ToList();
+            areaNames.Add("All areas");
+            areaNames.Add("");
+
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFStatRepository _repo = scope.ServiceProvider.GetRequiredService<EFStatRepository>();
 
-                DailyStatisticsModel updateStats = new DailyStatisticsModel()
+                foreach (string areaName in areaNames)
                 {
-                    Date = DateTime.UtcNow,
-                    CargoExpired = _repo.GetCargoExpired(),
-                    CargoMissing = _repo.GetCargoMissing(),
-                    CargoMoving = _repo.GetCargoMoving(),
-                    CargoNotMoving = _repo.GetCargoNotMoving(),
-                    CargoAnchored = _repo.GetCargoAnchored(),
-                    DredgingExpired = _repo.GetDredgingExpired(),
-                    DredgingMissing = _repo.GetDredgingMissing(),
-                    DredgingMoving = _repo.GetDredgingMoving(),
-                    DredgingNotMoving = _repo.GetDredgingNotMoving(),
-                    DredgingAnchored = _repo.GetDredgingAnchored(),
-                    FishingExpired = _repo.GetFishingExpired(),
-                    FishingMissing = _repo.GetFishingMissing(),
-                    FishingMoving = _repo.GetFishingMoving(),
-                    FishingNotMoving = _repo.GetFishingNotMoving(),
-                    FishingAnchored = _repo.GetFishingAnchored(),
-                    OffshoreExpired = _repo.GetOffshoreExpired(),
-                    OffshoreMissing = _repo.GetOffshoreMissing(),
-                    OffshoreMoving = _repo.GetOffshoreMoving(),
-                    OffshoreNotMoving = _repo.GetOffshoreNotMoving(),
-                    OffshoreAnchored = _repo.GetOffshoreAnchored(),
-                    OtherExpired = _repo.GetOtherExpired(),
-                    OtherMissing = _repo.GetOtherMissing(),
-                    OtherMoving = _repo.GetOtherMoving(),
-                    OtherNotMoving = _repo.GetOtherNotMoving(),
-                    OtherAnchored = _repo.GetOtherAnchored(),
-                    PassengerExpired = _repo.GetPassengerExpired(),
-                    PassengerMissing = _repo.GetPassengerMissing(),
-                    PassengerMoving = _repo.GetPassengerMoving(),
-                    PassengerNotMoving = _repo.GetPassengerNotMoving(),
-                    PassengerAnchored = _repo.GetPassengerAnchored(),
-                    TankerExpired = _repo.GetTankerExpired(),
-                    TankerMissing = _repo.GetTankerMissing(),
-                    TankerMoving = _repo.GetTankerMoving(),
-                    TankerNotMoving = _repo.GetTankerNotMoving(),
-                    TankerAnchored = _repo.GetTankerAnchored(),
-                    TugExpired = _repo.GetTugExpired(),
-                    TugMissing = _repo.GetTugMissing(),
-                    TugMoving = _repo.GetTugMoving(),
-                    TugNotMoving = _repo.GetTugNotMoving(),
-                    TugAnchored = _repo.GetTugAnchored()
-                };
+                    DailyStatisticsModel updateStats = new DailyStatisticsModel()
+                    {
+                        Id = 0,
+                        Date = DateTime.UtcNow,
+                        CargoMoving = _repo.GetCargoMoving(areaName),
+                        CargoNotMoving = _repo.GetCargoNotMoving(areaName),
+                        CargoAnchored = _repo.GetCargoAnchored(areaName),
+                        DredgingMoving = _repo.GetDredgingMoving(areaName),
+                        DredgingNotMoving = _repo.GetDredgingNotMoving(areaName),
+                        DredgingAnchored = _repo.GetDredgingAnchored(areaName),
+                        FishingMoving = _repo.GetFishingMoving(areaName),
+                        FishingNotMoving = _repo.GetFishingNotMoving(areaName),
+                        FishingAnchored = _repo.GetFishingAnchored(areaName),
+                        OffshoreMoving = _repo.GetOffshoreMoving(areaName),
+                        OffshoreNotMoving = _repo.GetOffshoreNotMoving(areaName),
+                        OffshoreAnchored = _repo.GetOffshoreAnchored(areaName),
+                        OtherMoving = _repo.GetOtherMoving(areaName),
+                        OtherNotMoving = _repo.GetOtherNotMoving(areaName),
+                        OtherAnchored = _repo.GetOtherAnchored(areaName),
+                        PassengerMoving = _repo.GetPassengerMoving(areaName),
+                        PassengerNotMoving = _repo.GetPassengerNotMoving(areaName),
+                        PassengerAnchored = _repo.GetPassengerAnchored(areaName),
+                        TankerMoving = _repo.GetTankerMoving(areaName),
+                        TankerNotMoving = _repo.GetTankerNotMoving(areaName),
+                        TankerAnchored = _repo.GetTankerAnchored(areaName),
+                        TugMoving = _repo.GetTugMoving(areaName),
+                        TugNotMoving = _repo.GetTugNotMoving(areaName),
+                        TugAnchored = _repo.GetTugAnchored(areaName),
+                        Area = areaName
+                    };
 
-                _repo.SaveStatistics(updateStats);
+                    _repo.SaveStatistics(updateStats);
+                }
             };
         }
 
