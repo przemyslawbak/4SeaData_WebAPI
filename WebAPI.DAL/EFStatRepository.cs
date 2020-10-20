@@ -364,5 +364,65 @@ namespace WebAPI.DAL
 
             _context.SaveChanges();
         }
+
+        public int GetMoving(string areaName, string category)
+        {
+            IQueryable<VesselModel> list = _context.Vessels.Where(v =>
+                v.AISStatus == "Constrained By Draught" ||
+                v.AISStatus == "Fishing" ||
+                v.AISStatus == "Not Under Command" ||
+                v.AISStatus == "Restricted Movement" ||
+                v.AISStatus == "Under Way" ||
+                v.AISStatus == "Sailing" ||
+                v.AISStatus == "Moving");
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            if (category != "All types")
+            {
+                list = list.Where(v => v.VesselCategory == category);
+            }
+
+            return list.Count();
+        }
+
+        public int GetMoored(string areaName, string category)
+        {
+            IQueryable<VesselModel> list = _context.Vessels.Where(v =>
+               v.AISStatus == "Moored" || v.AISStatus == "Grounded");
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            if (category != "All types")
+            {
+                list = list.Where(v => v.VesselCategory == category);
+            }
+
+            return list.Count();
+        }
+
+        public int GetAnchored(string areaName, string category)
+        {
+            IQueryable<VesselModel> list = _context.Vessels.Where(v =>
+               v.AISStatus == "Anchored");
+
+            if (areaName != "All areas")
+            {
+                list = list.Where(v => v.GeographicalArea == areaName);
+            }
+
+            if (category != "All types")
+            {
+                list = list.Where(v => v.VesselCategory == category);
+            }
+
+            return list.Count();
+        }
     }
 }

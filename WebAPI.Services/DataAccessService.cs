@@ -87,6 +87,7 @@ namespace WebAPI.Services
 
         public void UpdateDailyStatistics()
         {
+            List<string> vesselCategories = new List<string>() { "Cargo", "Dredging", "Fishing", "Offshore", "Other", "Passenger", "Tanker", "Tug", "All types", "" };
             List<string> areaNames = GetSeaAreas().Select(a => a.Name).ToList();
             areaNames.Add("All areas");
             areaNames.Add("");
@@ -94,41 +95,27 @@ namespace WebAPI.Services
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFStatRepository _repo = scope.ServiceProvider.GetRequiredService<EFStatRepository>();
-
-                foreach (string areaName in areaNames)
+                foreach (string category in vesselCategories)
                 {
-                    DailyStatisticsModel updateStats = new DailyStatisticsModel()
+                    foreach (string areaName in areaNames)
                     {
-                        Id = 0,
-                        Date = DateTime.UtcNow,
-                        CargoMoving = _repo.GetCargoMoving(areaName),
-                        CargoNotMoving = _repo.GetCargoNotMoving(areaName),
-                        CargoAnchored = _repo.GetCargoAnchored(areaName),
-                        DredgingMoving = _repo.GetDredgingMoving(areaName),
-                        DredgingNotMoving = _repo.GetDredgingNotMoving(areaName),
-                        DredgingAnchored = _repo.GetDredgingAnchored(areaName),
-                        FishingMoving = _repo.GetFishingMoving(areaName),
-                        FishingNotMoving = _repo.GetFishingNotMoving(areaName),
-                        FishingAnchored = _repo.GetFishingAnchored(areaName),
-                        OffshoreMoving = _repo.GetOffshoreMoving(areaName),
-                        OffshoreNotMoving = _repo.GetOffshoreNotMoving(areaName),
-                        OffshoreAnchored = _repo.GetOffshoreAnchored(areaName),
-                        OtherMoving = _repo.GetOtherMoving(areaName),
-                        OtherNotMoving = _repo.GetOtherNotMoving(areaName),
-                        OtherAnchored = _repo.GetOtherAnchored(areaName),
-                        PassengerMoving = _repo.GetPassengerMoving(areaName),
-                        PassengerNotMoving = _repo.GetPassengerNotMoving(areaName),
-                        PassengerAnchored = _repo.GetPassengerAnchored(areaName),
-                        TankerMoving = _repo.GetTankerMoving(areaName),
-                        TankerNotMoving = _repo.GetTankerNotMoving(areaName),
-                        TankerAnchored = _repo.GetTankerAnchored(areaName),
-                        TugMoving = _repo.GetTugMoving(areaName),
-                        TugNotMoving = _repo.GetTugNotMoving(areaName),
-                        TugAnchored = _repo.GetTugAnchored(areaName),
-                        Area = areaName
-                    };
+                        if (areaName == "" || category == "" || areaName == "All areas" || category == "All types")
+                        {
+                            continue;
+                        }
 
-                    _repo.SaveStatistics(updateStats);
+                        DailyStatisticsModel updateStats = new DailyStatisticsModel()
+                        {
+                            Date = DateTime.UtcNow,
+                            Moving = _repo.GetMoving(areaName, category),
+                            Moored = _repo.GetMoored(areaName, category),
+                            Anchored = _repo.GetAnchored(areaName, category),
+                            VesselCategory = category,
+                            Area = areaName
+                        };
+
+                        _repo.SaveStatistics(updateStats);
+                    }
                 }
             };
         }

@@ -30,5 +30,8 @@ namespace WebAPI.DAL
         int GetTugMoving(string areaName);
         int GetTugNotMoving(string areaName);
         int GetTugAnchored(string areaName);
+        int GetMoving(string areaName, string category);
+        int GetMoored(string areaName, string category);
+        int GetAnchored(string areaName, string category);
     }
 }
