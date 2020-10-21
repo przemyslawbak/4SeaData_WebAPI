@@ -84,34 +84,27 @@ namespace WebAPI.Services
                 _repo.SaveUpdateLogs(updateLog);
             };
         }
-
+        //todo: unit tests
         public void UpdateDailyStatistics()
         {
-            List<string> vesselCategories = new List<string>() { "Cargo", "Dredging", "Fishing", "Offshore", "Other", "Passenger", "Tanker", "Tug", "All types", "" };
+            List<string> vesselCategories = new List<string>() { "Cargo", "Dredging", "Fishing", "Offshore", "Other", "Passenger", "Tanker", "Tug" };
             List<string> areaNames = GetSeaAreas().Select(a => a.Name).ToList();
-            areaNames.Add("All areas");
-            areaNames.Add("");
 
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFStatRepository _repo = scope.ServiceProvider.GetRequiredService<EFStatRepository>();
-                foreach (string category in vesselCategories)
+                for (int i = 0; i < vesselCategories.Count(); i++)
                 {
-                    foreach (string areaName in areaNames)
+                    for (int j = 0; j < areaNames.Count(); j++)
                     {
-                        if (areaName == "" || category == "" || areaName == "All areas" || category == "All types")
-                        {
-                            continue;
-                        }
-
                         DailyStatisticsModel updateStats = new DailyStatisticsModel()
                         {
                             Date = DateTime.UtcNow,
-                            Moving = _repo.GetMoving(areaName, category),
-                            Moored = _repo.GetMoored(areaName, category),
-                            Anchored = _repo.GetAnchored(areaName, category),
-                            VesselCategory = category,
-                            Area = areaName
+                            Moving = _repo.GetMoving(areaNames[j], vesselCategories[i]),
+                            Moored = _repo.GetMoored(areaNames[j], vesselCategories[i]),
+                            Anchored = _repo.GetAnchored(areaNames[j], vesselCategories[i]),
+                            VesselCategory = vesselCategories[i],
+                            Area = areaNames[j]
                         };
 
                         _repo.SaveStatistics(updateStats);

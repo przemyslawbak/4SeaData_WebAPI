@@ -6,9 +6,9 @@ namespace WebAPI.Models
     public class DailyStatisticsModel
     {
         [Key]
+        public int Id { get; set; }
         public string Area { get; set; }
         public string VesselCategory { get; set; }
-        public int Id { get; set; }
         public DateTime Date { get; set; }
         public int Moving { get; set; }
         public int Moored { get; set; }
