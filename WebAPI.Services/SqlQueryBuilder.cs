@@ -57,7 +57,9 @@ namespace WebAPI.Services
             VesselAisUpdateModel existingVessel = FindExistingVessel(update.IMO);
             existingVessel.Imo = update.IMO;
 
-            return BuildSingleVesselQuery(existingVessel, update);
+            string query = BuildSingleVesselQuery(existingVessel, update) ?? "";
+
+            return query;
         }
 
         private VesselAisUpdateModel FindExistingVessel(int? iMO)
