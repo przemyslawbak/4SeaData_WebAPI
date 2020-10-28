@@ -8,14 +8,14 @@ namespace WebAPI.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IHttpClientProvider _http;
-        private readonly INodeProcessor _nodeParser;
+        private readonly INodeProcessor _nodeProcessor;
         private readonly IGeoAreaFinder _areaFinder;
 
         public Scrapper(IConfiguration configuration, IHttpClientProvider http, INodeProcessor nodeParser, IGeoAreaFinder areaFinder)
         {
             _configuration = configuration;
             _http = http;
-            _nodeParser = nodeParser;
+            _nodeProcessor = nodeParser;
             _areaFinder = areaFinder;
         }
 
@@ -34,10 +34,9 @@ namespace WebAPI.Services
 
         private string GetHtml2(int mmsi, string html_document_1) //todo: unit test
         {
-            if (mmsi == 0)
-            {
-                mmsi = _nodeParser.ExtractMmsiFromHtml(html_document_1);
-            }
+            int newMmsi = _nodeProcessor.ExtractMmsiFromHtml(html_document_1);
+
+            if (newMmsi != 0) mmsi = newMmsi;
 
             if (mmsi == 0) return "";
 
@@ -46,18 +45,18 @@ namespace WebAPI.Services
 
         private VesselUpdateModel GetVesselUpdates(string html_document_1, string html_document_2, int imo, int mmsi)
         {
-            double? lat = _nodeParser.ExtractLatFromHtml(html_document_2);
-            double? lon = _nodeParser.ExtractLonFromHtml(html_document_2);
-            DateTime? time = _nodeParser.ExtractAisUpdateTimeFromHtml(html_document_1, html_document_2);
+            double? lat = _nodeProcessor.ExtractLatFromHtml(html_document_2);
+            double? lon = _nodeProcessor.ExtractLonFromHtml(html_document_2);
+            DateTime? time = _nodeProcessor.ExtractAisUpdateTimeFromHtml(html_document_1, html_document_2);
 
             VesselUpdateModel vessel = new VesselUpdateModel()
             {
-                Destination = _nodeParser.ExtractDestinationFromHtml(html_document_2),
-                AISStatus = _nodeParser.ExtractNaviStatusFromHtml(html_document_1, time),
-                ETA = _nodeParser.ExtractEtaTimeFromHtml(html_document_2),
-                Course = _nodeParser.ExtractCourseFromHtml(html_document_2),
-                Speed = _nodeParser.ExtractSpeedFromHtml(html_document_2),
-                Draught = _nodeParser.ExtractDraughtFromHtml(html_document_2),
+                Destination = _nodeProcessor.ExtractDestinationFromHtml(html_document_2),
+                AISStatus = _nodeProcessor.ExtractNaviStatusFromHtml(html_document_1, time),
+                ETA = _nodeProcessor.ExtractEtaTimeFromHtml(html_document_2),
+                Course = _nodeProcessor.ExtractCourseFromHtml(html_document_2),
+                Speed = _nodeProcessor.ExtractSpeedFromHtml(html_document_2),
+                Draught = _nodeProcessor.ExtractDraughtFromHtml(html_document_2),
                 AISLatestActivity = time,
                 Lat = lat,
                 Lon = lon,
