@@ -92,7 +92,10 @@ namespace WebAPI.Services
 
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
-                IEFStatRepository _repo = scope.ServiceProvider.GetRequiredService<EFStatRepository>();
+                IEFStatRepository _statsRepo = scope.ServiceProvider.GetRequiredService<EFStatRepository>();
+
+                RemoveIncompleteStatsIfAny(_statsRepo);
+
                 for (int i = 0; i < vesselCategories.Count(); i++)
                 {
                     for (int j = 0; j < areaNames.Count(); j++)
@@ -100,16 +103,36 @@ namespace WebAPI.Services
                         DailyStatisticsModel updateStats = new DailyStatisticsModel()
                         {
                             Date = DateTime.UtcNow,
-                            Moving = _repo.GetMoving(areaNames[j], vesselCategories[i]),
-                            Moored = _repo.GetMoored(areaNames[j], vesselCategories[i]),
-                            Anchored = _repo.GetAnchored(areaNames[j], vesselCategories[i]),
+                            Moving = _statsRepo.GetMoving(areaNames[j], vesselCategories[i]),
+                            Moored = _statsRepo.GetMoored(areaNames[j], vesselCategories[i]),
+                            Anchored = _statsRepo.GetAnchored(areaNames[j], vesselCategories[i]),
                             VesselCategory = vesselCategories[i],
                             Area = areaNames[j]
                         };
 
-                        _repo.SaveStatistics(updateStats);
+                        _statsRepo.SaveStatistics(updateStats);
                     }
                 }
+            };
+        }
+
+        private void RemoveIncompleteStatsIfAny(IEFStatRepository _statsRepo)
+        {
+            List<DailyStatisticsModel> statsToBeRemoved = _statsRepo.GetAllStatsForToday();
+
+            if (statsToBeRemoved.Count > 0)
+            {
+                _statsRepo.DeleteStats(statsToBeRemoved);
+            }
+        }
+
+        public bool CheckIfStatsCompleteForToday()
+        {
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFStatRepository _statsRepo = scope.ServiceProvider.GetRequiredService<EFStatRepository>();
+
+                return _statsRepo.AreCompleteStatsForToday();
             };
         }
 

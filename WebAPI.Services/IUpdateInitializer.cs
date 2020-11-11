@@ -6,5 +6,6 @@ namespace WebAPI.Services
     {
         Task StartUpdatesAsync();
         void UpdateStatistics();
+        void VerifyStatisticsForToday();
     }
 }

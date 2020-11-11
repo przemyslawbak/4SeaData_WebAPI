@@ -19,6 +19,7 @@ namespace WebAPI.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            _initializer.VerifyStatisticsForToday();
             _timerUpdates = new Timer(InitUpdates, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
             _timerStatistics = new Timer(InitStatistics, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 

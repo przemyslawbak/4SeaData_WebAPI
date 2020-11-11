@@ -33,5 +33,8 @@ namespace WebAPI.DAL
         int GetMoving(string areaName, string category);
         int GetMoored(string areaName, string category);
         int GetAnchored(string areaName, string category);
+        bool AreCompleteStatsForToday();
+        void DeleteStats(List<DailyStatisticsModel> statsToBeRemoved);
+        List<DailyStatisticsModel> GetAllStatsForToday();
     }
 }

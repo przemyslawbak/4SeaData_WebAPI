@@ -11,5 +11,6 @@ namespace WebAPI.Services
         void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels);
         void SaveUpdateLogs(StatusModel statusModel);
         void UpdateDailyStatistics();
+        bool CheckIfStatsCompleteForToday();
     }
 }

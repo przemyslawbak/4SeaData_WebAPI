@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebAPI.Models;
 
@@ -423,6 +424,23 @@ namespace WebAPI.DAL
             }
 
             return list.Count();
+        }
+
+        public bool AreCompleteStatsForToday()
+        {
+            return _context.Statistics.Where(s => s.Date >= DateTime.UtcNow.Date).Count() == 808;
+        }
+
+        public void DeleteStats(List<DailyStatisticsModel> statsToBeRemoved)
+        {
+            _context.Statistics.RemoveRange(statsToBeRemoved);
+
+            _context.SaveChanges();
+        }
+
+        public List<DailyStatisticsModel> GetAllStatsForToday()
+        {
+            return _context.Statistics.Where(s => s.Date >= DateTime.UtcNow.Date).ToList();
         }
     }
 }
