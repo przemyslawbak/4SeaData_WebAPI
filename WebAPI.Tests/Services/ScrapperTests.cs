@@ -30,21 +30,5 @@ namespace WebAPI.Tests.Services
 
             _service = new Scrapper(_configMock.Object, _httpClientMock.Object, _nodeParserMock.Object, _areaFinder.Object);
         }
-
-        [Fact]
-        private void ScrapSingleVessel_OnMmsiEqualZero_CallsExtractMmsiFromHtmlOnce()
-        {
-            VesselUpdateModel model = _service.ScrapSingleVessel(0, 11111112);
-
-            _nodeParserMock.Verify(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>()), Times.Once());
-        }
-
-        [Fact]
-        private void ScrapSingleVessel_OnMmsiDifferentThanZero_NeverCallsExtractMmsiFromHtml()
-        {
-            VesselUpdateModel model = _service.ScrapSingleVessel(11111111, 11111112);
-
-            _nodeParserMock.Verify(mock => mock.ExtractMmsiFromHtml(It.IsAny<string>()), Times.Never());
-        }
     }
 }

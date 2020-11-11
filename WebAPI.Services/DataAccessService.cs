@@ -84,6 +84,7 @@ namespace WebAPI.Services
                 _repo.SaveUpdateLogs(updateLog);
             };
         }
+
         //todo: unit tests
         public void UpdateDailyStatistics()
         {

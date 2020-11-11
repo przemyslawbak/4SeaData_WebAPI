@@ -5,7 +5,7 @@ using WebAPI.Models;
 
 namespace WebAPI.DAL
 {
-    //todo: DRY
+    //todo: DRY, clean up (move some stuff to the service)
     public class EFStatRepository : IEFStatRepository
     {
         private readonly ApplicationDbContext _context;
