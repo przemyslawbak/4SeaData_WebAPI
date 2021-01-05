@@ -21,7 +21,7 @@ namespace WebAPI.App.Controllers
         }
 
         /// <summary>
-        /// GET: https://localhost:44342/api/updates/pausing-updates?key=
+        /// GET: /api/updates/pausing-updates?key=
         /// </summary>
         /// <param name="key">Clients security key.</param>
         [HttpGet]
@@ -42,7 +42,7 @@ namespace WebAPI.App.Controllers
         }
 
         /// <summary>
-        /// GET: https://localhost:44342/api/updates/stop-updates?key=
+        /// GET: /api/updates/stop-updates?key=
         /// </summary>
         /// <param name="key">Clients security key.</param>
         [HttpGet]
@@ -63,7 +63,7 @@ namespace WebAPI.App.Controllers
         }
 
         /// <summary>
-        /// GET: https://localhost:44342/api/updates/get-status?key=
+        /// GET: /api/updates/get-status?key=
         /// </summary>
         /// <param name="key">Clients security key.</param>
         [HttpGet]
