@@ -50,7 +50,7 @@ namespace WebAPI.Services
         {
             List<string> proxies = _proxy.GetProxies();
             HttpClient client = _httpClientFactory.CreateClient(proxies[_proxyNumber]);
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/81.0");
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Android 11; Mobile; rv:68.0) Gecko/68.0 Firefox/85.0");
 
             _proxyNumber = UpdateProxyNumber(_proxyNumber);
 
