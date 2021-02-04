@@ -59,9 +59,10 @@ namespace WebAPI.Services
 
         private int UpdateProxyNumber(int proxyNumber)
         {
+            _proxyNumber++;
             if (_proxyNumber == 99) return 0;
 
-            return proxyNumber++;
+            return _proxyNumber;
         }
     }
 }

@@ -59,7 +59,9 @@ namespace WebAPI.Services
                 await ProcessNextStepAsync(updateList);
             }
 
-            _dataService.SaveUpdateLogs(_progress.GetProgressStatus());
+            StatusModel progress = _progress.GetProgressStatus();
+
+            _dataService.SaveUpdateLogs(progress);
         }
 
         private async Task ProcessNextStepAsync(List<VesselAisUpdateModel> updateList)
