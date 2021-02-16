@@ -73,11 +73,11 @@ namespace WebAPI.Services
         {
             if (_progress.GetReturnedResultsQuantity() < _progress.GetTotalResultsQuantity() / 2)
             {
-                return "SELECT TOP 1 VesselId,MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + " ORDER BY VesselId DESC;";
+                return "SELECT TOP 1 MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + " ORDER BY IMO DESC;";
             }
             else
             {
-                return "SELECT TOP 1 VesselId,MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + ";";
+                return "SELECT TOP 1 MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + ";";
             }
         }
 
@@ -136,7 +136,7 @@ namespace WebAPI.Services
             {
                 vesselQuerySb.Append(" , GeographicalArea = '" + update.GeographicalArea + "'");
             }
-            vesselQuerySb.Append(" WHERE VesselId = " + existingVessel.VesselId + "; ");
+            vesselQuerySb.Append(" WHERE IMO = " + existingVessel.Imo + "; ");
 
             vesselQuerySb.AppendLine();
 

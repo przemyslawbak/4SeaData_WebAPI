@@ -6,6 +6,5 @@
         public int Imo { get; set; }
         public double? Speed { get; set; }
         public double? SpeedMax { get; set; }
-        public int VesselId { get; set; }
     }
 }

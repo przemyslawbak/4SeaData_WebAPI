@@ -7,7 +7,6 @@ namespace WebAPI.Models
     public class VesselModel
     {
         [Key]
-        public int VesselId { get; set; }
         public int? IMO { get; set; }
         public DateTime? DatatUpdate { get; set; }
         public string Name { get; set; }

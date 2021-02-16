@@ -29,7 +29,6 @@ namespace WebAPI.DAL
                 {
                     while (rdr.Read())
                     {
-                        existing.VesselId = (int)rdr["VesselId"];
                         existing.Mmsi = (int)rdr["MMSI"];
                         existing.SpeedMax = null;
 

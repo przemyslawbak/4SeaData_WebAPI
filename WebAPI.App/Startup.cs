@@ -55,18 +55,22 @@ namespace WebAPI
         {
             ProxyProvider proxyProvider = new ProxyProvider();
             List<string> proxies = proxyProvider.GetProxies();
-            foreach (var proxy in proxies)
+            foreach (string proxy in proxies)
             {
+                string user = Configuration["Proxy:User"];
+                string pass = Configuration["Proxy:Pass"];
+                string uri = $"http://{proxy}";
+
                 services.AddHttpClient(proxy).ConfigurePrimaryHttpMessageHandler(() =>
                 {
                     return new HttpClientHandler
                     {
                         Proxy = new WebProxy
                         {
-                            Address = new Uri($"http://{proxy}:{"80"}"),
+                            Address = new Uri(uri),
                             BypassProxyOnLocal = false,
                             UseDefaultCredentials = false,
-                            Credentials = new NetworkCredential(userName: Configuration["Proxy:User"], password: Configuration["Proxy:Pass"])
+                            Credentials = new NetworkCredential(userName: user, password: pass)
                         },
                         UseProxy = true
                     };
