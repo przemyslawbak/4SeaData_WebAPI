@@ -65,6 +65,7 @@ namespace WebAPI.Services
             };
 
             vessel.GeographicalArea = _areaFinder.GetGeographicalArea(lat, lon);
+            vessel.CurrnetPortLocode = _areaFinder.GetPortLocode(vessel.Speed, lat, lon);
 
             return vessel;
         }

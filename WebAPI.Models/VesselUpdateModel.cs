@@ -16,5 +16,6 @@ namespace WebAPI.Models
         public DateTime? ETA { get; set; }
         public string AISStatus { get; set; }
         public string GeographicalArea { get; set; }
+        public string CurrnetPortLocode { get; set; }
     }
 }

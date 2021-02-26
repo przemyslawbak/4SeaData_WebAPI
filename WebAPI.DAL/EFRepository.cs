@@ -18,12 +18,12 @@ namespace WebAPI.DAL
 
         public IEnumerable<PortModel> GetAllPorts()
         {
-            return _context.Ports.AsNoTracking().OrderBy(s => s.PolygonSize).ToList();
+            return _context.Ports.AsNoTracking().OrderBy(s => s.PolygonSize).ToList(); //todo: smaller model mapping
         }
 
         public List<SeaModel> GetAllSeaAreas()
         {
-            return _context.Seas.AsNoTracking().OrderBy(s => s.PolygonSize).ToList();
+            return _context.Seas.AsNoTracking().OrderBy(s => s.PolygonSize).ToList(); //todo: smaller model mapping
         }
 
         public List<VesselAisUpdateModel> GetAllVesselsUpdateModels()

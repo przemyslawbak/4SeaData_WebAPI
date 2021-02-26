@@ -51,6 +51,7 @@ namespace WebAPI.Models
         public int? ManagerId { get; set; }
         public string PortCurrent { get; set; }
         public string PortNext { get; set; }
+        public string CurrnetPortLocode { get; set; }
         public bool? FullChecked { get; set; }
 
         //one-to-many
