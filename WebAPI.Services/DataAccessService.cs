@@ -20,7 +20,17 @@ namespace WebAPI.Services
             _progress = progress;
         }
 
-        public List<SeaModel> GetSeaAreas()
+
+        public IEnumerable<PortModel> GetAllPorts()
+        {
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
+                return _repo.GetAllPorts();
+            };
+        }
+
+        public IEnumerable<SeaModel> GetSeaAreas()
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {

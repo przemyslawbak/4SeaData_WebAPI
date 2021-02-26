@@ -30,10 +30,26 @@ namespace WebAPI.Services
 
             return result;
         }
+
+        public IEnumerable<PortModel> GetAllPorts()
+        {
+            IEnumerable<PortModel> result;
+            if (!_cache.TryGetValue(CacheKeys.Ports, out result))
+            {
+                result = _dataAccess.GetAllPorts();
+
+                MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromDays(1));
+
+                _cache.Set(CacheKeys.Ports, result, cacheEntryOptions);
+            }
+
+            return result;
+        }
     }
 
     public class CacheKeys
     {
         public static string SeaAreas { get { return "_SeaAreas"; } }
+        public static string Ports { get { return "_Ports"; } }
     }
 }

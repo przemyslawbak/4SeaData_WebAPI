@@ -9,5 +9,6 @@ namespace WebAPI.DAL
         List<VesselAisUpdateModel> GetAllVesselsUpdateModels();
         void SaveDatabaseQuantities();
         void SaveUpdateLogs(UpdateLogModel updateLog);
+        IEnumerable<PortModel> GetAllPorts();
     }
 }

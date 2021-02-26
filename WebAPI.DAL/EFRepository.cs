@@ -16,6 +16,11 @@ namespace WebAPI.DAL
             _context = ctx;
         }
 
+        public IEnumerable<PortModel> GetAllPorts()
+        {
+            return _context.Ports.AsNoTracking().OrderBy(s => s.PolygonSize).ToList();
+        }
+
         public List<SeaModel> GetAllSeaAreas()
         {
             return _context.Seas.AsNoTracking().OrderBy(s => s.PolygonSize).ToList();

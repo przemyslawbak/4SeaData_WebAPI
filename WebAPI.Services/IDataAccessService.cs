@@ -7,7 +7,8 @@ namespace WebAPI.Services
     {
         List<VesselAisUpdateModel> GetVesselsToBeUpdated();
         void SaveDatabaseQuantities();
-        List<SeaModel> GetSeaAreas();
+        IEnumerable<PortModel> GetAllPorts();
+        IEnumerable<SeaModel> GetSeaAreas();
         void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels);
         void SaveUpdateLogs(StatusModel statusModel);
         void UpdateDailyStatistics();

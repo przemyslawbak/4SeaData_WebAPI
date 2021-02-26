@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -57,5 +58,8 @@ namespace WebAPI.Models
         public CompanyModel CompanyOwner { get; set; }
         [ForeignKey(nameof(ManagerId))]
         public CompanyModel CompanyManager { get; set; }
+
+        //many-to-many
+        public virtual ICollection<VesselPort> VesselsPorts { get; set; }
     }
 }

@@ -14,12 +14,28 @@ namespace WebAPI.DAL
         public DbSet<VesselModel> Vessels { get; set; }
         public DbSet<AppSettings> Settings { get; set; }
         public DbSet<SeaModel> Seas { get; set; }
+        public DbSet<PortModel> Ports { get; set; }
         public DbSet<UpdateLogModel> UpdatingLogs { get; set; }
         public DbSet<DailyStatisticsModel> Statistics { get; set; }
+        public DbSet<VesselPort> VesselsPorts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //many-to-many
+
+            modelBuilder.Entity<VesselPort>()
+                .HasOne(vp => vp.VesselModel)
+                .WithMany(vm => vm.VesselsPorts)
+                .HasForeignKey(vu => vu.IMO);
+
+            modelBuilder.Entity<VesselPort>()
+                .HasOne(vp => vp.PortModel)
+                .WithMany(vm => vm.VesselsPorts)
+                .HasForeignKey(vu => vu.PortLocode);
+
+            //one-to-many
 
             modelBuilder
                 .Entity<DailyStatisticsModel>()
