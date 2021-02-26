@@ -27,6 +27,7 @@ namespace WebAPI.Services
             return null;
         }
 
+        //todo: unit test
         public string GetPortLocode(double? speed, double? lat, double? lon)
         {
             if (lat.HasValue && lon.HasValue && speed.HasValue)

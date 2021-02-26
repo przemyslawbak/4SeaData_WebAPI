@@ -183,7 +183,7 @@ namespace WebAPI.Services
             UpdatePortCalls(updatedVessels);
         }
 
-        //todo: move logic to port service
+        //todo: unit test
         private void UpdatePortCalls(List<VesselUpdateModel> updatedVessels)
         {
             for (int i = 0; i < updatedVessels.Count; i++)

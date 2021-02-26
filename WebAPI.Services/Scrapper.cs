@@ -43,6 +43,7 @@ namespace WebAPI.Services
             return _http.GetHtmlDocumentWithProxy(_configuration["Services:Url2"] + mmsi);
         }
 
+        //todo: unit test
         private VesselUpdateModel GetVesselUpdates(string html_document_1, string html_document_2, int imo, int mmsi)
         {
             double? lat = _nodeProcessor.ExtractLatFromHtml(html_document_2);
