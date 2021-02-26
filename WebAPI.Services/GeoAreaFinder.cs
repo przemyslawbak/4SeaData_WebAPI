@@ -15,12 +15,12 @@ namespace WebAPI.Services
         {
             if (lat.HasValue && lon.HasValue)
             {
-                foreach (SeaModel area in _memoryAccess.GetSeaAreas())
+                foreach (AreaBboxModel sea in _memoryAccess.GetSeaAreas())
                 {
                     MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
 
-                    if (VerifyPolygon(point, area))
-                        return area.Name;
+                    if (VerifyPolygon(point, sea))
+                        return sea.Name;
                 }
             }
 
@@ -36,31 +36,19 @@ namespace WebAPI.Services
                     return null;
                 }
 
-                foreach (PortModel port in _memoryAccess.GetAllPorts())
+                foreach (AreaBboxModel port in _memoryAccess.GetPortAreas())
                 {
                     MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
 
                     if (VerifyPolygon(point, port))
-                        return port.PortLocode;
+                        return port.KeyProperty;
                 }
             }
 
             return null;
         }
 
-        //todo: DRY
-        private bool VerifyPolygon(MapPointModel point, PortModel area)
-        {
-            if (point.Lat > area.MinLatitude && point.Lat < area.MaxLatitude && point.Lon > area.MinLongitude && point.Lon < area.MaxLongitude)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        //todo: DRY
-        private bool VerifyPolygon(MapPointModel point, SeaModel area)
+        private bool VerifyPolygon(MapPointModel point, AreaBboxModel area)
         {
             if (point.Lat > area.MinLatitude && point.Lat < area.MaxLatitude && point.Lon > area.MinLongitude && point.Lon < area.MaxLongitude)
             {

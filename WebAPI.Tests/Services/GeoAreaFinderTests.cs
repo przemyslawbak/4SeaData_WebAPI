@@ -15,7 +15,7 @@ namespace WebAPI.Tests.Services
         {
             _memoryAccessMock = new Mock<IMemoryAccess>();
 
-            _memoryAccessMock.Setup(mock => mock.GetSeaAreas()).Returns(new List<SeaModel>() { new SeaModel() { MaxLatitude = 10.00, MaxLongitude = 10.00, MinLatitude = 00.00, MinLongitude = 00.00, Name = "area_name" } });
+            _memoryAccessMock.Setup(mock => mock.GetSeaAreas()).Returns(new List<AreaBboxModel>() { new AreaBboxModel() { MaxLatitude = 10.00, MaxLongitude = 10.00, MinLatitude = 00.00, MinLongitude = 00.00, Name = "area_name" } });
 
             _service = new GeoAreaFinder(_memoryAccessMock.Object);
         }

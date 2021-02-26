@@ -12,11 +12,11 @@ namespace WebAPI.Tests.Services
     {
         private readonly Mock<IDataAccessService> _dataAccessMock;
         private MemoryAccess _service;
-        private readonly List<SeaModel> _expectedCollection;
+        private readonly List<AreaBboxModel> _expectedCollection;
 
         public MemoryAccessTests()
         {
-            _expectedCollection = new List<SeaModel>() { new SeaModel() };
+            _expectedCollection = new List<AreaBboxModel>() { new AreaBboxModel() };
             _dataAccessMock = new Mock<IDataAccessService>();
         }
 
@@ -43,7 +43,7 @@ namespace WebAPI.Tests.Services
             IMemoryCache memoryCache = GetMemoryCacheCached(_expectedCollection);
             _service = new MemoryAccess(memoryCache, _dataAccessMock.Object);
 
-            IEnumerable<SeaModel> result = _service.GetSeaAreas();
+            IEnumerable<AreaBboxModel> result = _service.GetSeaAreas();
 
             _dataAccessMock.Verify(mock => mock.GetSeaAreas(), Times.Never());
             Assert.Single(result);
@@ -56,7 +56,7 @@ namespace WebAPI.Tests.Services
             _service = new MemoryAccess(memoryCache, _dataAccessMock.Object);
             _dataAccessMock.Setup(mock => mock.GetSeaAreas()).Returns(_expectedCollection);
 
-            IEnumerable<SeaModel> result = _service.GetSeaAreas();
+            IEnumerable<AreaBboxModel> result = _service.GetSeaAreas();
 
             _dataAccessMock.Verify(mock => mock.GetSeaAreas(), Times.Once());
             Assert.Single(result);

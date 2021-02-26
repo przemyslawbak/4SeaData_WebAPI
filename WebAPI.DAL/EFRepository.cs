@@ -16,14 +16,14 @@ namespace WebAPI.DAL
             _context = ctx;
         }
 
-        public IEnumerable<PortModel> GetAllPorts()
+        public IQueryable<PortModel> GetAllPorts()
         {
-            return _context.Ports.AsNoTracking().OrderBy(s => s.PolygonSize).ToList(); //todo: smaller model mapping
+            return _context.Ports.AsNoTracking().OrderBy(s => s.PolygonSize);
         }
 
-        public List<SeaModel> GetAllSeaAreas()
+        public IQueryable<SeaModel> GetAllSeaAreas()
         {
-            return _context.Seas.AsNoTracking().OrderBy(s => s.PolygonSize).ToList(); //todo: smaller model mapping
+            return _context.Seas.AsNoTracking().OrderBy(s => s.PolygonSize);
         }
 
         public List<VesselAisUpdateModel> GetAllVesselsUpdateModels()

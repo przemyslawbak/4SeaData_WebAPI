@@ -21,21 +21,39 @@ namespace WebAPI.Services
         }
 
 
-        public IEnumerable<PortModel> GetAllPorts()
+        public IEnumerable<AreaBboxModel> GetPortAreas()
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                return _repo.GetAllPorts();
+                return from port in _repo.GetAllPorts()
+                       select new AreaBboxModel
+                       {
+                           KeyProperty = port.PortLocode,
+                           Name = port.NameAscii,
+                           MaxLatitude = port.MaxLatitude,
+                           MaxLongitude = port.MaxLongitude,
+                           MinLatitude = port.MinLatitude,
+                           MinLongitude = port.MinLongitude
+                       };
             };
         }
 
-        public IEnumerable<SeaModel> GetSeaAreas()
+        public IEnumerable<AreaBboxModel> GetSeaAreas()
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                return _repo.GetAllSeaAreas();
+                return from port in _repo.GetAllSeaAreas()
+                       select new AreaBboxModel
+                       {
+                           KeyProperty = port.MRGID.ToString(),
+                           Name = port.Name,
+                           MaxLatitude = port.MaxLatitude,
+                           MaxLongitude = port.MaxLongitude,
+                           MinLatitude = port.MinLatitude,
+                           MinLongitude = port.MinLongitude
+                       };
             };
         }
 

@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using WebAPI.Models;
 
 namespace WebAPI.DAL
 {
     public interface IEFRepository
     {
-        List<SeaModel> GetAllSeaAreas();
+        IQueryable<SeaModel> GetAllSeaAreas();
         List<VesselAisUpdateModel> GetAllVesselsUpdateModels();
         void SaveDatabaseQuantities();
         void SaveUpdateLogs(UpdateLogModel updateLog);
-        IEnumerable<PortModel> GetAllPorts();
+        IQueryable<PortModel> GetAllPorts();
     }
 }
