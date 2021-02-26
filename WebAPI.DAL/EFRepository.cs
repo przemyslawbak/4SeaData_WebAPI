@@ -172,12 +172,18 @@ namespace WebAPI.DAL
 
         public void UpdatePort(string currnetPortLocode, int iMO)
         {
-            VesselModel vessel = _context.Vessels.Where(v => v.IMO == iMO).FirstOrDefault();
+            VesselSizes vesselSizes = (from vsl in _context.Vessels.Where(v => v.IMO == iMO)
+                                 select new VesselSizes()
+                                 {
+                                     LOA = vsl.LOA.HasValue ? vsl.LOA : 0,
+                                     Breadth = vsl.Breadth.HasValue ? vsl.Breadth : 0,
+                                     Draught = vsl.Draught.HasValue ? vsl.Draught : 0
+                                 }).FirstOrDefault();
             PortModel port = _context.Ports.Where(p => p.PortLocode == currnetPortLocode).FirstOrDefault();
 
-            if (port.MaxKnownBreadth < vessel.Breadth) port.MaxKnownBreadth = vessel.Breadth;
-            if (port.MaxKnownDraught < vessel.Draught) port.MaxKnownDraught = vessel.Draught;
-            if (port.MaxKnownLOA < vessel.LOA) port.MaxKnownLOA = vessel.LOA;
+            if (port.MaxKnownBreadth < vesselSizes.Breadth || !port.MaxKnownBreadth.HasValue) port.MaxKnownBreadth = vesselSizes.Breadth;
+            if (port.MaxKnownDraught < vesselSizes.Draught || !port.MaxKnownDraught.HasValue) port.MaxKnownDraught = vesselSizes.Draught;
+            if (port.MaxKnownLOA < vesselSizes.LOA || !port.MaxKnownLOA.HasValue) port.MaxKnownLOA = vesselSizes.LOA;
 
             _context.SaveChanges();
         }

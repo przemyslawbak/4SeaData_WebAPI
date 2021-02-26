@@ -54,12 +54,6 @@ namespace WebAPI.Models
         public string CurrnetPortLocode { get; set; }
         public bool? FullChecked { get; set; }
 
-        //one-to-many
-        [ForeignKey(nameof(OwnerId))]
-        public CompanyModel CompanyOwner { get; set; }
-        [ForeignKey(nameof(ManagerId))]
-        public CompanyModel CompanyManager { get; set; }
-
         //many-to-many
         public virtual ICollection<VesselPort> VesselsPorts { get; set; }
     }

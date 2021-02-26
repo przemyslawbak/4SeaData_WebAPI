@@ -43,14 +43,6 @@ namespace WebAPI.DAL
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<CompanyModel>()
-               .HasMany(c => c.VesselOwner)
-               .WithOne(e => e.CompanyOwner);
-
-            modelBuilder.Entity<CompanyModel>()
-               .HasMany(c => c.VesselManager)
-               .WithOne(e => e.CompanyManager);
-
-            modelBuilder.Entity<CompanyModel>()
                .HasMany(c => c.EmailList)
                .WithOne(e => e.Company);
 

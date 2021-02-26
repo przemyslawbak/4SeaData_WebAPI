@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPI.Models
 {
@@ -10,7 +11,9 @@ namespace WebAPI.Models
         public string PortLocode { get; set; }
         public DateTime? Departure { get; set; }
         public DateTime? Arrival { get; set; }
+        [ForeignKey(nameof(IMO))]
         public VesselModel VesselModel { get; set; }
+        [ForeignKey(nameof(PortLocode))]
         public PortModel PortModel { get; set; }
     }
 }
