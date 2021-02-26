@@ -11,5 +11,9 @@ namespace WebAPI.DAL
         void SaveDatabaseQuantities();
         void SaveUpdateLogs(UpdateLogModel updateLog);
         IQueryable<PortModel> GetAllPorts();
+        bool VerifyIfVesselArrivedPortAndNotDeparted(string currnetPortLocode, int iMO);
+        void VesselDeparture(int iMO, System.DateTime? aISLatestActivity);
+        void VesselArrival(string currnetPortLocode, int iMO, System.DateTime? aISLatestActivity);
+        void UpdatePort(string currnetPortLocode, int iMO);
     }
 }

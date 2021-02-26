@@ -5,7 +5,7 @@ namespace WebAPI.Services
 {
     public interface IMemoryAccess
     {
-        IEnumerable<AreaBboxModel> GetSeaAreas();
-        IEnumerable<AreaBboxModel> GetPortAreas();
+        List<AreaBboxModel> GetSeaAreas();
+        List<AreaBboxModel> GetPortAreas();
     }
 }

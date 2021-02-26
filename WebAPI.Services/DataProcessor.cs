@@ -66,7 +66,7 @@ namespace WebAPI.Services
 
         private async Task ProcessNextStepAsync(List<VesselAisUpdateModel> updateList)
         {
-            List<VesselUpdateModel> updatedVessels = new List<VesselUpdateModel>();
+            List<VesselUpdateModel> updatedVesselsStep = new List<VesselUpdateModel>();
 
             try
             {
@@ -85,9 +85,9 @@ namespace WebAPI.Services
                         _progress.UpdateMissingProperties(updatedVessel);
                         _progress.SetLastUpdatedVessel(_stringParser.BuildUpdatedVesselInfo(updatedVessel));
 
-                        lock (((ICollection)updatedVessels).SyncRoot)
+                        lock (((ICollection)updatedVesselsStep).SyncRoot)
                         {
-                            updatedVessels.Add(updatedVessel);
+                            updatedVesselsStep.Add(updatedVessel);
                         }
 
                         _counter++;
@@ -105,12 +105,12 @@ namespace WebAPI.Services
             finally
             {
                 _progress.SetUpdatingDatabaseTrue();
-                SaveUpdatedVessels(updatedVessels);
+                SaveUpdatedVesselsStep(updatedVesselsStep);
                 _progress.SetUpdatingDatabaseFalse();
             }
         }
 
-        private void SaveUpdatedVessels(List<VesselUpdateModel> updatedVessels)
+        private void SaveUpdatedVesselsStep(List<VesselUpdateModel> updatedVessels)
         {
             _dataService.SaveUpdatedVessels(updatedVessels);
         }

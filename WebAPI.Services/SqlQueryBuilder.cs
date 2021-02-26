@@ -136,6 +136,10 @@ namespace WebAPI.Services
             {
                 vesselQuerySb.Append(" , GeographicalArea = '" + update.GeographicalArea + "'");
             }
+            if (!string.IsNullOrEmpty(update.CurrnetPortLocode))
+            {
+                vesselQuerySb.Append(" , CurrnetPortLocode = '" + update.CurrnetPortLocode + "'");
+            }
             vesselQuerySb.Append(" WHERE IMO = " + existingVessel.Imo + "; ");
 
             vesselQuerySb.AppendLine();

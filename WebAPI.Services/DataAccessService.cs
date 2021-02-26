@@ -21,12 +21,12 @@ namespace WebAPI.Services
         }
 
 
-        public IEnumerable<AreaBboxModel> GetPortAreas()
+        public List<AreaBboxModel> GetPortAreas()
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                return from port in _repo.GetAllPorts()
+                return (from port in _repo.GetAllPorts()
                        select new AreaBboxModel
                        {
                            KeyProperty = port.PortLocode,
@@ -35,16 +35,16 @@ namespace WebAPI.Services
                            MaxLongitude = port.MaxLongitude,
                            MinLatitude = port.MinLatitude,
                            MinLongitude = port.MinLongitude
-                       };
+                       }).ToList();
             };
         }
 
-        public IEnumerable<AreaBboxModel> GetSeaAreas()
+        public List<AreaBboxModel> GetSeaAreas()
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                return from port in _repo.GetAllSeaAreas()
+                return (from port in _repo.GetAllSeaAreas()
                        select new AreaBboxModel
                        {
                            KeyProperty = port.MRGID.ToString(),
@@ -53,7 +53,7 @@ namespace WebAPI.Services
                            MaxLongitude = port.MaxLongitude,
                            MinLatitude = port.MinLatitude,
                            MinLongitude = port.MinLongitude
-                       };
+                       }).ToList();
             };
         }
 
@@ -179,6 +179,77 @@ namespace WebAPI.Services
                     _progress.AddFailedRequest();
                 }
             }
+
+            UpdatePortCalls(updatedVessels);
+        }
+
+        //todo: move logic to port service
+        private void UpdatePortCalls(List<VesselUpdateModel> updatedVessels)
+        {
+            for (int i = 0; i < updatedVessels.Count; i++)
+            {
+                if (updatedVessels[i] == null)
+                {
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(updatedVessels[i].CurrnetPortLocode))
+                {
+                    VesselAtSea(updatedVessels[i].CurrnetPortLocode, updatedVessels[i].IMO, updatedVessels[i].AISLatestActivity);
+                }
+                else
+                {
+                    VesselInPort(updatedVessels[i].CurrnetPortLocode, updatedVessels[i].IMO, updatedVessels[i].AISLatestActivity);
+                }
+            }
+        }
+
+        private void VesselInPort(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        {
+            bool isVesselArrivedAndNotDeparted = GetArrivalStatus(currnetPortLocode, iMO);
+
+            if (!isVesselArrivedAndNotDeparted)
+            {
+                PrepareArrival(currnetPortLocode, iMO, aISLatestActivity);
+            }
+        }
+
+        private void VesselAtSea(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        {
+            bool isVesselArrivedAndNotDeparted = GetArrivalStatus(currnetPortLocode, iMO);
+
+            if (isVesselArrivedAndNotDeparted)
+            {
+                PrepareDeparture(iMO, aISLatestActivity);
+            }
+        }
+
+        private void PrepareDeparture(int iMO, DateTime? aISLatestActivity)
+        {
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
+                _repo.VesselDeparture(iMO, aISLatestActivity);
+            };
+        }
+
+        private void PrepareArrival(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        {
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
+                _repo.VesselArrival(currnetPortLocode, iMO, aISLatestActivity);
+                _repo.UpdatePort(currnetPortLocode, iMO);
+            };
+        }
+
+        private bool GetArrivalStatus(string currnetPortLocode, int iMO)
+        {
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
+                return _repo.VerifyIfVesselArrivedPortAndNotDeparted(currnetPortLocode, iMO);
+            };
         }
     }
 }

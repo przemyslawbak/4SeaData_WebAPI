@@ -16,9 +16,9 @@ namespace WebAPI.Services
             _dataAccess = dataAccess;
         }
 
-        public IEnumerable<AreaBboxModel> GetSeaAreas()
+        public List<AreaBboxModel> GetSeaAreas()
         {
-            IEnumerable<AreaBboxModel> result;
+            List<AreaBboxModel> result;
             if (!_cache.TryGetValue(CacheKeys.SeaAreas, out result))
             {
                 result = _dataAccess.GetSeaAreas();
@@ -31,9 +31,9 @@ namespace WebAPI.Services
             return result;
         }
 
-        public IEnumerable<AreaBboxModel> GetPortAreas()
+        public List<AreaBboxModel> GetPortAreas()
         {
-            IEnumerable<AreaBboxModel> result;
+            List<AreaBboxModel> result;
             if (!_cache.TryGetValue(CacheKeys.Ports, out result))
             {
                 result = _dataAccess.GetPortAreas();

@@ -133,5 +133,53 @@ namespace WebAPI.DAL
 
             _context.SaveChanges();
         }
+
+        public bool VerifyIfVesselArrivedPortAndNotDeparted(string currnetPortLocode, int iMO)
+        {
+            return _context.VesselsPorts.Any(vp => vp.IMO == iMO && vp.PortLocode == currnetPortLocode && vp.Arrival.HasValue && !vp.Departure.HasValue);
+        }
+
+        public void VesselDeparture(int iMO, DateTime? aISLatestActivity)
+        {
+            VesselPort model = _context.VesselsPorts.Where(vp => vp.IMO == iMO && !vp.Departure.HasValue).FirstOrDefault();
+            model.Departure = DateTime.UtcNow;
+
+            if (aISLatestActivity.HasValue)
+            {
+                model.Departure = aISLatestActivity;
+            }
+
+            _context.SaveChanges();
+        }
+
+        public void VesselArrival(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        {
+            VesselPort model = new VesselPort()
+            {
+                IMO = iMO,
+                PortLocode = currnetPortLocode,
+                Arrival = DateTime.UtcNow
+            };
+
+            if (aISLatestActivity.HasValue)
+            {
+                model.Arrival = aISLatestActivity;
+            }
+
+            _context.VesselsPorts.Add(model);
+            _context.SaveChanges();
+        }
+
+        public void UpdatePort(string currnetPortLocode, int iMO)
+        {
+            VesselModel vessel = _context.Vessels.Where(v => v.IMO == iMO).FirstOrDefault();
+            PortModel port = _context.Ports.Where(p => p.PortLocode == currnetPortLocode).FirstOrDefault();
+
+            if (port.MaxKnownBreadth < vessel.Breadth) port.MaxKnownBreadth = vessel.Breadth;
+            if (port.MaxKnownDraught < vessel.Draught) port.MaxKnownDraught = vessel.Draught;
+            if (port.MaxKnownLOA < vessel.LOA) port.MaxKnownLOA = vessel.LOA;
+
+            _context.SaveChanges();
+        }
     }
 }
