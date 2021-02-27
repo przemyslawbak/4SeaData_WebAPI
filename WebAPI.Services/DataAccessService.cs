@@ -248,7 +248,13 @@ namespace WebAPI.Services
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                return _repo.VerifyIfVesselArrivedPortAndNotDeparted(currnetPortLocode, iMO);
+
+                if (!string.IsNullOrEmpty(currnetPortLocode))
+                {
+                    return _repo.VerifyIfVesselArrivedSpecificPortAndNotDeparted(currnetPortLocode, iMO);
+                }
+
+                return _repo.VerifyIfVesselArrivedAnyPortAndNotDeparted(iMO);
             };
         }
     }

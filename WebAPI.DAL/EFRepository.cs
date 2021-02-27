@@ -134,9 +134,14 @@ namespace WebAPI.DAL
             _context.SaveChanges();
         }
 
-        public bool VerifyIfVesselArrivedPortAndNotDeparted(string currnetPortLocode, int iMO)
+        public bool VerifyIfVesselArrivedSpecificPortAndNotDeparted(string currnetPortLocode, int iMO)
         {
             return _context.VesselsPorts.Any(vp => vp.IMO == iMO && vp.PortLocode == currnetPortLocode && vp.Arrival.HasValue && !vp.Departure.HasValue);
+        }
+
+        public bool VerifyIfVesselArrivedAnyPortAndNotDeparted(int iMO)
+        {
+            return _context.VesselsPorts.Any(vp => vp.IMO == iMO && vp.Arrival.HasValue && !vp.Departure.HasValue);
         }
 
         public void VesselDeparture(int iMO, DateTime? aISLatestActivity)
