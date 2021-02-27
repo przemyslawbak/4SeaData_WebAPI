@@ -7,6 +7,7 @@ namespace WebAPI.Models
     public class VesselPort
     {
         [Key]
+        public int Id { get; set; }
         public int IMO { get; set; }
         public string PortLocode { get; set; }
         public DateTime? Departure { get; set; }
