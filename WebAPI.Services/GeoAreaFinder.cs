@@ -1,4 +1,6 @@
-﻿using WebAPI.Models;
+﻿using System;
+using System.Collections.Generic;
+using WebAPI.Models;
 
 namespace WebAPI.Services
 {
@@ -47,6 +49,44 @@ namespace WebAPI.Services
             }
 
             return null;
+        }
+
+        public string VerifyDestinationWithLocode(string destination)
+        {
+            if (!string.IsNullOrEmpty(destination))
+            {
+                if (destination.Contains("<"))
+                {
+                    destination = destination.Split('<')[0];
+                }
+                if (destination.Contains(">"))
+                {
+                    destination = destination.Split('>')[0];
+                }
+                if (destination.Trim().Length == 6 && destination.Contains(" "))
+                {
+                    destination = destination.Trim().Replace(" ", string.Empty);
+                }
+                if (destination.Length == 5)
+                {
+                    destination = TryParseWithLocodes(destination);
+                }
+            }
+
+            return destination;
+        }
+
+        private string TryParseWithLocodes(string destination)
+        {
+            Dictionary<string, string> portsDict = _memoryAccess.GetPortLocodeNameDictionary();
+            if (portsDict.TryGetValue(destination, out string value))
+            {
+                return value;
+            }
+            else
+            {
+                return destination;
+            }
         }
 
         private bool VerifyPolygon(MapPointModel point, AreaBboxModel area)

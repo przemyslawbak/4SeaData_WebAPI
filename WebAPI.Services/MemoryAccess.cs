@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebAPI.Models;
 
 namespace WebAPI.Services
@@ -44,6 +45,11 @@ namespace WebAPI.Services
             }
 
             return result;
+        }
+
+        public Dictionary<string, string> GetPortLocodeNameDictionary()
+        {
+            return GetPortAreas().ToDictionary(x => x.KeyProperty, x => x.Name);
         }
     }
 

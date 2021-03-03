@@ -7,5 +7,6 @@ namespace WebAPI.Services
     {
         List<AreaBboxModel> GetSeaAreas();
         List<AreaBboxModel> GetPortAreas();
+        Dictionary<string, string> GetPortLocodeNameDictionary();
     }
 }

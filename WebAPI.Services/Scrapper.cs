@@ -65,6 +65,7 @@ namespace WebAPI.Services
                 MMSI = mmsi
             };
 
+            vessel.Destination = _areaFinder.VerifyDestinationWithLocode(vessel.Destination);
             vessel.GeographicalArea = _areaFinder.GetGeographicalArea(lat, lon);
             vessel.CurrnetPortLocode = _areaFinder.GetPortLocode(vessel.Speed, lat, lon);
 
