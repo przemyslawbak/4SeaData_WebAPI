@@ -91,8 +91,8 @@ namespace WebAPI.Services
 
         private bool VerifyPolygon(MapPointModel point, AreaBboxModel area)
         {
-            //+/- 0.1 for port boundaries
-            if (point.Lat > (area.MinLatitude - 0.1) && point.Lat < (area.MaxLatitude + 0.1) && point.Lon > (area.MinLongitude - 0.1) && point.Lon < (area.MaxLongitude + 0.1))
+            //+/- 0.05 for port boundaries
+            if (point.Lat > (area.MinLatitude - 0.05) && point.Lat < (area.MaxLatitude + 0.05) && point.Lon > (area.MinLongitude - 0.05) && point.Lon < (area.MaxLongitude + 0.05))
             {
                 return true;
             }

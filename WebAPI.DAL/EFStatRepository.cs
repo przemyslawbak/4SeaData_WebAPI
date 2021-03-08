@@ -428,7 +428,9 @@ namespace WebAPI.DAL
 
         public bool AreCompleteStatsForToday()
         {
-            return _context.Statistics.Where(s => s.Date >= DateTime.UtcNow.Date).Count() == 808;
+            int seaAreasQty = _context.Seas.Count();
+
+            return _context.Statistics.Where(s => s.Date >= DateTime.UtcNow.Date).Count() >= (seaAreasQty - 1) * 8;
         }
 
         public void DeleteStats(List<DailyStatisticsModel> statsToBeRemoved)

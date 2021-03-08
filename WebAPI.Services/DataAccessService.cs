@@ -129,17 +129,20 @@ namespace WebAPI.Services
                 {
                     for (int j = 0; j < areaNames.Count(); j++)
                     {
-                        DailyStatisticsModel updateStats = new DailyStatisticsModel()
+                        if (areaNames[j] != "Unknown")
                         {
-                            Date = DateTime.UtcNow,
-                            Moving = _statsRepo.GetMoving(areaNames[j], vesselCategories[i]),
-                            Moored = _statsRepo.GetMoored(areaNames[j], vesselCategories[i]),
-                            Anchored = _statsRepo.GetAnchored(areaNames[j], vesselCategories[i]),
-                            VesselCategory = vesselCategories[i],
-                            Area = areaNames[j]
-                        };
+                            DailyStatisticsModel updateStats = new DailyStatisticsModel()
+                            {
+                                Date = DateTime.UtcNow,
+                                Moving = _statsRepo.GetMoving(areaNames[j], vesselCategories[i]),
+                                Moored = _statsRepo.GetMoored(areaNames[j], vesselCategories[i]),
+                                Anchored = _statsRepo.GetAnchored(areaNames[j], vesselCategories[i]),
+                                VesselCategory = vesselCategories[i],
+                                Area = areaNames[j]
+                            };
 
-                        _statsRepo.SaveStatistics(updateStats);
+                            _statsRepo.SaveStatistics(updateStats);
+                        }
                     }
                 }
             };
