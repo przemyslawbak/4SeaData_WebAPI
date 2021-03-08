@@ -87,7 +87,7 @@ namespace WebAPI.App.Controllers
         /// <param name="mmsi">Vessel MMSI number.</param>
         /// <param name="imo">Vessel IMO number.</param>
         /// <param name="searchType">Vessel search type.</param>
-        [HttpGet("get-vessel")]
+        [HttpGet("/api/updates/update-vessel")]
         public async Task<IActionResult> UpdateSingleVesselAsync(string key, int mmsi, int imo, string searchType)
         {
             if (_securityKey != key)
