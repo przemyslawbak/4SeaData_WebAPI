@@ -39,6 +39,14 @@ namespace WebAPI.DAL
                                 existing.SpeedMax = d;
                             }
                         }
+
+                        if (!string.IsNullOrEmpty(rdr["DraughtMax"].ToString()))
+                        {
+                            if (double.TryParse(rdr["DraughtMax"].ToString(), out double d))
+                            {
+                                existing.DraughtMax = d;
+                            }
+                        }
                     }
                 }
 

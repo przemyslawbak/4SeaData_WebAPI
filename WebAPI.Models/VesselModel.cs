@@ -46,6 +46,7 @@ namespace WebAPI.Models
         public double? Course { get; set; }
         public string Destination { get; set; }
         public double? Draught { get; set; }
+        public double? DraughtMax { get; set; }
         public DateTime? ETA { get; set; }
         public int? OwnerId { get; set; }
         public int? ManagerId { get; set; }

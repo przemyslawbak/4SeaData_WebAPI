@@ -73,11 +73,11 @@ namespace WebAPI.Services
         {
             if (_progress.GetReturnedResultsQuantity() < _progress.GetTotalResultsQuantity() / 2)
             {
-                return "SELECT TOP 1 MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + " ORDER BY IMO DESC;";
+                return "SELECT TOP 1 MMSI,SpeedMax,DraughtMax FROM dbo.Vessels WHERE IMO = " + iMO + " ORDER BY IMO DESC;";
             }
             else
             {
-                return "SELECT TOP 1 MMSI,SpeedMax FROM dbo.Vessels WHERE IMO = " + iMO + ";";
+                return "SELECT TOP 1 MMSI,SpeedMax,DraughtMax FROM dbo.Vessels WHERE IMO = " + iMO + ";";
             }
         }
 
@@ -104,10 +104,6 @@ namespace WebAPI.Services
             {
                 vesselQuerySb.Append(" , Course = '" + update.Course.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "'");
             }
-            if (update.Draught.HasValue)
-            {
-                vesselQuerySb.Append(" , Draught = '" + update.Draught.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "'");
-            }
             if (update.Lat.HasValue)
             {
                 vesselQuerySb.Append(" , Lat = '" + update.Lat.Value.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + "'");
@@ -122,6 +118,14 @@ namespace WebAPI.Services
                 if ((existingVessel.SpeedMax < update.Speed || existingVessel.SpeedMax == null) && update.Speed != 0)
                 {
                     vesselQuerySb.Append(" , SpeedMax = '" + update.Speed.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "'");
+                }
+            }
+            if (update.Draught.HasValue)
+            {
+                vesselQuerySb.Append(" , Draught = '" + update.Draught.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "'");
+                if ((existingVessel.DraughtMax < update.Draught || existingVessel.DraughtMax == null) && update.Draught != 0)
+                {
+                    vesselQuerySb.Append(" , DraughtMax = '" + update.Draught.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "'");
                 }
             }
             if (!string.IsNullOrEmpty(update.AISStatus))
