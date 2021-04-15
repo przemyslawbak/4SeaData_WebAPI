@@ -16,6 +16,7 @@ namespace WebAPI.Services
 
         public double? ExtractSpeedFromHtml(string html_document_2)
         {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
             string speed = _stringParser.GetTrimmedSpeed(node);
             return _stringParser.ParsedTrimmedNullableDouble(speed);
@@ -23,6 +24,7 @@ namespace WebAPI.Services
 
         public double? ExtractCourseFromHtml(string html_document_2)
         {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
             string course = _stringParser.GetTrimmedCourse(node);
             return _stringParser.ParsedTrimmedNullableDouble(course);
@@ -30,12 +32,14 @@ namespace WebAPI.Services
 
         public string ExtractDestinationFromHtml(string html_document_2)
         {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
-            return _stringParser.GetUndashedTrimmedText(node);
+            return _stringParser.GetTrimmedDestination(node);
         }
 
         public double? ExtractDraughtFromHtml(string html_document_2)
         {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
             string draught = _stringParser.GetTrimmedDraught(node);
             return _stringParser.ParsedTrimmedNullableDouble(draught);
@@ -43,13 +47,15 @@ namespace WebAPI.Services
 
         public DateTime? ExtractEtaTimeFromHtml(string html_document_2)
         {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
-            string eta = _stringParser.GetUndashedTrimmedText(node);
+            string eta = _stringParser.GetTrimmedEta(node);
             return _stringParser.ParsedTrimmedNullableDateTime(eta);
         }
 
         public double? ExtractLatFromHtml(string html_document_2)
         {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
             string lat = _stringParser.GetTrimmedLatitude(node);
             return _stringParser.ParsedTrimmedNullableDouble(lat);
@@ -57,9 +63,18 @@ namespace WebAPI.Services
 
         public double? ExtractLonFromHtml(string html_document_2)
         {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
             string node = _creator.CreatePrepareAndVerifyRowNodeString(html_document_2);
             string lon = _stringParser.GetTrimmedLongitude(node);
             return _stringParser.ParsedTrimmedNullableDouble(lon);
+        }
+
+        private DateTime? ExtractAisUpdateTimeFromHtml2(string html_document_2)
+        {
+            if (html_document_2.Contains("Error - VesselFinder")) return null;
+            string node = _creator.CreatePrepareAndVerifyRowNodeOuterHtml(html_document_2);
+            string time = _stringParser.GetTrimmedTime1(node);
+            return _stringParser.ParsedTrimmedNullableDateTime(time);
         }
 
         public int ExtractMmsiFromHtml(string html_document_1)
@@ -89,13 +104,6 @@ namespace WebAPI.Services
             DateTime? time1 = ExtractAisUpdateTimeFromHtml1(html_document_1);
             DateTime? time2 = ExtractAisUpdateTimeFromHtml2(html_document_2);
             return CompareUpdateTimes(time1, time2);
-        }
-
-        private DateTime? ExtractAisUpdateTimeFromHtml2(string html_document_2)
-        {
-            string node = _creator.CreatePrepareAndVerifyRowNodeOuterHtml(html_document_2);
-            string time = _stringParser.GetTrimmedTime1(node);
-            return _stringParser.ParsedTrimmedNullableDateTime(time);
         }
 
         private DateTime? ExtractAisUpdateTimeFromHtml1(string html_document_1)

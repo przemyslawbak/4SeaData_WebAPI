@@ -25,5 +25,7 @@ namespace WebAPI.Services
         string GetTrimmedTime2(string innerHtml);
         string MakeFirstCharactersToUpper(string aISStatus);
         string GetTrimmedMmsi(string innerHtml);
+        string GetTrimmedDestination(string node);
+        string GetTrimmedEta(string node);
     }
 }

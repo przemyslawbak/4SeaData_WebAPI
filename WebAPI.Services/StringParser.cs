@@ -14,17 +14,17 @@ namespace WebAPI.Services
         {
             Dictionary<string, string> xpathDict = new Dictionary<string, string>()
             {
-                { "ExtractCourseFromHtml", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[9]/td[2]" },
-                { "ExtractDestinationFromHtml", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[3]/td[2]" },
-                { "ExtractDraughtFromHtml", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[8]/td[2]" },
-                { "ExtractEtaTimeFromHtml", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[4]/td[2]" },
-                { "ExtractLatFromHtml", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[10]/td[2]" },
-                { "ExtractLonFromHtml", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[10]/td[2]" },
-                { "ExtractSpeedFromHtml", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[9]/td[2]" },
+                { "ExtractCourseFromHtml", "/html/body/div[1]/div/main/div/section[1]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[2]" },
+                { "ExtractDestinationFromHtml", "/html/body/div[1]/div/main/div/section[1]/div/div[2]/div/div[1]/div[2]" },
+                { "ExtractDraughtFromHtml", "/html/body/div[1]/div/main/div/section[1]/div/div[2]/div/div[2]/table/tbody/tr[2]/td[2]" },
+                { "ExtractEtaTimeFromHtml", "/html/body/div[1]/div/main/div/section[1]/div/div[2]/div/div[1]/div[2]/div/span[1]" },
+                { "ExtractLatFromHtml", "/html/body/div[1]/div/main/div/div[3]/p[1]" },
+                { "ExtractLonFromHtml", "/html/body/div[1]/div/main/div/div[3]/p[1]" },
+                { "ExtractSpeedFromHtml", "/html/body/div[1]/div/main/div/section[1]/div/div[2]/div/div[2]/table/tbody/tr[1]/td[2]" },
                 { "ExtractMmsiFromHtml", "//div[@class='row']" },
                 { "ExtractNaviStatusFromHtml", "/html/body" },
                 { "ExtractAisUpdateTimeFromHtml1", "//div[@class='row']" },
-                { "ExtractAisUpdateTimeFromHtml2", "/html/body/div[1]/div/main/div/section[2]/div/div[1]/table/tbody/tr[12]/td[2]" },
+                { "ExtractAisUpdateTimeFromHtml2", "//*[@id='lastrep']" },
             };
 
             string result = xpathDict[methodName];
@@ -130,14 +130,37 @@ namespace WebAPI.Services
                 .Trim();
         }
 
+        public string GetTrimmedDestination(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+            if (text.Contains("Destination not available")) return null;
+            if (!text.Contains(",")) return null;
+
+            return text.Split(',')[0].Trim();
+        }
+
+        public string GetTrimmedEta(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("ATA: ")) return null;
+            if (!text.Contains(" UTC")) return null;
+
+            return text.Split(new string[] { "ATA: " }, StringSplitOptions.None)[1].Split(new string[] { " UTC" }, StringSplitOptions.None)[0];
+        }
 
         public string GetTrimmedLongitude(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("coordinates ")) return null;
             if (!text.Contains("/")) return null;
             if (!text.Contains(" ")) return null;
+            if (!text.Contains("(")) return null;
+            if (!text.Contains(")")) return null;
+            text = text.Replace("coordinates ", "");
             string trimmed = DecodeAndTrim(text)
-                .Split('/')[1];
+                .Split('(')[1]
+                .Split(')')[0]
+                .Split('/')[1].Trim();
             if (trimmed.Contains("E"))
             {
                 return trimmed
@@ -157,10 +180,16 @@ namespace WebAPI.Services
         public string GetTrimmedLatitude(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;
+            if (!text.Contains("coordinates ")) return null;
             if (!text.Contains("/")) return null;
             if (!text.Contains(" ")) return null;
+            if (!text.Contains("(")) return null;
+            if (!text.Contains(")")) return null;
+            text = text.Replace("coordinates ", "");
             string trimmed = DecodeAndTrim(text)
-                .Split('/')[0];
+                .Split('(')[1]
+                .Split(')')[0]
+                .Split('/')[0].Trim();
             if (trimmed.Contains("N"))
             {
                 return trimmed
@@ -202,6 +231,8 @@ namespace WebAPI.Services
 
         public bool IsTableRowCorrect(string text)
         {
+            return true;
+
             if (string.IsNullOrEmpty(text)) return false;
             if (text.Contains("<td class=\"v3\">"))
             {
