@@ -86,7 +86,6 @@ namespace WebAPI.Services
         {
             StringBuilder vesselQuerySb = new StringBuilder();
             vesselQuerySb.Append("UPDATE dbo.Vessels SET IMO = '" + update.IMO + "'");
-            vesselQuerySb.Append("UPDATE dbo.Vessels SET VesselId = '" + update.VesselId + "'");
             if (existingVessel.Mmsi == 0)
             {
                 if (update.MMSI.HasValue)
@@ -146,7 +145,7 @@ namespace WebAPI.Services
             {
                 vesselQuerySb.Append(" , CurrnetPortLocode = '" + update.CurrnetPortLocode + "'");
             }
-            vesselQuerySb.Append(" WHERE IMO = " + existingVessel.Imo + "; ");
+            vesselQuerySb.Append(" WHERE VesselId = " + existingVessel.VesselId + "; ");
 
             vesselQuerySb.AppendLine();
 
