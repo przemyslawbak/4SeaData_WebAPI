@@ -35,6 +35,7 @@ namespace WebAPI.Services
                 if (!skip)
                 {
                     vessel = _scrapper.ScrapSingleVessel(aisUpdateModel.Mmsi, aisUpdateModel.Imo);
+                    vessel.VesselId = aisUpdateModel.VesselId;
 
                     if (vessel.IMO != aisUpdateModel.Imo)
                     {

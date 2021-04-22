@@ -28,12 +28,12 @@ namespace WebAPI.DAL
             modelBuilder.Entity<VesselPort>()
                 .HasOne(vp => vp.VesselModel)
                 .WithMany(vm => vm.VesselsPorts)
-                .HasForeignKey(vu => vu.IMO);
+                .HasForeignKey(vu => vu.VesselId);
 
             modelBuilder.Entity<VesselPort>()
                 .HasOne(vp => vp.PortModel)
                 .WithMany(vm => vm.VesselsPorts)
-                .HasForeignKey(vu => vu.PortLocode);
+                .HasForeignKey(vu => vu.PortId);
 
             //one-to-many
 

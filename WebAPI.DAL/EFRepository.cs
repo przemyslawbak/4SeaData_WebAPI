@@ -178,20 +178,24 @@ namespace WebAPI.DAL
 
         public void UpdatePort(int portId, int vesselId)
         {
-            VesselSizes vesselSizes = (from vsl in _context.Vessels.Where(v => v.VesselId == vesselId)
-                                 select new VesselSizes()
-                                 {
-                                     LOA = vsl.LOA.HasValue ? vsl.LOA : 0,
-                                     Breadth = vsl.Breadth.HasValue ? vsl.Breadth : 0,
-                                     Draught = vsl.Draught.HasValue ? vsl.Draught : 0
-                                 }).FirstOrDefault();
             PortModel port = _context.Ports.Where(p => p.PortId == portId).FirstOrDefault();
 
-            if (port.MaxKnownBreadth < vesselSizes.Breadth || !port.MaxKnownBreadth.HasValue) port.MaxKnownBreadth = vesselSizes.Breadth;
-            if (port.MaxKnownDraught < vesselSizes.Draught || !port.MaxKnownDraught.HasValue) port.MaxKnownDraught = vesselSizes.Draught;
-            if (port.MaxKnownLOA < vesselSizes.LOA || !port.MaxKnownLOA.HasValue) port.MaxKnownLOA = vesselSizes.LOA;
+            if (port != null)
+            {
+                VesselSizes vesselSizes = (from vsl in _context.Vessels.Where(v => v.VesselId == vesselId)
+                                           select new VesselSizes()
+                                           {
+                                               LOA = vsl.LOA.HasValue ? vsl.LOA : 0,
+                                               Breadth = vsl.Breadth.HasValue ? vsl.Breadth : 0,
+                                               Draught = vsl.Draught.HasValue ? vsl.Draught : 0
+                                           }).FirstOrDefault();
 
-            _context.SaveChanges();
+                if (port.MaxKnownBreadth < vesselSizes.Breadth || !port.MaxKnownBreadth.HasValue) port.MaxKnownBreadth = vesselSizes.Breadth;
+                if (port.MaxKnownDraught < vesselSizes.Draught || !port.MaxKnownDraught.HasValue) port.MaxKnownDraught = vesselSizes.Draught;
+                if (port.MaxKnownLOA < vesselSizes.LOA || !port.MaxKnownLOA.HasValue) port.MaxKnownLOA = vesselSizes.LOA;
+
+                _context.SaveChanges();
+            }
         }
 
         public int GetPortId(string locode)
