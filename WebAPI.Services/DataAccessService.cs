@@ -196,68 +196,84 @@ namespace WebAPI.Services
                     continue;
                 }
 
-                if (string.IsNullOrEmpty(updatedVessels[i].CurrnetPortLocode))
+                int portId = 0;
+
+                if (!string.IsNullOrEmpty(updatedVessels[i].CurrnetPortLocode))
                 {
-                    VesselAtSea(updatedVessels[i].CurrnetPortLocode, updatedVessels[i].IMO, updatedVessels[i].AISLatestActivity);
+                    portId = GetPortId(updatedVessels[i].CurrnetPortLocode);
+                }
+
+                if (portId != 0)
+                {
+                    VesselAtSea(portId, updatedVessels[i].VesselId, updatedVessels[i].AISLatestActivity);
                 }
                 else
                 {
-                    VesselInPort(updatedVessels[i].CurrnetPortLocode, updatedVessels[i].IMO, updatedVessels[i].AISLatestActivity);
+                    VesselInPort(portId, updatedVessels[i].VesselId, updatedVessels[i].AISLatestActivity);
                 }
             }
         }
 
-        private void VesselInPort(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        private int GetPortId(string locode)
         {
-            bool isVesselArrivedAndNotDeparted = GetArrivalStatus(currnetPortLocode, iMO);
+            using (IServiceScope scope = _scopeFactory.CreateScope())
+            {
+                IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
+                return _repo.GetPortId(locode);
+            };
+        }
+
+        private void VesselInPort(int portId, int vesselId, DateTime? aISLatestActivity)
+        {
+            bool isVesselArrivedAndNotDeparted = GetArrivalStatus(portId, vesselId);
 
             if (!isVesselArrivedAndNotDeparted)
             {
-                PrepareArrival(currnetPortLocode, iMO, aISLatestActivity);
+                PrepareArrival(portId, vesselId, aISLatestActivity);
             }
         }
 
-        private void VesselAtSea(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        private void VesselAtSea(int portId, int vesselId, DateTime? aISLatestActivity)
         {
-            bool isVesselArrivedAndNotDeparted = GetArrivalStatus(currnetPortLocode, iMO);
+            bool isVesselArrivedAndNotDeparted = GetArrivalStatus(portId, vesselId);
 
             if (isVesselArrivedAndNotDeparted)
             {
-                PrepareDeparture(iMO, aISLatestActivity);
+                PrepareDeparture(vesselId, aISLatestActivity);
             }
         }
 
-        private void PrepareDeparture(int iMO, DateTime? aISLatestActivity)
+        private void PrepareDeparture(int VesselId, DateTime? aISLatestActivity)
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                _repo.VesselDeparture(iMO, aISLatestActivity);
+                _repo.VesselDeparture(VesselId, aISLatestActivity);
             };
         }
 
-        private void PrepareArrival(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        private void PrepareArrival(int portId, int VesselId, DateTime? aISLatestActivity)
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                _repo.VesselArrival(currnetPortLocode, iMO, aISLatestActivity);
-                _repo.UpdatePort(currnetPortLocode, iMO);
+                _repo.VesselArrival(portId, VesselId, aISLatestActivity);
+                _repo.UpdatePort(portId, VesselId);
             };
         }
 
-        private bool GetArrivalStatus(string currnetPortLocode, int iMO)
+        private bool GetArrivalStatus(int portId, int VesselId)
         {
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
 
-                if (!string.IsNullOrEmpty(currnetPortLocode))
+                if (portId != 0)
                 {
-                    return _repo.VerifyIfVesselArrivedSpecificPortAndNotDeparted(currnetPortLocode, iMO);
+                    return _repo.VerifyIfVesselArrivedSpecificPortAndNotDeparted(portId, VesselId);
                 }
 
-                return _repo.VerifyIfVesselArrivedAnyPortAndNotDeparted(iMO);
+                return _repo.VerifyIfVesselArrivedAnyPortAndNotDeparted(VesselId);
             };
         }
     }

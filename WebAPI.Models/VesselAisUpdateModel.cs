@@ -2,6 +2,7 @@
 {
     public class VesselAisUpdateModel
     {
+        public int VesselId { get; set; }
         public int Mmsi { get; set; }
         public int Imo { get; set; }
         public double? Speed { get; set; }

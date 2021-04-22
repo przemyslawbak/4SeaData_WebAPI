@@ -1,13 +1,14 @@
-﻿using System;
+﻿using _4SeaData.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPI.Models
 {
     public class VesselModel
     {
         [Key]
+        public int VesselId { get; set; }
         public int? IMO { get; set; }
         public DateTime? DatatUpdate { get; set; }
         public string Name { get; set; }

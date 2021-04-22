@@ -31,6 +31,7 @@ namespace WebAPI.DAL
             List<VesselAisUpdateModel> result = (from vessel in _context.Vessels.AsNoTracking()
                           select new VesselAisUpdateModel
                           {
+                              VesselId = vessel.VesselId,
                               Imo = vessel.IMO.Value,
                               Mmsi = vessel.MMSI.Value,
                               Speed = vessel.Speed
@@ -134,19 +135,19 @@ namespace WebAPI.DAL
             _context.SaveChanges();
         }
 
-        public bool VerifyIfVesselArrivedSpecificPortAndNotDeparted(string currnetPortLocode, int iMO)
+        public bool VerifyIfVesselArrivedSpecificPortAndNotDeparted(int portId, int vesselId)
         {
-            return _context.VesselsPorts.Any(vp => vp.IMO == iMO && vp.PortLocode == currnetPortLocode && vp.Arrival.HasValue && !vp.Departure.HasValue);
+            return _context.VesselsPorts.Any(vp => vp.VesselId == vesselId && vp.PortId == portId && vp.Arrival.HasValue && !vp.Departure.HasValue);
         }
 
-        public bool VerifyIfVesselArrivedAnyPortAndNotDeparted(int iMO)
+        public bool VerifyIfVesselArrivedAnyPortAndNotDeparted(int vesselId)
         {
-            return _context.VesselsPorts.Any(vp => vp.IMO == iMO && vp.Arrival.HasValue && !vp.Departure.HasValue);
+            return _context.VesselsPorts.Any(vp => vp.VesselId == vesselId && vp.Arrival.HasValue && !vp.Departure.HasValue);
         }
 
-        public void VesselDeparture(int iMO, DateTime? aISLatestActivity)
+        public void VesselDeparture(int VesselId, DateTime? aISLatestActivity)
         {
-            VesselPort model = _context.VesselsPorts.Where(vp => vp.IMO == iMO && !vp.Departure.HasValue).FirstOrDefault();
+            VesselPort model = _context.VesselsPorts.Where(vp => vp.VesselId == VesselId && !vp.Departure.HasValue).FirstOrDefault();
             model.Departure = DateTime.UtcNow;
 
             if (aISLatestActivity.HasValue)
@@ -157,12 +158,12 @@ namespace WebAPI.DAL
             _context.SaveChanges();
         }
 
-        public void VesselArrival(string currnetPortLocode, int iMO, DateTime? aISLatestActivity)
+        public void VesselArrival(int portId, int VesselId, DateTime? aISLatestActivity)
         {
             VesselPort model = new VesselPort()
             {
-                IMO = iMO,
-                PortLocode = currnetPortLocode,
+                VesselId = VesselId,
+                PortId = portId,
                 Arrival = DateTime.UtcNow
             };
 
@@ -175,22 +176,27 @@ namespace WebAPI.DAL
             _context.SaveChanges();
         }
 
-        public void UpdatePort(string currnetPortLocode, int iMO)
+        public void UpdatePort(int portId, int vesselId)
         {
-            VesselSizes vesselSizes = (from vsl in _context.Vessels.Where(v => v.IMO == iMO)
+            VesselSizes vesselSizes = (from vsl in _context.Vessels.Where(v => v.VesselId == vesselId)
                                  select new VesselSizes()
                                  {
                                      LOA = vsl.LOA.HasValue ? vsl.LOA : 0,
                                      Breadth = vsl.Breadth.HasValue ? vsl.Breadth : 0,
                                      Draught = vsl.Draught.HasValue ? vsl.Draught : 0
                                  }).FirstOrDefault();
-            PortModel port = _context.Ports.Where(p => p.PortLocode == currnetPortLocode).FirstOrDefault();
+            PortModel port = _context.Ports.Where(p => p.PortId == portId).FirstOrDefault();
 
             if (port.MaxKnownBreadth < vesselSizes.Breadth || !port.MaxKnownBreadth.HasValue) port.MaxKnownBreadth = vesselSizes.Breadth;
             if (port.MaxKnownDraught < vesselSizes.Draught || !port.MaxKnownDraught.HasValue) port.MaxKnownDraught = vesselSizes.Draught;
             if (port.MaxKnownLOA < vesselSizes.LOA || !port.MaxKnownLOA.HasValue) port.MaxKnownLOA = vesselSizes.LOA;
 
             _context.SaveChanges();
+        }
+
+        public int GetPortId(string locode)
+        {
+            return _context.Ports.Where(p => p.PortLocode == locode).FirstOrDefault().PortId;
         }
     }
 }

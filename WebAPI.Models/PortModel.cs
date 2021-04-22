@@ -7,6 +7,7 @@ namespace WebAPI.Models
     public class PortModel
     {
         [Key]
+        public int PortId { get; set; }
         public string PortLocode { get; set; }
         public DateTime? DataUpdate { get; set; }
         public string CountryCode { get; set; }

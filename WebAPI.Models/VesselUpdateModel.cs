@@ -5,6 +5,7 @@ namespace WebAPI.Models
     public class VesselUpdateModel
     {
         public int IMO { get; set; }
+        public int VesselId { get; set; }
         public int? MMSI { get; set; }
         public string Destination { get; set; }
         public double? Draught { get; set; }

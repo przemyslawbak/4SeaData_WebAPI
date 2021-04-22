@@ -54,7 +54,8 @@ namespace WebAPI.Services
 
         private string GetVesselUpdateQuery(VesselUpdateModel update)
         {
-            VesselAisUpdateModel existingVessel = FindExistingVessel(update.IMO);
+            VesselAisUpdateModel existingVessel = FindExistingVessel(update.VesselId);
+            existingVessel.VesselId = update.VesselId;
             existingVessel.Imo = update.IMO;
 
             string query = BuildSingleVesselQuery(existingVessel, update) ?? "";
@@ -62,22 +63,22 @@ namespace WebAPI.Services
             return query;
         }
 
-        private VesselAisUpdateModel FindExistingVessel(int? iMO)
+        private VesselAisUpdateModel FindExistingVessel(int VesselId)
         {
-            string searchQuery = BuildSearchQuery(iMO);
+            string searchQuery = BuildSearchQuery(VesselId);
 
             return _adoRepo.GetVesselData(searchQuery);
         }
 
-        private string BuildSearchQuery(int? iMO)
+        private string BuildSearchQuery(int VesselId)
         {
             if (_progress.GetReturnedResultsQuantity() < _progress.GetTotalResultsQuantity() / 2)
             {
-                return "SELECT TOP 1 MMSI,SpeedMax,DraughtMax FROM dbo.Vessels WHERE IMO = " + iMO + " ORDER BY IMO DESC;";
+                return "SELECT TOP 1 MMSI,SpeedMax,DraughtMax FROM dbo.Vessels WHERE VesselId = " + VesselId + " ORDER BY IMO DESC;";
             }
             else
             {
-                return "SELECT TOP 1 MMSI,SpeedMax,DraughtMax FROM dbo.Vessels WHERE IMO = " + iMO + ";";
+                return "SELECT TOP 1 MMSI,SpeedMax,DraughtMax FROM dbo.Vessels WHERE VesselId = " + VesselId + ";";
             }
         }
 
@@ -85,6 +86,7 @@ namespace WebAPI.Services
         {
             StringBuilder vesselQuerySb = new StringBuilder();
             vesselQuerySb.Append("UPDATE dbo.Vessels SET IMO = '" + update.IMO + "'");
+            vesselQuerySb.Append("UPDATE dbo.Vessels SET VesselId = '" + update.VesselId + "'");
             if (existingVessel.Mmsi == 0)
             {
                 if (update.MMSI.HasValue)
