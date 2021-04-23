@@ -203,7 +203,7 @@ namespace WebAPI.Services
                     portId = GetPortId(updatedVessels[i].CurrnetPortLocode);
                 }
 
-                if (portId != 0)
+                if (portId == 0)
                 {
                     VesselAtSea(portId, updatedVessels[i].VesselId, updatedVessels[i].AISLatestActivity);
                 }
