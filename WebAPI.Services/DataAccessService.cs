@@ -248,7 +248,14 @@ namespace WebAPI.Services
             using (IServiceScope scope = _scopeFactory.CreateScope())
             {
                 IEFRepository _repo = scope.ServiceProvider.GetRequiredService<EFRepository>();
-                _repo.VesselDeparture(VesselId, aISLatestActivity);
+                try //todo: debug
+                {
+                    _repo.VesselDeparture(VesselId, aISLatestActivity);
+                }
+                catch
+                {
+
+                }
             };
         }
 
