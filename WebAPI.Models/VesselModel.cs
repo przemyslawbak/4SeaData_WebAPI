@@ -38,8 +38,8 @@ namespace WebAPI.Models
         public string AisVesselType { get; set; }
         //voyage data
         public DateTime? AISLatestActivity { get; set; }
-        public double? Lat { get; set; }
-        public double? Lon { get; set; }
+        public double Lat { get; set; }
+        public double Lon { get; set; }
         public string GeographicalArea { get; set; }
         public string AISStatus { get; set; }
         public double? Speed { get; set; }
