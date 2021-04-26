@@ -17,6 +17,11 @@ namespace WebAPI.Services
         {
             if (lat.HasValue && lon.HasValue)
             {
+                if (lat.Value == 0 && lon.Value == 0)
+                {
+                    return "Unknown";
+                }
+
                 foreach (AreaBboxModel sea in _memoryAccess.GetSeaAreas())
                 {
                     MapPointModel point = new MapPointModel() { Lat = double.Parse(lat.ToString()), Lon = double.Parse(lon.ToString()) };
