@@ -29,7 +29,7 @@ namespace WebAPI.Services
 
         private string GetHtml1(int imo)
         {
-            return _http.GetHtmlDocumentWithoutProxy(_configuration["Services:Url1"] + imo + ".html");
+            return _http.GetHtmlDocumentWithProxy(_configuration["Services:Url1"] + imo + ".html");
         }
 
         private string GetHtml2(int mmsi, string html_document_1) //todo: unit test
